@@ -1,0 +1,46 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net8.0-windows</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <UseWPF>true</UseWPF>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="Resources\RestoratorMain.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Page Remove="Views\App.xaml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.0" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="9.0.0">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="9.0.0" />
+    <PackageReference Include="Microsoft.Xaml.Behaviors.Wpf" Version="1.1.135" />
+    <PackageReference Include="System.Windows.Extensions" Version="9.0.0" />
+    <PackageReference Include="WPF-UI" Version="3.0.5" />
+    <PackageReference Include="WPF-UI.DependencyInjection" Version="4.0.0-rc.3" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Restorator.Application\Restorator.Application.csproj" />
+    <ProjectReference Include="..\Restorator.Domain\Restorator.Domain.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="Resources\RestoratorMain.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ApplicationDefinition Include="Views\App.xaml" />
+  </ItemGroup>
+
+</Project>
