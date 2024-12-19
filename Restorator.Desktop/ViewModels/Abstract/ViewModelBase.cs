@@ -2,11 +2,6 @@
 
 namespace Restorator.Desktop.ViewModels.Abstract
 {
-    public partial class ViewModelBase : ObservableObject
-    {
-        public virtual Task Initialize()
-        {
-            return Task.CompletedTask;
-        }
-    }
+    public abstract partial class ViewModelBase : ObservableObject
+    { }
 }

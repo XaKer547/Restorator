@@ -41,7 +41,7 @@ namespace Restorator.Desktop.ViewModels
         [RelayCommand]
         public void NavigateToUserMenu()
         {
-            var a = 1;
+            _navigationService.Navigate<RestaurantInteractiveTableViewModel>();
         }
     }
 }

@@ -7,10 +7,5 @@ namespace Restorator.Desktop.ViewModels
     {
         [ObservableProperty]
         private ViewModelBase currentViewModel;
-
-
-
-
-
     }
 }
