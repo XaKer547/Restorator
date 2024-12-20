@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using System.Reflection;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Restorator.Application.Services;
 using Restorator.DataAccess.Data;
@@ -10,8 +11,6 @@ using Restorator.Desktop.ViewModels.Abstract;
 using Restorator.Desktop.Views;
 using Restorator.Desktop.Views.Pages;
 using Restorator.Domain.Services;
-using System.ComponentModel;
-using System.Reflection;
 using Wpf.Ui;
 using Wpf.Ui.Abstractions;
 using Wpf.Ui.DependencyInjection;
@@ -33,7 +32,9 @@ namespace Restorator.Desktop.Extensions
             services.AddSingleton<INavigationViewPageProvider, DependencyInjectionNavigationViewPageProvider>();
             services.AddSingleton<Services.INavigationService, Services.NavigationService>();
             services.AddSingleton<ISessionManager, SessionManager>();
+
             services.AddScoped<IAuthenticationService, AuthenticationService>();
+            services.AddScoped<IRestaurantService, RestaurantService>();
 
             services.AddDbContext<RestoratorDbContext>(opt =>
             {
@@ -53,7 +54,8 @@ namespace Restorator.Desktop.Extensions
                 .RegisterDataTemplate<AuthenticationViewModel, AuthenticationPage>()
                 .RegisterDataTemplate<SignInViewModel, SignInControl>()
                 .RegisterDataTemplate<SignUpViewModel, SignUpControl>()
-                .RegisterDataTemplate<ReservationViewModel, ReservationPage>();
+                .RegisterDataTemplate<ReservationViewModel, ReservationPage>()
+                .RegisterDataTemplate<RestaurantSearchViewModel, RestaurantSearchPage>();
 
             var assembly = Assembly.GetExecutingAssembly();
 
@@ -62,7 +64,7 @@ namespace Restorator.Desktop.Extensions
 
             var currentApp = System.Windows.Application.Current;
 
-            currentApp.Startup += (assemb, ac) => manager.InitilizeTemplates(currentApp.Resources);
+            currentApp.Startup += (assemb, args) => manager.InitilizeTemplates(currentApp.Resources);
 
             services.AddSingleton(manager);
 

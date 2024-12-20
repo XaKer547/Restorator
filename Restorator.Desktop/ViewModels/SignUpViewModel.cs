@@ -9,9 +9,6 @@ namespace Restorator.Desktop.ViewModels
 {
     public partial class SignUpViewModel : AuthenticationViewModelBase
     {
-        private readonly IMed
-
-
         private readonly IAuthenticationService _authenticationService;
         private readonly ISessionManager _sessionManager;
 

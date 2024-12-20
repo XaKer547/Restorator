@@ -1,13 +1,33 @@
-﻿using Restorator.Desktop.ViewModels.Abstract;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
+using Restorator.Desktop.ViewModels.Abstract;
+using Restorator.Domain.Models;
+using Restorator.Domain.Services;
 
 namespace Restorator.Desktop.ViewModels
 {
-    public partial class RestaurantSearchViewModel : ViewModelBase, IValueHandler<int>
+    public partial class RestaurantSearchViewModel : ViewModelBase
     {
-        //private readonly 
-        public void Handle(int data)
+        [ObservableProperty]
+        private IReadOnlyCollection<string> _restaurantNames;
+
+        [ObservableProperty]
+        private IReadOnlyCollection<RestaurantPreviewDTO> _restaurantsPreview;
+
+        [ObservableProperty]
+
+
+        private readonly IRestaurantService _restaurantService;
+        public RestaurantSearchViewModel(IRestaurantService restaurantService)
         {
-            throw new NotImplementedException();
+            _restaurantService = restaurantService;
+        }
+
+        [RelayCommand]
+        public void SearchRestaurants()
+        {
+
+            int a = 1;
         }
     }
 }

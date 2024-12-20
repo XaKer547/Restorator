@@ -23,7 +23,7 @@ namespace Restorator.Desktop.Views
             navigationService.SetNavigationControl(RootNavigation);
             contentDialogService.SetDialogHost(RootContentDialog);
 
-            navigationService.Navigate<ReservationViewModel>();
+            navigationService.Navigate<RestaurantSearchViewModel>();
         }
     }
 }
