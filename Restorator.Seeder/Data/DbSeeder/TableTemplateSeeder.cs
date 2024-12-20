@@ -10,8 +10,8 @@ namespace Restorator.Seeder.Data.DbSeeder
             {
                 new TableTemplate()
                 {
-                    Rotation = 90,
-
+                    Height = 183,
+                    Width = 183,
                 }
             };
 

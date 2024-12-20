@@ -19,8 +19,6 @@ namespace Restorator.Seeder.Data.DbSeeder
 
             await SeedUsersAsync();
 
-            await SeedTableShapesAsync();
-
             await SeedTableTemplatesAsync();
 
             await SeedRestaurantTemplatesAsync();

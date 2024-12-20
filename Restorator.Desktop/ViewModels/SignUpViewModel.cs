@@ -4,6 +4,8 @@ using Restorator.Desktop.Session;
 using Restorator.Desktop.ViewModels.Abstract;
 using Restorator.Domain.Models;
 using Restorator.Domain.Services;
+using Wpf.Ui;
+using Wpf.Ui.Extensions;
 
 namespace Restorator.Desktop.ViewModels
 {
@@ -11,11 +13,14 @@ namespace Restorator.Desktop.ViewModels
     {
         private readonly IAuthenticationService _authenticationService;
         private readonly ISessionManager _sessionManager;
-
-        public SignUpViewModel(IAuthenticationService authenticationService, ISessionManager sessionManager)
+        private readonly ISnackbarService _snackbarService;
+        public SignUpViewModel(IAuthenticationService authenticationService,
+                               ISessionManager sessionManager,
+                               ISnackbarService snackbarService)
         {
             _authenticationService = authenticationService;
             _sessionManager = sessionManager;
+            _snackbarService = snackbarService;
         }
 
         [ObservableProperty]
@@ -27,19 +32,17 @@ namespace Restorator.Desktop.ViewModels
         [RelayCommand]
         public async Task SignUp()
         {
-            var signInDto = new SignUpDTO()
+            var signUnDto = new SignUpDTO()
             {
                 Login = Login,
                 Password = Password
             };
 
-            var result = await _authenticationService.SignUpAsync(signInDto);
+            var result = await _authenticationService.SignUpAsync(signUnDto);
 
             if (!result)
             {
-                //TODO:
-                //как подгружать view, чтобы родитель получил событие 
-                //привязать окно к навигатору и отправить в дочерку? 
+                _snackbarService.Show("Упс", "У нас не получилось тебя зарегистрировать, попробуй чуть позже", Wpf.Ui.Controls.ControlAppearance.Danger);
 
                 return;
             }
@@ -53,6 +56,8 @@ namespace Restorator.Desktop.ViewModels
             _sessionManager.SetSession(session.SessionInfo!);
 
             Authenticated = true;
+
+            _snackbarService.Show("Добро пожаловать в семью", "Let's celebrate and eat some chick", Wpf.Ui.Controls.ControlAppearance.Success);
         }
     }
 }

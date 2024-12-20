@@ -1,5 +1,8 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using MediatR;
+using Restorator.Desktop.Notifications;
+using Restorator.Desktop.Services;
 using Restorator.Desktop.ViewModels.Abstract;
 using Restorator.Domain.Models;
 using Restorator.Domain.Services;
@@ -8,6 +11,19 @@ namespace Restorator.Desktop.ViewModels
 {
     public partial class RestaurantSearchViewModel : ViewModelBase
     {
+        private readonly IRestaurantService _restaurantService;
+        private readonly INavigationService _navigationService;
+        private readonly IMediator _mediator;
+
+        public RestaurantSearchViewModel(IRestaurantService restaurantService,
+                                         INavigationService navigationService,
+                                         IMediator mediator)
+        {
+            _restaurantService = restaurantService;
+            _navigationService = navigationService;
+            _mediator = mediator;
+        }
+
         [ObservableProperty]
         private IReadOnlyCollection<string> _restaurantNames;
 
@@ -15,19 +31,83 @@ namespace Restorator.Desktop.ViewModels
         private IReadOnlyCollection<RestaurantPreviewDTO> _restaurantsPreview;
 
         [ObservableProperty]
+        private RestaurantPreviewDTO? _selectedRestaurantPreview;
 
-
-        private readonly IRestaurantService _restaurantService;
-        public RestaurantSearchViewModel(IRestaurantService restaurantService)
+        private bool CanOpenRestaurantInfo => SelectedRestaurantPreview != null;
+        [RelayCommand(CanExecute = nameof(CanOpenRestaurantInfo))]
+        public void OpenRestaurantInfo()
         {
-            _restaurantService = restaurantService;
+            //open part and send data
+
+            _mediator.Publish(new RestaurantInfoNoification(SelectedRestaurantPreview!.Id));
         }
 
         [RelayCommand]
         public void SearchRestaurants()
         {
+            RestaurantNames = new List<string>()
+            {
+                "Синабонная Бо Синна"
+            };
 
-            int a = 1;
+            RestaurantsPreview = new List<RestaurantPreviewDTO>()
+            {
+                new RestaurantPreviewDTO
+                {
+                    Id = 1,
+                    Description = "Testsasdddddddddddddddddddddddddddddddddddd",
+                    Name = "Синабонная Бо Синна"
+                },
+                new RestaurantPreviewDTO
+                {
+                    Id = 1,
+                    Description = "Testsasdddddddddddddddddddddddddddddddddddd",
+                    Name = "Синабонная Бо Синна"
+                },
+                new RestaurantPreviewDTO
+                {
+                    Id = 1,
+                    Description = "Testsasdddddddddddddddddddddddddddddddddddd",
+                    Name = "Синабонная Бо Синна"
+                },
+                new RestaurantPreviewDTO
+                {
+                    Id = 1,
+                    Description = "Testsasdddddddddddddddddddddddddddddddddddd",
+                    Name = "Синабонная Бо Синна"
+                },
+                new RestaurantPreviewDTO
+                {
+                    Id = 1,
+                    Description = "Testsasdddddddddddddddddddddddddddddddddddd",
+                    Name = "Синабонная Бо Синна"
+                },
+                new RestaurantPreviewDTO
+                {
+                    Id = 1,
+                    Description = "Testsasdddddddddddddddddddddddddddddddddddd",
+                    Name = "Синабонная Бо Синна"
+                },
+                new RestaurantPreviewDTO
+                {
+                    Id = 1,
+                    Description = "Testsasdddddddddddddddddddddddddddddddddddd",
+                    Name = "Синабонная Бо Синна"
+                },
+                new RestaurantPreviewDTO
+                {
+                    Id = 1,
+                    Description = "Testsasdddddddddddddddddddddddddddddddddddd",
+                    Name = "Синабонная Бо Синна"
+
+                },
+            };
+        }
+
+        [RelayCommand]
+        public void Logout()
+        {
+            //
         }
     }
 }

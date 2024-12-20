@@ -1,4 +1,6 @@
-﻿using Restorator.DataAccess.Data;
+﻿using Microsoft.EntityFrameworkCore;
+using Restorator.Application.Services.Extensions;
+using Restorator.DataAccess.Data;
 using Restorator.Domain.Models;
 using Restorator.Domain.Services;
 
@@ -17,10 +19,15 @@ namespace Restorator.Application.Services
             throw new NotImplementedException();
         }
 
-        public Task<IReadOnlyCollection<RestaurantPreviewDTO>> GetRestaurantPreviews()
+        public async Task<IReadOnlyCollection<RestaurantPreviewDTO>> GetRestaurantPreviews(GetRestaurantsPreviewDTO getRestaurantsPreview)
         {
-
-            return null;
+            return await _context.Restaurants.Select(r => new RestaurantPreviewDTO
+            {
+                Id = r.Id,
+                Name = r.Name,
+                Description = r.Description,
+            }).AsPage(getRestaurantsPreview.CurrentPage, getRestaurantsPreview.PageSize)
+            .ToArrayAsync();
         }
     }
 }

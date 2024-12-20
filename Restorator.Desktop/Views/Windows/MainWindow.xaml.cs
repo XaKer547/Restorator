@@ -3,7 +3,7 @@ using Wpf.Ui;
 using Wpf.Ui.Appearance;
 using Wpf.Ui.Controls;
 
-namespace Restorator.Desktop.Views
+namespace Restorator.Desktop.Views.Windows
 {
     /// <summary>
     /// Interaction logic for MainWindow.xaml

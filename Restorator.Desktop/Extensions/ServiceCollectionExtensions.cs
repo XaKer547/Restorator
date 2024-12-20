@@ -10,6 +10,7 @@ using Restorator.Desktop.ViewModels;
 using Restorator.Desktop.ViewModels.Abstract;
 using Restorator.Desktop.Views;
 using Restorator.Desktop.Views.Pages;
+using Restorator.Desktop.Views.Windows;
 using Restorator.Domain.Services;
 using Wpf.Ui;
 using Wpf.Ui.Abstractions;
@@ -35,6 +36,11 @@ namespace Restorator.Desktop.Extensions
 
             services.AddScoped<IAuthenticationService, AuthenticationService>();
             services.AddScoped<IRestaurantService, RestaurantService>();
+
+            services.AddMediatR(opt =>
+            {
+                opt.RegisterServicesFromAssembly(Assembly.GetExecutingAssembly());
+            });
 
             services.AddDbContext<RestoratorDbContext>(opt =>
             {

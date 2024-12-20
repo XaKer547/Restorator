@@ -8,7 +8,73 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Include="Extensions\FileExtensions.cs" />
+    <None Remove="Resources\100 мест%281%29.png" />
+    <None Remove="Resources\100 мест%282%29.png" />
+    <None Remove="Resources\100 мест%283%29.png" />
+    <None Remove="Resources\100 мест%284%29.png" />
+    <None Remove="Resources\100 мест%285%29.png" />
+    <None Remove="Resources\100+ мест%281%29.png" />
+    <None Remove="Resources\100+ мест%282%29.png" />
+    <None Remove="Resources\100+ мест%283%29.png" />
+    <None Remove="Resources\100+ мест%284%29.png" />
+    <None Remove="Resources\100+ мест%285%29.png" />
+    <None Remove="Resources\20 мест%281%29.png" />
+    <None Remove="Resources\20 мест%282%29.png" />
+    <None Remove="Resources\20 мест%283%29.png" />
+    <None Remove="Resources\20 мест%284%29.png" />
+    <None Remove="Resources\20 мест%285%29.png" />
+    <None Remove="Resources\30 мест%281%29.png" />
+    <None Remove="Resources\30 мест%282%29.png" />
+    <None Remove="Resources\30 мест%283%29.png" />
+    <None Remove="Resources\30 мест%284%29.png" />
+    <None Remove="Resources\30 мест%285%29.png" />
+    <None Remove="Resources\40 мест%281%29.png" />
+    <None Remove="Resources\40 мест%282%29.png" />
+    <None Remove="Resources\40 мест%283%29.png" />
+    <None Remove="Resources\40 мест%284%29.png" />
+    <None Remove="Resources\40 мест%285%29.png" />
+    <None Remove="Resources\50 мест%281%29.png" />
+    <None Remove="Resources\50 мест%282%29.png" />
+    <None Remove="Resources\50 мест%283%29.png" />
+    <None Remove="Resources\50 мест%284%29.png" />
+    <None Remove="Resources\50 мест%285%29.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\100 мест(1).png" />
+    <EmbeddedResource Include="Resources\100 мест(2).png" />
+    <EmbeddedResource Include="Resources\100 мест(3).png" />
+    <EmbeddedResource Include="Resources\100 мест(4).png" />
+    <EmbeddedResource Include="Resources\100 мест(5).png" />
+    <EmbeddedResource Include="Resources\100+ мест(1).png" />
+    <EmbeddedResource Include="Resources\100+ мест(2).png" />
+    <EmbeddedResource Include="Resources\100+ мест(3).png" />
+    <EmbeddedResource Include="Resources\100+ мест(4).png" />
+    <EmbeddedResource Include="Resources\100+ мест(5).png" />
+    <EmbeddedResource Include="Resources\20 мест(1).png" />
+    <EmbeddedResource Include="Resources\20 мест(2).png" />
+    <EmbeddedResource Include="Resources\20 мест(3).png" />
+    <EmbeddedResource Include="Resources\20 мест(4).png" />
+    <EmbeddedResource Include="Resources\20 мест(5).png" />
+    <EmbeddedResource Include="Resources\30 мест(1).png" />
+    <EmbeddedResource Include="Resources\30 мест(2).png" />
+    <EmbeddedResource Include="Resources\30 мест(3).png" />
+    <EmbeddedResource Include="Resources\30 мест(4).png" />
+    <EmbeddedResource Include="Resources\30 мест(5).png" />
+    <EmbeddedResource Include="Resources\40 мест(1).png" />
+    <EmbeddedResource Include="Resources\40 мест(2).png" />
+    <EmbeddedResource Include="Resources\40 мест(3).png" />
+    <EmbeddedResource Include="Resources\40 мест(4).png" />
+    <EmbeddedResource Include="Resources\40 мест(5).png" />
+    <EmbeddedResource Include="Resources\50 мест(1).png" />
+    <EmbeddedResource Include="Resources\50 мест(2).png" />
+    <EmbeddedResource Include="Resources\50 мест(3).png" />
+    <EmbeddedResource Include="Resources\50 мест(4).png" />
+    <EmbeddedResource Include="Resources\50 мест(5).png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="Helpers\EmbeddedResourceHelper.cs" />
   </ItemGroup>
 
   <ItemGroup>

@@ -3,17 +3,15 @@
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-      xmlns:controls="clr-namespace:Restorator.Desktop.Controls"
       xmlns:models="clr-namespace:Restorator.Desktop.Models"
       xmlns:viewmodels="clr-namespace:Restorator.Desktop.ViewModels"
-      xmlns:pages="clr-namespace:Restorator.Desktop.Views.Pages" xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
+      xmlns:pages="clr-namespace:Restorator.Desktop.Views.Pages"
       d:DataContext="{d:DesignInstance {x:Type viewmodels:ReservationViewModel}}"
       mc:Ignorable="d" 
       d:DesignHeight="1526.82" d:DesignWidth="1212.66">
     <Viewbox>
         <DockPanel>
             <ItemsControl ItemsSource="{Binding Tables, Mode=TwoWay}" Width="1212.66" Height="1526.82" HorizontalAlignment="Left">
-                <!--<ItemsControl Width="1212.66" Height="1526.82">-->
                 <ItemsControl.Background>
                     <ImageBrush Stretch="Uniform" ImageSource="C:\Users\a.panfilov\Desktop\templates\20 мест(1).png"/>
                 </ItemsControl.Background>
@@ -28,8 +26,6 @@
                     <Style>
                         <Setter Property="Canvas.Left" Value="{Binding X}"/>
                         <Setter Property="Canvas.Top" Value="{Binding Y}"/>
-                        <!--<Setter Property="Canvas.Left" Value="358.19"/>
-                    <Setter Property="Canvas.Top" Value="39.19"/>-->
                     </Style>
                 </ItemsControl.ItemContainerStyle>
 
@@ -54,18 +50,7 @@
                     </CheckBox>-->
                     </DataTemplate>
                 </ItemsControl.ItemTemplate>
-
-                <!--<ItemsControl.Items>
-            <models:TableModel Width="183" Height="183" X="366.09" Y="592.63"/>
-            
-                <models:TableModel Width="183" Height="183" X="291" Y="112"/>
-            </ItemsControl.Items>-->
             </ItemsControl>
-
-            <DockPanel HorizontalAlignment="Right" VerticalAlignment="Center">
-                <ui:TextBlock Text="Время" VerticalAlignment="Center"/>
-                <controls:TimePicker MinuteInterval="5"/>
-            </DockPanel>
         </DockPanel>
     </Viewbox>
 </Page>

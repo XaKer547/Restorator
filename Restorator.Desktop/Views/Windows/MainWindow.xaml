@@ -1,4 +1,4 @@
-﻿<ui:FluentWindow x:Class="Restorator.Desktop.Views.MainWindow"
+﻿<ui:FluentWindow x:Class="Restorator.Desktop.Views.Windows.MainWindow"
                  xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                  xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
                  xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
@@ -11,9 +11,7 @@
     <Grid>
         <ui:TitleBar/>
 
-        <Frame Name="RootNavigation"  NavigationUIVisibility="Hidden"/>
-
-        <!--<Frame Name="RootNavigation" Grid.Row="1" NavigationUIVisibility="Hidden" Source="{Binding CurrentViewModel}"/>-->
+        <Frame Name="RootNavigation" NavigationUIVisibility="Hidden"/>
 
         <ContentPresenter x:Name="RootContentDialog" />
     </Grid>

@@ -1,7 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Restorator.Desktop.Extensions;
-using Restorator.Desktop.Infrastructure;
-using Restorator.Desktop.Views;
+using Restorator.Desktop.Views.Windows;
 using System.Windows;
 
 namespace Restorator.Desktop

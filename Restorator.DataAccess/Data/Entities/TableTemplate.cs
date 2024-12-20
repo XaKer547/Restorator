@@ -1,6 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
-
-namespace Restorator.DataAccess.Data.Entities
+﻿namespace Restorator.DataAccess.Data.Entities
 {
     /// <summary>
     /// Шаблон стола
@@ -11,9 +9,5 @@ namespace Restorator.DataAccess.Data.Entities
         public float Height { get; set; }
         public float Width { get; set; }
         public int Rotation { get; set; }
-
-        [ForeignKey(nameof(Shape))]
-        public int TableShapeId {  get; set; }
-        public TableShape Shape { get; set; }
     }
 }
