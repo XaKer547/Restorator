@@ -4,7 +4,7 @@
     {
         public static IQueryable<T> AsPage<T>(this IQueryable<T> query, int currentPage, int pageSize)
         {
-            return query.Skip(currentPage * pageSize)
+            return query.Skip((currentPage - 1) * pageSize)
                  .Take(pageSize);
         }
     }

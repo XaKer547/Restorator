@@ -6,6 +6,8 @@ namespace Restorator.DataAccess.Data.Entities
     public class Restaurant
     {
         public int Id { get; set; }
+        public byte[] Image { get; set; }
+        public byte[] MenuImage { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }
 
@@ -18,5 +20,6 @@ namespace Restorator.DataAccess.Data.Entities
         [ForeignKey(nameof(Template))]
         public int TemplateId { get; set; }
         public RestaurantTemplate Template { get; set; }
+        public ICollection<RestaurantTag> Tags { get; set; } = new HashSet<RestaurantTag>();
     }
 }

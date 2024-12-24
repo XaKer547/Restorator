@@ -1,5 +1,4 @@
-﻿using System.Runtime.InteropServices;
-using CommunityToolkit.Mvvm.ComponentModel;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Restorator.Desktop.ViewModels.Abstract;
 using Restorator.Domain.Services;
@@ -8,14 +7,19 @@ using Wpf.Ui.Extensions;
 
 namespace Restorator.Desktop.ViewModels
 {
-    public partial class RestaurantPreviewViewModel : ViewModelBase
+    public partial class RestaurantInfoViewModel : RestaurantViewModelBase
     {
         private readonly IRestaurantService _restaurantService;
         private readonly ISnackbarService _snackbarService;
-        public RestaurantPreviewViewModel(IRestaurantService restaurantService, ISnackbarService snackbarService)
+        private readonly Services.INavigationService _navigationService;
+
+        public RestaurantInfoViewModel(IRestaurantService restaurantService,
+                                       ISnackbarService snackbarService,
+                                       Services.INavigationService navigationService)
         {
             _restaurantService = restaurantService;
             _snackbarService = snackbarService;
+            _navigationService = navigationService;
         }
 
         [ObservableProperty]
@@ -30,7 +34,6 @@ namespace Restorator.Desktop.ViewModels
         [ObservableProperty]
         private TimeOnly endWorkTime;
 
-        [RelayCommand]
         public async Task OpenRestaurantInfo(int restaurantId)
         {
             var result = await _restaurantService.GetRestaurantInfo(restaurantId);
@@ -48,6 +51,12 @@ namespace Restorator.Desktop.ViewModels
             Description = info.Description;
             BeginWorkTime = info.BeginWorkTime;
             EndWorkTime = info.EndWorkTime;
+        }
+
+        [RelayCommand]
+        public void OpenRestaurantReservation()
+        {
+            _navigationService.Navigate<RestaurantReservationViewModel>();
         }
     }
 }

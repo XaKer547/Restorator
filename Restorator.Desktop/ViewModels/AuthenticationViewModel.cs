@@ -23,9 +23,6 @@ namespace Restorator.Desktop.ViewModels
         [ObservableProperty]
         private AuthenticationViewModelBase currentViewModel;
 
-        [ObservableProperty]
-        private byte[] _imageTest;
-
         [RelayCommand]
         public void NavigateToSignUpPage()
         {

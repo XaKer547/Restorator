@@ -1,4 +1,5 @@
 ﻿using Restorator.Desktop.ViewModels.Abstract;
+using System.Globalization;
 using System.Windows;
 using System.Windows.Markup;
 
@@ -29,7 +30,14 @@ namespace Restorator.Desktop.Infrastructure
         {
             resourceDictionary.MergedDictionaries.Add(_resources);
         }
+        public void SetControlsCulture(CultureInfo culture = default)
+        {
+            if (culture == default)
+                culture = CultureInfo.CurrentCulture;
 
+            FrameworkElement.LanguageProperty.OverrideMetadata(typeof(FrameworkElement), new FrameworkPropertyMetadata(
+                XmlLanguage.GetLanguage(culture.IetfLanguageTag)));
+        }
         private static DataTemplate CreateTemplate(Type viewModelType, Type viewType)
         {
             const string xamlTemplate = "<DataTemplate DataType=\"{{x:Type vm:{0}}}\"><v:{1} /></DataTemplate>";

@@ -21,7 +21,7 @@ namespace Restorator.Application.Services
         async Task<Result<SessionInfo>> IAuthenticationService.SignInAsync(SignInDTO signIn)
         {
             var user = await _context.Users.Include(u => u.Role)
-                .SingleOrDefaultAsync(u => u.Password == signIn.Password && u.Login == signIn.Login);
+                .SingleOrDefaultAsync(u => u.Password == AccountPasswordHelper.HashUserPassword(signIn.Password) && u.Login == signIn.Login);
 
             if (user is null)
                 return Result.Fail("Пользователь с такими данными не найден");

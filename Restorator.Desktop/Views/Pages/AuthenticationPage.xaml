@@ -21,7 +21,7 @@
         </Grid>
 
         <Viewbox Grid.Column="1" HorizontalAlignment="Center" Margin="0,48">
-            <StackPanel Cursor="">
+            <StackPanel>
                 <DockPanel>
                     <ui:SymbolIcon Symbol="Mic32" FontSize="38"/>
                     <ui:TextBlock FontTypography="Title" Text="Ресторатор" />

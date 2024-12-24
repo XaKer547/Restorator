@@ -10,6 +10,13 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Events\**" />
+    <EmbeddedResource Remove="Events\**" />
+    <None Remove="Events\**" />
+    <Page Remove="Events\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <None Remove="Resources\RestoratorMain.png" />
   </ItemGroup>
 
@@ -42,10 +49,6 @@
 
   <ItemGroup>
     <ApplicationDefinition Include="Views\App.xaml" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Events\" />
   </ItemGroup>
 
 </Project>

@@ -63,5 +63,14 @@ namespace Restorator.Application.Services
 
             return Result.Ok(info);
         }
+
+        public async Task<IReadOnlyCollection<RestaurantSearchItemDTO>> GetRestaurantNames()
+        {
+            return await _context.Restaurants.Select(r => new RestaurantSearchItemDTO()
+            {
+                Id = r.Id,
+                Name = r.Name,
+            }).ToArrayAsync();
+        }
     }
 }

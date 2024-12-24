@@ -14,6 +14,6 @@ namespace Restorator.Desktop.Models
 
         public float Height { get; set; }
         public float Width { get; set; }
-        public float Rotation { get; set; } = 0;
+        public double Rotation { get; set; } = 0;
     }
 }

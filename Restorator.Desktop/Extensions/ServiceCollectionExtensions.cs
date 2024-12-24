@@ -35,6 +35,7 @@ namespace Restorator.Desktop.Extensions
 
             services.AddScoped<IAuthenticationService, AuthenticationService>();
             services.AddScoped<IRestaurantService, RestaurantService>();
+            services.AddScoped<IReservationService, ReservationService>();
 
             services.AddMediatR(opt =>
             {
@@ -56,13 +57,17 @@ namespace Restorator.Desktop.Extensions
 
             services.AddSingleton<MainWindowViewModel>();
 
+            services.AddSingleton<RestaurantSearchViewModel>();
+
             var manager = new DataTemplateManager()
                 .RegisterDataTemplate<AuthenticationViewModel, AuthenticationPage>()
                 .RegisterDataTemplate<SignInViewModel, SignInControl>()
                 .RegisterDataTemplate<SignUpViewModel, SignUpControl>()
-                .RegisterDataTemplate<RestaurantPreviewViewModel, RestaurantPreviewControl>()
-                .RegisterDataTemplate<ReservationViewModel, ReservationPage>()
+                .RegisterDataTemplate<RestaurantInfoViewModel, RestaurantInfoControl>()
+                //.RegisterDataTemplate<RestaurantReservationViewModel, ReservationContentDialog>()
                 .RegisterDataTemplate<RestaurantSearchViewModel, RestaurantSearchPage>();
+
+            manager.SetControlsCulture();
 
             var assembly = Assembly.GetExecutingAssembly();
 
@@ -86,7 +91,7 @@ namespace Restorator.Desktop.Extensions
                     .GetTypes()
                     .Where(x =>
                         x.IsClass
-                        && x.Namespace!.StartsWith(namespaceName, StringComparison.InvariantCultureIgnoreCase)
+                        && (x.Namespace?.StartsWith(namespaceName, StringComparison.InvariantCultureIgnoreCase) ?? false)
                     );
 
                 foreach (Type? type in types)

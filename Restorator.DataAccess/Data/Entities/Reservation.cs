@@ -8,5 +8,6 @@
         public Table Table { get; set; }
         public DateTime ReservationStart { get; set; }
         public DateTime ReservationEnd { get; set; }
+        public bool Canceled { get; set; }
     }
 }
