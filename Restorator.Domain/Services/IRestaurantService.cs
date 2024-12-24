@@ -1,10 +1,13 @@
-﻿using Restorator.Domain.Models;
+﻿using FluentResults;
+using Restorator.Domain.Models;
 
 namespace Restorator.Domain.Services
 {
     public interface IRestaurantService
     {
-        Task CreateRestaurant(CreateRestaurantDTO createRestaurant);
+        Task<Result> CreateRestaurant(CreateRestaurantDTO createRestaurant);
+        Task<Result<RestaurantInfoDTO>> GetRestaurantInfo(int restaurantId);
+
         Task<IReadOnlyCollection<RestaurantPreviewDTO>> GetRestaurantPreviews(GetRestaurantsPreviewDTO getRestaurantsPreview);
     }
 }

@@ -8,7 +8,6 @@ using Restorator.Desktop.Infrastructure;
 using Restorator.Desktop.Session;
 using Restorator.Desktop.ViewModels;
 using Restorator.Desktop.ViewModels.Abstract;
-using Restorator.Desktop.Views;
 using Restorator.Desktop.Views.Pages;
 using Restorator.Desktop.Views.Windows;
 using Restorator.Domain.Services;
@@ -44,7 +43,8 @@ namespace Restorator.Desktop.Extensions
 
             services.AddDbContext<RestoratorDbContext>(opt =>
             {
-                opt.UseSqlServer("Server=b2-225-002\\SQLEXPRESS;Database=Restorator;TrustServerCertificate=true;Trusted_connection=true");
+                opt.UseSqlServer("Server=DESKTOP-F1TRK20\\SQLEXPRESS;Database=Restorator;TrustServerCertificate=true;Trusted_connection=true");
+                //opt.UseSqlServer("Server=b2-225-002\\SQLEXPRESS;Database=Restorator;TrustServerCertificate=true;Trusted_connection=true");
             });
 
             return services;
@@ -60,6 +60,7 @@ namespace Restorator.Desktop.Extensions
                 .RegisterDataTemplate<AuthenticationViewModel, AuthenticationPage>()
                 .RegisterDataTemplate<SignInViewModel, SignInControl>()
                 .RegisterDataTemplate<SignUpViewModel, SignUpControl>()
+                .RegisterDataTemplate<RestaurantPreviewViewModel, RestaurantPreviewControl>()
                 .RegisterDataTemplate<ReservationViewModel, ReservationPage>()
                 .RegisterDataTemplate<RestaurantSearchViewModel, RestaurantSearchPage>();
 

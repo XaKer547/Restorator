@@ -9,7 +9,6 @@ namespace Restorator.DataAccess.Data
 
         public DbSet<Role> Roles => Set<Role>();
         public DbSet<User> Users => Set<User>();
-        public DbSet<Account> Accounts => Set<Account>();
         public DbSet<Reservation> Reservations => Set<Reservation>();
         public DbSet<Restaurant> Restaurants => Set<Restaurant>();
         public DbSet<RestaurantTemplate> RestaurantTemplates => Set<RestaurantTemplate>();

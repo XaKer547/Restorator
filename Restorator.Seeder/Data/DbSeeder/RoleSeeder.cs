@@ -1,4 +1,4 @@
-﻿using Restorator.DataAccess.Data.Entities;
+﻿using Restorator.DataAccess.Data.Entities.Enums;
 
 namespace Restorator.Seeder.Data.DbSeeder
 {
@@ -9,19 +9,9 @@ namespace Restorator.Seeder.Data.DbSeeder
             if (_context.Roles.Any())
                 return;
 
-            var roles = new List<Role>()
-            {
-                new()
-                {
-                    Name = "Клиент",
-                },
-                new()
-                {
-                    Name = "Администратор"
-                }
-            };
-
-            _context.Roles.AddRange(roles);
+            Enum.GetValues<Roles>()
+                .ToList()
+                .ForEach(instance => _context.Roles.Add(instance));
 
             await _context.SaveChangesAsync();
         }

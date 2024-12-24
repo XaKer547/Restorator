@@ -18,53 +18,50 @@
 
         <DockPanel>
             <!--SuggestionChosen="" TextChanged=""-->
-            <ui:AutoSuggestBox PlaceholderText="Введите название ресторана" OriginalItemsSource="{Binding RestaurantNames}" >
+            <ui:AutoSuggestBox PlaceholderText="Введите название ресторана" OriginalItemsSource="{Binding RestaurantNames}">
                 <i:Interaction.Triggers>
-                    <i:EventTrigger EventName="Loaded">
+                    <i:EventTrigger EventName="SuggestionChosen">
                         <i:InvokeCommandAction Command="{Binding SearchRestaurantsCommand}"/>
                     </i:EventTrigger>
                 </i:Interaction.Triggers>
             </ui:AutoSuggestBox>
         </DockPanel>
 
-        <Grid Grid.Row="1">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Name="itemsPart"/>
-                <ColumnDefinition Width="5*"/>
-            </Grid.ColumnDefinitions>
+        <DockPanel Grid.Row="1">
+            <ListBox ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                                 ItemsSource="{Binding RestaurantsPreview}" 
+                                 SelectedItem="{Binding SelectedRestaurantPreview}">
+                <ListBox.ItemTemplate>
+                    <DataTemplate>
+                        <StackPanel>
+                            <ui:TextBlock Text="{Binding Name}" FontTypography="Subtitle" />
+                            <ui:TextBlock Text="{Binding Description}" FontTypography="Body" TextTrimming="CharacterEllipsis" />
+                        </StackPanel>
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
 
-            <ui:NavigationView x:Name="navigation" Grid.ColumnSpan="2"
-                               CompactPaneLength="{Binding ElementName=itemsPart, Path=ActualWidth, UpdateSourceTrigger=PropertyChanged}">
+                <i:Interaction.Triggers>
+                    <i:EventTrigger EventName="SelectionChanged">
+                        <i:InvokeCommandAction Command="{Binding OpenRestaurantInfoCommand}"/>
+                    </i:EventTrigger>
+                </i:Interaction.Triggers>
+            </ListBox>
+
+            <ContentPresenter Content="{Binding SelectedRestaurant}"/>
+
+            <!--<ui:NavigationView x:Name="navigation" Grid.ColumnSpan="2">
                 <ui:NavigationView.MenuItems>
                     <DockPanel>
-                        <ListBox ScrollViewer.HorizontalScrollBarVisibility="Disabled" 
-                         ItemsSource="{Binding RestaurantsPreview}" 
-                         SelectedItem="{Binding SelectedRestaurantPreview}">
-                            <ListBox.ItemTemplate>
-                                <DataTemplate>
-                                    <StackPanel>
-                                        <ui:TextBlock Text="{Binding Name}" FontTypography="Subtitle" />
-                                        <ui:TextBlock Text="{Binding Description}" FontTypography="Body" />
-                                    </StackPanel>
-                                </DataTemplate>
-                            </ListBox.ItemTemplate>
-
-                            <i:Interaction.Triggers>
-                                <i:EventTrigger EventName="SelectionChanged">
-                                    <i:InvokeCommandAction Command="{Binding OpenRestaurantInfoCommand}"/>
-                                </i:EventTrigger>
-                            </i:Interaction.Triggers>
-                        </ListBox>
                     </DockPanel>
                 </ui:NavigationView.MenuItems>
                 <ui:NavigationView.FooterMenuItems>
                     <ui:NavigationViewItem
-                    Content="Выйти"
-                    Icon="{ui:SymbolIcon DoorArrowLeft20}"
-                    Command="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type windows:MainWindow}}, Path=DataContext.NavigateToAuthenticationCommand}"/>
+                        Content="Выйти"
+                        Icon="{ui:SymbolIcon DoorArrowLeft20}"
+                        Command="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type windows:MainWindow}}, Path=DataContext.NavigateToAuthenticationCommand}"/>
                 </ui:NavigationView.FooterMenuItems>
-            </ui:NavigationView>
-        </Grid>
+            </ui:NavigationView>-->
+        </DockPanel>
     </Grid>
 
     <i:Interaction.Triggers>

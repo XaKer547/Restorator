@@ -40,9 +40,12 @@ namespace Restorator.Desktop.ViewModels
 
             var result = await _authenticationService.SignUpAsync(signUnDto);
 
-            if (!result)
+            if (result.IsFailed)
             {
-                _snackbarService.Show("Упс", "У нас не получилось тебя зарегистрировать, попробуй чуть позже", Wpf.Ui.Controls.ControlAppearance.Danger);
+                if (result.Errors.Count != 0)
+                    _snackbarService.Show("Упс", result.Errors.First().Message, Wpf.Ui.Controls.ControlAppearance.Danger);
+                else
+                    _snackbarService.Show("Упс", "У нас не получилось тебя зарегистрировать, попробуй чуть позже", Wpf.Ui.Controls.ControlAppearance.Danger);
 
                 return;
             }
@@ -53,7 +56,7 @@ namespace Restorator.Desktop.ViewModels
                 Password = Password
             });
 
-            _sessionManager.SetSession(session.SessionInfo!);
+            _sessionManager.SetSession(session.Value);
 
             Authenticated = true;
 

@@ -1,4 +1,6 @@
 ﻿using Restorator.DataAccess.Data.Entities;
+using Restorator.DataAccess.Data.Entities.Enums;
+using Restorator.DataAccess.Extensions;
 using Restorator.DataAccess.Helpers;
 
 namespace Restorator.Seeder.Data.DbSeeder
@@ -7,27 +9,24 @@ namespace Restorator.Seeder.Data.DbSeeder
     {
         private async Task SeedUsersAsync()
         {
+            if (_context.Users.Any())
+                return;
+
             var users = new List<User>()
             {
                 new()
                 {
-                    RoleId = 1,
+                    Role = _context.Roles.FromEnum(Roles.User),
                     Username = "Шелкопряд Тутовый",
-                    Account = new Account()
-                    {
-                        Login = "Silk",
-                        Password = AccountPasswordHelper.HashUserPassword("MasterPassword")
-                    },
+                    Login = "Silk",
+                    Password = AccountPasswordHelper.HashUserPassword("MasterPassword")
                 },
                 new()
                 {
-                    RoleId = 2,
+                    Role = _context.Roles.FromEnum(Roles.Admin),
                     Username = "Cool adm",
-                    Account = new Account()
-                    {
-                        Login = "admin",
-                        Password = AccountPasswordHelper.HashUserPassword("admin")
-                    }
+                    Login = "admin",
+                    Password = AccountPasswordHelper.HashUserPassword("admin")
                 }
             };
 

@@ -42,14 +42,14 @@ namespace Restorator.Desktop.ViewModels
 
             var result = await _authenticationService.SignInAsync(signInDto);
 
-            if (!result.Success)
+            if (!result.IsSuccess)
             {
                 _snackbarService.Show("Ой-ой", "Кажется такого пользователя нет", Wpf.Ui.Controls.ControlAppearance.Danger);
 
                 return;
             }
 
-            _sessionManager.SetSession(result.SessionInfo!);
+            _sessionManager.SetSession(result.Value!);
 
             Authenticated = true;
 

@@ -1,20 +1,19 @@
-﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
+using Microsoft.EntityFrameworkCore;
 using Restorator.DataAccess.Data;
-using Restorator.Seeder.Helpers;
+using Restorator.Seeder.Data.DbSeeder;
+using Restorator.Seeder.HostedServices;
 
-internal class Program
+var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.AddDbContext<RestoratorDbContext>(opt =>
 {
-    private readonly RestoratorDbContext _context = _provider.GetRequiredService<RestoratorDbContext>();
-    private static void Main()
-    {
-        var a = EmbeddedResourceHelper.GetByteArrayFromResource("20 мест(1).png");
-    }
+    opt.UseSqlServer(builder.Configuration.GetConnectionString("Home"));
+});
 
-    private static readonly IServiceProvider _provider = new ServiceCollection()
-        .AddDbContext<RestoratorDbContext>(opt =>
-        {
-            opt.UseSqlServer("Server=b2-225-002\\SQLEXPRESS;Database=Restorator;TrustServerCertificate=true;Trusted_connection=true");
-        })
-        .BuildServiceProvider();
-}
+builder.Services.AddScoped<IDbSeeder, RestoratorDbSeeder>();
+
+builder.Services.AddHostedService<DbSeederService>();
+
+var app = builder.Build();
+
+app.Run();

@@ -1,5 +1,10 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using FluentResults;
+using Microsoft.EntityFrameworkCore;
 using Restorator.DataAccess.Data;
+using Restorator.DataAccess.Data.Entities;
+using Restorator.DataAccess.Data.Entities.Enums;
+using Restorator.DataAccess.Extensions;
+using Restorator.DataAccess.Helpers;
 using Restorator.Domain.Models;
 using Restorator.Domain.Services;
 
@@ -7,35 +12,43 @@ namespace Restorator.Application.Services
 {
     public class AuthenticationService : IAuthenticationService
     {
-        //private readonly RestoratorDbContext _context;
-        public AuthenticationService(/*RestoratorDbContext context*/)
+        private readonly RestoratorDbContext _context;
+        public AuthenticationService(RestoratorDbContext context)
         {
-            //_context = context;
+            _context = context;
         }
 
-        public async Task<AuthorizationResult> SignInAsync(SignInDTO signIn)
+        async Task<Result<SessionInfo>> IAuthenticationService.SignInAsync(SignInDTO signIn)
         {
-            //    var user = await _context.Users.Include(u => u.Role)
-            //        .Where(u => u.Account.Password == signIn.Password && u.Account.Login == signIn.Login)
-            //        .SingleOrDefaultAsync();
+            var user = await _context.Users.Include(u => u.Role)
+                .SingleOrDefaultAsync(u => u.Password == signIn.Password && u.Login == signIn.Login);
 
-            //    if (user is null)
-            return new AuthorizationResult()
+            if (user is null)
+                return Result.Fail("Пользователь с такими данными не найден");
+
+            var sessionInfo = new SessionInfo(user.Id, user.Username, user.Role.Name);
+
+            return Result.Ok(sessionInfo);
+        }
+
+        async Task<Result> IAuthenticationService.SignUpAsync(SignUpDTO signUp)
+        {
+            if (_context.Users.Any(u => u.Login == signUp.Login))
+                return Result.Fail("Такой логин занят");
+
+            var user = new User()
             {
-                Error = "Пользователь с такими данными не найден"
+                Login = signUp.Login,
+                Username = signUp.Username,
+                Role = _context.Roles.FromEnum(Roles.User),
+                Password = AccountPasswordHelper.HashUserPassword(signUp.Password),
             };
 
-            //var sessionInfo = new SessionInfo(user.Id, user.Username, user.Role.Name);
+            _context.Users.Add(user);
 
-            //return new AuthorizationResult()
-            //{
-            //    SessionInfo = sessionInfo,
-            //};
-        }
+            await _context.SaveChangesAsync();
 
-        public Task<bool> SignUpAsync(SignUpDTO signUp)
-        {
-            return Task.FromResult(true);
+            return Result.Ok();
         }
     }
 }

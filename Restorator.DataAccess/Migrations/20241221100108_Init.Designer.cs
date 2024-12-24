@@ -12,7 +12,7 @@ using Restorator.DataAccess.Data;
 namespace Restorator.DataAccess.Migrations
 {
     [DbContext(typeof(RestoratorDbContext))]
-    [Migration("20241217144913_Init")]
+    [Migration("20241221100108_Init")]
     partial class Init
     {
         /// <inheritdoc />
@@ -25,27 +25,6 @@ namespace Restorator.DataAccess.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("Restorator.DataAccess.Data.Entities.Account", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("Login")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Password")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Accounts");
-                });
-
             modelBuilder.Entity("Restorator.DataAccess.Data.Entities.Reservation", b =>
                 {
                     b.Property<int>("Id")
@@ -54,7 +33,10 @@ namespace Restorator.DataAccess.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<DateTime>("ReservationDateTime")
+                    b.Property<DateTime>("ReservationEnd")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("ReservationStart")
                         .HasColumnType("datetime2");
 
                     b.Property<int>("RestaurantId")
@@ -129,18 +111,21 @@ namespace Restorator.DataAccess.Migrations
             modelBuilder.Entity("Restorator.DataAccess.Data.Entities.Role", b =>
                 {
                     b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
 
                     b.HasKey("Id");
 
-                    b.ToTable("Role");
+                    b.ToTable("Roles");
                 });
 
             modelBuilder.Entity("Restorator.DataAccess.Data.Entities.Table", b =>
@@ -154,7 +139,7 @@ namespace Restorator.DataAccess.Migrations
                     b.Property<int?>("RestaurantTemplateId")
                         .HasColumnType("int");
 
-                    b.Property<int>("TemplateId")
+                    b.Property<int>("TableTemplateId")
                         .HasColumnType("int");
 
                     b.Property<float>("X")
@@ -167,26 +152,9 @@ namespace Restorator.DataAccess.Migrations
 
                     b.HasIndex("RestaurantTemplateId");
 
-                    b.HasIndex("TemplateId");
+                    b.HasIndex("TableTemplateId");
 
                     b.ToTable("Tables");
-                });
-
-            modelBuilder.Entity("Restorator.DataAccess.Data.Entities.TableShape", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("TableShape");
                 });
 
             modelBuilder.Entity("Restorator.DataAccess.Data.Entities.TableTemplate", b =>
@@ -203,15 +171,10 @@ namespace Restorator.DataAccess.Migrations
                     b.Property<int>("Rotation")
                         .HasColumnType("int");
 
-                    b.Property<int>("ShapeId")
-                        .HasColumnType("int");
-
                     b.Property<float>("Width")
                         .HasColumnType("real");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("ShapeId");
 
                     b.ToTable("TableTemplates");
                 });
@@ -224,8 +187,13 @@ namespace Restorator.DataAccess.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int>("AccountId")
-                        .HasColumnType("int");
+                    b.Property<string>("Login")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Password")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("RoleId")
                         .HasColumnType("int");
@@ -235,8 +203,6 @@ namespace Restorator.DataAccess.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("AccountId");
 
                     b.HasIndex("RoleId");
 
@@ -289,39 +255,20 @@ namespace Restorator.DataAccess.Migrations
 
                     b.HasOne("Restorator.DataAccess.Data.Entities.TableTemplate", "Template")
                         .WithMany()
-                        .HasForeignKey("TemplateId")
+                        .HasForeignKey("TableTemplateId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Template");
                 });
 
-            modelBuilder.Entity("Restorator.DataAccess.Data.Entities.TableTemplate", b =>
-                {
-                    b.HasOne("Restorator.DataAccess.Data.Entities.TableShape", "Shape")
-                        .WithMany()
-                        .HasForeignKey("ShapeId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Shape");
-                });
-
             modelBuilder.Entity("Restorator.DataAccess.Data.Entities.User", b =>
                 {
-                    b.HasOne("Restorator.DataAccess.Data.Entities.Account", "Account")
-                        .WithMany()
-                        .HasForeignKey("AccountId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("Restorator.DataAccess.Data.Entities.Role", "Role")
                         .WithMany("Users")
                         .HasForeignKey("RoleId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.Navigation("Account");
 
                     b.Navigation("Role");
                 });

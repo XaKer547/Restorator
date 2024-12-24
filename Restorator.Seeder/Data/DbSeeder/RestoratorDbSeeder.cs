@@ -3,7 +3,7 @@ using Restorator.DataAccess.Data;
 
 namespace Restorator.Seeder.Data.DbSeeder
 {
-    public partial class RestoratorDbSeeder
+    public partial class RestoratorDbSeeder : IDbSeeder
     {
         private readonly RestoratorDbContext _context;
         public RestoratorDbSeeder(RestoratorDbContext context)
@@ -27,31 +27,8 @@ namespace Restorator.Seeder.Data.DbSeeder
         }
     }
 
-    public partial class RestoratorDbSeeder
+    public interface IDbSeeder
     {
-        private async Task SeedRestaurantsAsync()
-        {
-
-        }
-    }
-
-
-    public partial class RestoratorDbSeeder
-    {
-        private async Task SeedReservationsAsync()
-        {
-
-        }
-
-
-    }
-
-
-    public partial class RestoratorDbSeeder
-    {
-        private async Task SeedAccountAsync()
-        {
-
-        }
+        Task SeedAsync();
     }
 }

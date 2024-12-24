@@ -17,12 +17,15 @@ namespace Restorator.Desktop.ViewModels
 
         public RestaurantSearchViewModel(IRestaurantService restaurantService,
                                          INavigationService navigationService,
-                                         IMediator mediator)
+                                         IMediator mediator,
+                                         RestaurantPreviewViewModel restaurantPreview)
         {
             _restaurantService = restaurantService;
             _navigationService = navigationService;
             _mediator = mediator;
+            RestaurantPreview = restaurantPreview;
         }
+
 
         [ObservableProperty]
         private IReadOnlyCollection<string> _restaurantNames;
@@ -33,13 +36,15 @@ namespace Restorator.Desktop.ViewModels
         [ObservableProperty]
         private RestaurantPreviewDTO? _selectedRestaurantPreview;
 
-        private bool CanOpenRestaurantInfo => SelectedRestaurantPreview != null;
-        [RelayCommand(CanExecute = nameof(CanOpenRestaurantInfo))]
-        public void OpenRestaurantInfo()
-        {
-            //open part and send data
+        [ObservableProperty]
+        private RestaurantPreviewViewModel restaurantPreview;
 
-            _mediator.Publish(new RestaurantInfoNoification(SelectedRestaurantPreview!.Id));
+
+        private bool CanOpenRestaurantInfo => SelectedRestaurantPreview != null;
+        [RelayCommand(CanExecute = nameof(CanOpenRestaurantInfo), AllowConcurrentExecutions = false)]
+        public async Task OpenRestaurantInfo()
+        {
+            await RestaurantPreview.OpenRestaurantInfo(SelectedRestaurantPreview!.Id);
         }
 
         [RelayCommand]
@@ -47,7 +52,10 @@ namespace Restorator.Desktop.ViewModels
         {
             RestaurantNames = new List<string>()
             {
-                "Синабонная Бо Синна"
+                "Синабонная Бо Синна",
+                "Дорсия",
+                "Под котлами",
+                "Павлин-Мавлин"
             };
 
             RestaurantsPreview = new List<RestaurantPreviewDTO>()
@@ -55,51 +63,14 @@ namespace Restorator.Desktop.ViewModels
                 new RestaurantPreviewDTO
                 {
                     Id = 1,
-                    Description = "Testsasdddddddddddddddddddddddddddddddddddd",
-                    Name = "Синабонная Бо Синна"
+                    Name = "Синабонная Бо Синна",
+                    Description = "Погрузитесь в мир сладких грез и пряных ароматов в “Синабонной Бо Синна”, где каждый ролл создан с душой и любовью, вдохновлённый самим Бо Синна! Здесь каждое блюдо — это произведение кулинарного искусства, приготовленное с заботой о ваших вкусовых рецепторах. Мы специализируемся на классических и авторских синабонах, приготовленных из нежнейшего теста, щедро сдобренных ароматной корицей и сливочным кремом, в точности как это делал сам маэстро.",
                 },
                 new RestaurantPreviewDTO
                 {
-                    Id = 1,
-                    Description = "Testsasdddddddddddddddddddddddddddddddddddd",
-                    Name = "Синабонная Бо Синна"
-                },
-                new RestaurantPreviewDTO
-                {
-                    Id = 1,
-                    Description = "Testsasdddddddddddddddddddddddddddddddddddd",
-                    Name = "Синабонная Бо Синна"
-                },
-                new RestaurantPreviewDTO
-                {
-                    Id = 1,
-                    Description = "Testsasdddddddddddddddddddddddddddddddddddd",
-                    Name = "Синабонная Бо Синна"
-                },
-                new RestaurantPreviewDTO
-                {
-                    Id = 1,
-                    Description = "Testsasdddddddddddddddddddddddddddddddddddd",
-                    Name = "Синабонная Бо Синна"
-                },
-                new RestaurantPreviewDTO
-                {
-                    Id = 1,
-                    Description = "Testsasdddddddddddddddddddddddddddddddddddd",
-                    Name = "Синабонная Бо Синна"
-                },
-                new RestaurantPreviewDTO
-                {
-                    Id = 1,
-                    Description = "Testsasdddddddddddddddddddddddddddddddddddd",
-                    Name = "Синабонная Бо Синна"
-                },
-                new RestaurantPreviewDTO
-                {
-                    Id = 1,
-                    Description = "Testsasdddddddddddddddddddddddddddddddddddd",
-                    Name = "Синабонная Бо Синна"
-
+                    Id = 2,
+                    Name = "Дорсия",
+                    Description = "“Дорсия” – это не просто ресторан, это воплощение изысканности, амбиций и безупречного вкуса, место, где каждый вечер становится спектаклем. За этими стенами, среди приглушенного света и безукоризненного сервиса, не раз проводил свои вечера сам Патрик Бейтман. Здесь царит атмосфера утонченной роскоши, где каждый элемент – от хрустальных бокалов до минималистичных картин на стенах – тщательно отобран, чтобы создать идеальную сцену для наслаждения высокой кухней. Приходите и вы, чтобы почувствовать себя настоящим сигмой!",
                 },
             };
         }

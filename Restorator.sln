@@ -11,7 +11,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Restorator.Domain", "Restor
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Restorator.Application", "Restorator.Application\Restorator.Application.csproj", "{C9E5C8AD-6001-4329-A168-32C4EE63C02D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Restorator.Seeder", "Restorator.Seeder\Restorator.Seeder.csproj", "{34D1070C-1BDD-451B-A2C8-718D41F92897}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Restorator.Seeder", "Restorator.Seeder\Restorator.Seeder.csproj", "{B2D5332A-0A86-4792-AD0F-C9604AA34EF8}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -35,10 +35,10 @@ Global
 		{C9E5C8AD-6001-4329-A168-32C4EE63C02D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C9E5C8AD-6001-4329-A168-32C4EE63C02D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C9E5C8AD-6001-4329-A168-32C4EE63C02D}.Release|Any CPU.Build.0 = Release|Any CPU
-		{34D1070C-1BDD-451B-A2C8-718D41F92897}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{34D1070C-1BDD-451B-A2C8-718D41F92897}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{34D1070C-1BDD-451B-A2C8-718D41F92897}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{34D1070C-1BDD-451B-A2C8-718D41F92897}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B2D5332A-0A86-4792-AD0F-C9604AA34EF8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B2D5332A-0A86-4792-AD0F-C9604AA34EF8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B2D5332A-0A86-4792-AD0F-C9604AA34EF8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B2D5332A-0A86-4792-AD0F-C9604AA34EF8}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

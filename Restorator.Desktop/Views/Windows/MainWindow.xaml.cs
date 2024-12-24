@@ -12,7 +12,8 @@ namespace Restorator.Desktop.Views.Windows
     {
         public MainWindow(MainWindowViewModel viewModel,
             Services.INavigationService navigationService,
-            IContentDialogService contentDialogService)
+            IContentDialogService contentDialogService,
+            ISnackbarService snackbarService)
         {
             SystemThemeWatcher.Watch(this);
 
@@ -22,6 +23,7 @@ namespace Restorator.Desktop.Views.Windows
 
             navigationService.SetNavigationControl(RootNavigation);
             contentDialogService.SetDialogHost(RootContentDialog);
+            snackbarService.SetSnackbarPresenter(SnackbarPresenter);
 
             navigationService.Navigate<RestaurantSearchViewModel>();
         }

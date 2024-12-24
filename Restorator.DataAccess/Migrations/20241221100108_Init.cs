@@ -12,20 +12,6 @@ namespace Restorator.DataAccess.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
-                name: "Accounts",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Login = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Password = table.Column<string>(type: "nvarchar(max)", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Accounts", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "RestaurantTemplates",
                 columns: table => new
                 {
@@ -39,29 +25,31 @@ namespace Restorator.DataAccess.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Role",
+                name: "Roles",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    Id = table.Column<int>(type: "int", nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
+                    Description = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Role", x => x.Id);
+                    table.PrimaryKey("PK_Roles", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
-                name: "TableShape",
+                name: "TableTemplates",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    Height = table.Column<float>(type: "real", nullable: false),
+                    Width = table.Column<float>(type: "real", nullable: false),
+                    Rotation = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_TableShape", x => x.Id);
+                    table.PrimaryKey("PK_TableTemplates", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -93,45 +81,18 @@ namespace Restorator.DataAccess.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    AccountId = table.Column<int>(type: "int", nullable: false),
-                    RoleId = table.Column<int>(type: "int", nullable: false),
-                    Username = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    Username = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Login = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Password = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    RoleId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Users", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Users_Accounts_AccountId",
-                        column: x => x.AccountId,
-                        principalTable: "Accounts",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_Users_Role_RoleId",
+                        name: "FK_Users_Roles_RoleId",
                         column: x => x.RoleId,
-                        principalTable: "Role",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "TableTemplates",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Height = table.Column<float>(type: "real", nullable: false),
-                    Width = table.Column<float>(type: "real", nullable: false),
-                    Rotation = table.Column<int>(type: "int", nullable: false),
-                    ShapeId = table.Column<int>(type: "int", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_TableTemplates", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_TableTemplates_TableShape_ShapeId",
-                        column: x => x.ShapeId,
-                        principalTable: "TableShape",
+                        principalTable: "Roles",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -142,7 +103,7 @@ namespace Restorator.DataAccess.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    TemplateId = table.Column<int>(type: "int", nullable: false),
+                    TableTemplateId = table.Column<int>(type: "int", nullable: false),
                     X = table.Column<float>(type: "real", nullable: false),
                     Y = table.Column<float>(type: "real", nullable: false),
                     RestaurantTemplateId = table.Column<int>(type: "int", nullable: true)
@@ -156,8 +117,8 @@ namespace Restorator.DataAccess.Migrations
                         principalTable: "RestaurantTemplates",
                         principalColumn: "Id");
                     table.ForeignKey(
-                        name: "FK_Tables_TableTemplates_TemplateId",
-                        column: x => x.TemplateId,
+                        name: "FK_Tables_TableTemplates_TableTemplateId",
+                        column: x => x.TableTemplateId,
                         principalTable: "TableTemplates",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
@@ -172,7 +133,8 @@ namespace Restorator.DataAccess.Migrations
                     UserId = table.Column<int>(type: "int", nullable: false),
                     RestaurantId = table.Column<int>(type: "int", nullable: false),
                     TableId = table.Column<int>(type: "int", nullable: false),
-                    ReservationDateTime = table.Column<DateTime>(type: "datetime2", nullable: false)
+                    ReservationStart = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    ReservationEnd = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -223,19 +185,9 @@ namespace Restorator.DataAccess.Migrations
                 column: "RestaurantTemplateId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Tables_TemplateId",
+                name: "IX_Tables_TableTemplateId",
                 table: "Tables",
-                column: "TemplateId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_TableTemplates_ShapeId",
-                table: "TableTemplates",
-                column: "ShapeId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Users_AccountId",
-                table: "Users",
-                column: "AccountId");
+                column: "TableTemplateId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Users_RoleId",
@@ -265,13 +217,7 @@ namespace Restorator.DataAccess.Migrations
                 name: "TableTemplates");
 
             migrationBuilder.DropTable(
-                name: "Accounts");
-
-            migrationBuilder.DropTable(
-                name: "Role");
-
-            migrationBuilder.DropTable(
-                name: "TableShape");
+                name: "Roles");
         }
     }
 }

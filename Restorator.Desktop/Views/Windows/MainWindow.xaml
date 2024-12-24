@@ -14,5 +14,6 @@
         <Frame Name="RootNavigation" NavigationUIVisibility="Hidden"/>
 
         <ContentPresenter x:Name="RootContentDialog" />
+        <ui:SnackbarPresenter x:Name="SnackbarPresenter"/>
     </Grid>
 </ui:FluentWindow>

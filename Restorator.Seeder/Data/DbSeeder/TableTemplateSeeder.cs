@@ -6,6 +6,9 @@ namespace Restorator.Seeder.Data.DbSeeder
     {
         private async Task SeedTableTemplatesAsync()
         {
+            if (_context.TableTemplates.Any())
+                return;
+
             var templates = new List<TableTemplate>()
             {
                 new TableTemplate()

@@ -7,6 +7,9 @@ namespace Restorator.Seeder.Data.DbSeeder
     {
         private async Task SeedRestaurantTemplatesAsync()
         {
+            if (_context.RestaurantTemplates.Any())
+                return;
+
             var templates = new List<RestaurantTemplate>()
             {
                 new RestaurantTemplate
@@ -21,12 +24,12 @@ namespace Restorator.Seeder.Data.DbSeeder
                             Y = 592.63F,
                         }
                     }
-
-
-
-
                 }
             };
+
+            _context.RestaurantTemplates.AddRange(templates);
+
+            await _context.SaveChangesAsync();
         }
     }
 }
