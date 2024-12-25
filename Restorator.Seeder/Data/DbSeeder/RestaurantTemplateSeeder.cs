@@ -14,7 +14,7 @@ namespace Restorator.Seeder.Data.DbSeeder
             {
                 new RestaurantTemplate
                 {
-                    Image = EmbeddedResourceHelper.GetByteArrayFromResource("20 мест(1).png"),
+                    Image = EmbeddedResourceHelper.GetRestaurantPlan("20 мест(1)"),
                     Tables = new List<Table>()
                     {
                         new Table()

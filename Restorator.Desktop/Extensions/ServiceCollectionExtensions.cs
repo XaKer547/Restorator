@@ -1,5 +1,4 @@
-﻿using System.Reflection;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Restorator.Application.Services;
 using Restorator.DataAccess.Data;
@@ -11,9 +10,11 @@ using Restorator.Desktop.ViewModels.Abstract;
 using Restorator.Desktop.Views.Pages;
 using Restorator.Desktop.Views.Windows;
 using Restorator.Domain.Services;
+using System.Reflection;
 using Wpf.Ui;
 using Wpf.Ui.Abstractions;
 using Wpf.Ui.DependencyInjection;
+
 
 namespace Restorator.Desktop.Extensions
 {
@@ -44,8 +45,11 @@ namespace Restorator.Desktop.Extensions
 
             services.AddDbContext<RestoratorDbContext>(opt =>
             {
+#if COLLEGEDEBUG || DEBUG
+                opt.UseSqlServer("Server=b2-225-002\\SQLEXPRESS;Database=Restorator;TrustServerCertificate=true;Trusted_connection=true");
+#elif HOMEDEBUG
                 opt.UseSqlServer("Server=DESKTOP-F1TRK20\\SQLEXPRESS;Database=Restorator;TrustServerCertificate=true;Trusted_connection=true");
-                //opt.UseSqlServer("Server=b2-225-002\\SQLEXPRESS;Database=Restorator;TrustServerCertificate=true;Trusted_connection=true");
+#endif
             });
 
             return services;
@@ -63,8 +67,8 @@ namespace Restorator.Desktop.Extensions
                 .RegisterDataTemplate<AuthenticationViewModel, AuthenticationPage>()
                 .RegisterDataTemplate<SignInViewModel, SignInControl>()
                 .RegisterDataTemplate<SignUpViewModel, SignUpControl>()
-                .RegisterDataTemplate<RestaurantInfoViewModel, RestaurantInfoControl>()
-                //.RegisterDataTemplate<RestaurantReservationViewModel, ReservationContentDialog>()
+                .RegisterDataTemplate<RestaurantInfoViewModel, RestaurantInfoPage>()
+                .RegisterDataTemplate<RestaurantReservationViewModel, RestraurantReservationPage>()
                 .RegisterDataTemplate<RestaurantSearchViewModel, RestaurantSearchPage>();
 
             manager.SetControlsCulture();

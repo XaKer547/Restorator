@@ -7,6 +7,9 @@ namespace Restorator.DataAccess.Data.Entities.Enums
         [Description("Пользователь")]
         User = 1,
 
+        [Description("Менеджер ресторана")]
+        Manager,
+
         [Description("Администратор")]
         Admin
     }

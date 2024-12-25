@@ -6,43 +6,113 @@ namespace Restorator.Desktop.Services
 {
     public interface INavigationService
     {
-        void Navigate<TViewModel, TData>(TData data) where TViewModel : ViewModelBase, IValueHandler<TData>;
-        void Navigate<T>() where T : ViewModelBase;
         void SetNavigationControl(Frame frame);
+
+        void Navigate<T>() where T : ViewModelBase;
+        void Navigate<T>(Action<T> action) where T : ViewModelBase;
+        Task NavigateAsync<T>(Func<T, Task> action) where T : ViewModelBase;
+
+        void NavigateWithHierarchy<T>() where T : ViewModelBase;
+        void NavigateWithHierarchy<T>(Action<T> action) where T : ViewModelBase;
+        Task NavigateWithHierarchyAsync<T>(Func<T, Task> action) where T : ViewModelBase;
+
+        void NavigateBack();
+        Task NavigateBackAsync();
     }
 
     public class NavigationService : INavigationService
     {
         private readonly IServiceProvider _serviceProvider;
         private Frame _navigationControl;
+        private readonly Stack<ViewModelBase> _hierarchy = new();
+
+        private ViewModelBase _currentViewModel;
 
         public NavigationService(IServiceProvider serviceProvider)
         {
             _serviceProvider = serviceProvider;
         }
 
-        public void Navigate<TViewModel>() where TViewModel : ViewModelBase
+        public void Navigate<T>() where T : ViewModelBase
         {
-            var item = _serviceProvider.GetRequiredService<TViewModel>();
+            _currentViewModel = _serviceProvider.GetRequiredService<T>();
 
-            _navigationControl.Navigate(item);
+            _navigationControl.Navigate(_currentViewModel);
+        }
+        public void Navigate<T>(Action<T> action) where T : ViewModelBase
+        {
+            var item = _serviceProvider.GetRequiredService<T>();
+
+            action(item);
+
+            _currentViewModel = item;
+
+            _navigationControl.Navigate(_currentViewModel);
+        }
+        public async Task NavigateAsync<T>(Func<T, Task> action) where T : ViewModelBase
+        {
+            var item = _serviceProvider.GetRequiredService<T>();
+
+            await action.Invoke(item);
+
+            _currentViewModel = item;
+
+            _navigationControl.Navigate(_currentViewModel);
         }
 
-        public void Navigate<TViewModel, TData>(TData data) where TViewModel : ViewModelBase, IValueHandler<TData>
+        public void NavigateWithHierarchy<T>() where T : ViewModelBase
         {
-            //var item = _serviceProvider.GetRequiredService<TViewModel>();
+            var item = _serviceProvider.GetRequiredService<T>();
 
-            //var wrapperType = typeof(ViewModelBase<>).MakeGenericType(requestType, typeof(TResponse));
+            _hierarchy.Push(_currentViewModel);
 
-            //item.Initialize(data);
+            _currentViewModel = item;
 
-            //_navigationControl.Navigate(item);
+            _navigationControl.Navigate(_currentViewModel);
         }
+        public void NavigateWithHierarchy<T>(Action<T> action) where T : ViewModelBase
+        {
+            var item = _serviceProvider.GetRequiredService<T>();
 
+            action(item);
+
+            _hierarchy.Push(_currentViewModel);
+
+            _currentViewModel = item;
+
+            _navigationControl.Navigate(_currentViewModel);
+        }
+        public async Task NavigateWithHierarchyAsync<T>(Func<T, Task> action) where T : ViewModelBase
+        {
+            var item = _serviceProvider.GetRequiredService<T>();
+
+            await action.Invoke(item);
+
+            _hierarchy.Push(_currentViewModel);
+
+            _currentViewModel = item;
+
+            _navigationControl.Navigate(_currentViewModel);
+        }
 
         public void SetNavigationControl(Frame navigationControl)
         {
             _navigationControl = navigationControl;
+        }
+
+        public void NavigateBack()
+        {
+            _currentViewModel = _hierarchy.Pop();
+
+            _navigationControl.Navigate(_currentViewModel);
+        }
+        public Task NavigateBackAsync()
+        {
+            _currentViewModel = _hierarchy.Pop();
+
+            _navigationControl.Navigate(_currentViewModel);
+
+            return Task.CompletedTask;
         }
     }
 }

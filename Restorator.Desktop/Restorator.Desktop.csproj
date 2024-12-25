@@ -7,7 +7,16 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <UseWPF>true</UseWPF>
     <PlatformTarget>AnyCPU</PlatformTarget>
+    <Configurations>Debug;Release;HomeDebug;COLLEGE_DEBUG;HOME_DEBUG;CollegeDebug</Configurations>
   </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'" />
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='CollegeDebug|AnyCPU'" />
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='HOME_DEBUG|AnyCPU'" />
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='COLLEGE_DEBUG|AnyCPU'" />
 
   <ItemGroup>
     <Compile Remove="Events\**" />
@@ -17,6 +26,8 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Remove="Controls\SliderTimePicker.xaml.cs~RF6d83f8f.TMP" />
+    <None Remove="Resources\NoImage.png" />
     <None Remove="Resources\RestoratorMain.png" />
   </ItemGroup>
 
@@ -26,6 +37,7 @@
 
   <ItemGroup>
     <PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.0" />
+    <PackageReference Include="Extended.Wpf.Toolkit" Version="4.6.1" />
     <PackageReference Include="MediatR" Version="12.4.1" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="9.0.0">
       <PrivateAssets>all</PrivateAssets>
@@ -44,6 +56,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Resource Include="Resources\NoImage.png" />
     <Resource Include="Resources\RestoratorMain.png" />
   </ItemGroup>
 

@@ -1,4 +1,5 @@
 ﻿using Restorator.DataAccess.Data.Entities;
+using Restorator.Seeder.Helpers;
 
 namespace Restorator.Seeder.Data.DbSeeder
 {
@@ -11,20 +12,18 @@ namespace Restorator.Seeder.Data.DbSeeder
 
             var restaurants = new List<Restaurant>()
             {
-                new Restaurant()
+                new()
                 {
                     Name = "Синабонная Бо Синна",
                     Description = "Погрузитесь в мир сладких грез и пряных ароматов в “Синабонной Бо Синна”, где каждый ролл создан с душой и любовью, вдохновлённый самим Бо Синном! Здесь каждое блюдо — это произведение кулинарного искусства, приготовленное с заботой о ваших вкусовых рецепторах. Мы специализируемся на классических и авторских синабонах, приготовленных из нежнейшего теста, щедро сдобренных ароматной корицей и сливочным кремом, в точности как это делал сам маэстро.",
                     TemplateId = 1,
-                    BeginWorkTime = new TimeOnly(9, 0),
-                    EndWorkTime = new TimeOnly(20, 0),
+                    Image = EmbeddedResourceHelper.GetRestaurantImage("Синабонная Бо Синна"),
+                    MenuImage = EmbeddedResourceHelper.GetRestaurantMenu("Синабонная Бо Синна"),
+                    BeginWorkTime = new TimeOnly(12, 0),
+                    EndWorkTime = new TimeOnly(0, 0),
+                    Approved = true,
+                    Tags = [.. _context.RestaurantTags.Where(t => t.Id == 1)]
                 },
-                //new Restaurant()
-                //{
-                //    Name = "Дорсия",
-                //    Description = "“Дорсия” – это не просто ресторан, это воплощение изысканности, амбиций и безупречного вкуса, место, где каждый вечер становится спектаклем. За этими стенами, среди приглушенного света и безукоризненного сервиса, не раз проводил свои вечера сам Патрик Бейтман. Здесь царит атмосфера утонченной роскоши, где каждый элемент – от хрустальных бокалов до минималистичных картин на стенах – тщательно отобран, чтобы создать идеальную сцену для наслаждения высокой кухней. Приходите и вы, чтобы почувствовать себя настоящим сигмой!",
-                //    TemplateId = 2,
-                //}
             };
 
             _context.Restaurants.AddRange(restaurants);

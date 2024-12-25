@@ -1,13 +1,13 @@
 ﻿using System.Windows.Controls;
 
-namespace Restorator.Desktop.Controls
+namespace Restorator.Desktop.Views.Pages
 {
     /// <summary>
     /// Логика взаимодействия для RestaurantPreviewControl.xaml
     /// </summary>
-    public partial class RestaurantInfoControl : UserControl
+    public partial class RestaurantInfoPage : Page
     {
-        public RestaurantInfoControl()
+        public RestaurantInfoPage()
         {
             InitializeComponent();
         }

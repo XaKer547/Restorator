@@ -6,9 +6,9 @@ namespace Restorator.Desktop.Dialogs
     /// <summary>
     /// Логика взаимодействия для ReservationPage.xaml
     /// </summary>
-    public partial class ReservationContentDialog : ContentDialog
+    public partial class ReservationReservationControl : ContentDialog
     {
-        public ReservationContentDialog(RestaurantReservationViewModel viewModel)
+        public ReservationReservationControl(RestaurantReservationViewModel viewModel)
         {
             DataContext = viewModel;
             InitializeComponent();

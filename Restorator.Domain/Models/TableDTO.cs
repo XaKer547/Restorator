@@ -1,4 +1,6 @@
-﻿namespace Restorator.Domain.Models
+﻿using Restorator.Domain.Models.Enums;
+
+namespace Restorator.Domain.Models
 {
     public class TableDTO
     {
@@ -11,5 +13,7 @@
         public float Y { get; set; }
 
         public float Rotation { get; set; }
+
+        public TableStates State { get; set; }
     }
 }

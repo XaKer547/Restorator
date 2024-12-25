@@ -12,8 +12,8 @@ using Restorator.DataAccess.Data;
 namespace Restorator.DataAccess.Migrations
 {
     [DbContext(typeof(RestoratorDbContext))]
-    [Migration("20241221100108_Init")]
-    partial class Init
+    [Migration("20241224143458_AddedRestaurantApproval")]
+    partial class AddedRestaurantApproval
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -25,6 +25,21 @@ namespace Restorator.DataAccess.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
+            modelBuilder.Entity("RestaurantRestaurantTag", b =>
+                {
+                    b.Property<int>("RestaurantsId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("TagsId")
+                        .HasColumnType("int");
+
+                    b.HasKey("RestaurantsId", "TagsId");
+
+                    b.HasIndex("TagsId");
+
+                    b.ToTable("RestaurantRestaurantTag");
+                });
+
             modelBuilder.Entity("Restorator.DataAccess.Data.Entities.Reservation", b =>
                 {
                     b.Property<int>("Id")
@@ -32,6 +47,9 @@ namespace Restorator.DataAccess.Migrations
                         .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<bool>("Canceled")
+                        .HasColumnType("bit");
 
                     b.Property<DateTime>("ReservationEnd")
                         .HasColumnType("datetime2");
@@ -67,6 +85,9 @@ namespace Restorator.DataAccess.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<bool>("Approved")
+                        .HasColumnType("bit");
+
                     b.Property<TimeOnly>("BeginWorkTime")
                         .HasColumnType("time");
 
@@ -76,6 +97,12 @@ namespace Restorator.DataAccess.Migrations
 
                     b.Property<TimeOnly>("EndWorkTime")
                         .HasColumnType("time");
+
+                    b.Property<byte[]>("Image")
+                        .HasColumnType("varbinary(max)");
+
+                    b.Property<byte[]>("MenuImage")
+                        .HasColumnType("varbinary(max)");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -89,6 +116,23 @@ namespace Restorator.DataAccess.Migrations
                     b.HasIndex("TemplateId");
 
                     b.ToTable("Restaurants");
+                });
+
+            modelBuilder.Entity("Restorator.DataAccess.Data.Entities.RestaurantTag", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("RestaurantTags");
                 });
 
             modelBuilder.Entity("Restorator.DataAccess.Data.Entities.RestaurantTemplate", b =>
@@ -207,6 +251,21 @@ namespace Restorator.DataAccess.Migrations
                     b.HasIndex("RoleId");
 
                     b.ToTable("Users");
+                });
+
+            modelBuilder.Entity("RestaurantRestaurantTag", b =>
+                {
+                    b.HasOne("Restorator.DataAccess.Data.Entities.Restaurant", null)
+                        .WithMany()
+                        .HasForeignKey("RestaurantsId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Restorator.DataAccess.Data.Entities.RestaurantTag", null)
+                        .WithMany()
+                        .HasForeignKey("TagsId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("Restorator.DataAccess.Data.Entities.Reservation", b =>

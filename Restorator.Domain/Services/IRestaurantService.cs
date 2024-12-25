@@ -8,6 +8,8 @@ namespace Restorator.Domain.Services
         Task<Result> CreateRestaurant(CreateRestaurantDTO createRestaurant);
         Task<Result<RestaurantInfoDTO>> GetRestaurantInfo(int restaurantId);
         Task<IReadOnlyCollection<RestaurantSearchItemDTO>> GetRestaurantNames();
-        Task<IReadOnlyCollection<RestaurantPreviewDTO>> GetRestaurantPreviews(GetRestaurantsPreviewDTO getRestaurantsPreview);
+        Task<IReadOnlyCollection<RestaurantTagDTO>> GetRestaurantTags();
+        Task<PaginatedList<RestaurantPreviewDTO>> GetRestaurantPreviews(GetRestaurantsPreviewDTO getRestaurantsPreview);
+        Task<Result> ChangeRestaurantApproval(ChangeRestaurantApprovalDTO changeRestaurantApproval);
     }
 }

@@ -1,11 +1,9 @@
-﻿using System.Windows.Input;
-using CommunityToolkit.Mvvm.ComponentModel;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using Restorator.Desktop.Dialogs;
 using Restorator.Desktop.ViewModels.Abstract;
 using Restorator.Domain.Models;
 using Restorator.Domain.Services;
-using Wpf.Ui;
+using System.Collections.ObjectModel;
 using Wpf.Ui.Controls;
 
 namespace Restorator.Desktop.ViewModels
@@ -14,61 +12,32 @@ namespace Restorator.Desktop.ViewModels
     {
         private readonly IRestaurantService _restaurantService;
         private readonly Services.INavigationService _navigationService;
-        private readonly IContentDialogService _contentDialogService;
         public RestaurantSearchViewModel(IRestaurantService restaurantService,
-                                         Services.INavigationService navigationService,
-                                         RestaurantInfoViewModel restaurantInfo,
-                                         RestaurantReservationViewModel reservationViewModel,
-                                         IContentDialogService contentDialogService)
+                                         Services.INavigationService navigationService)
         {
             _restaurantService = restaurantService;
             _navigationService = navigationService;
-
-            _restaurantInfoViewModel = restaurantInfo;
-            _restaurantReservationViewModel = reservationViewModel;
-
-            SelectedView = _restaurantInfoViewModel;
-            _contentDialogService = contentDialogService;
         }
 
         [ObservableProperty]
-        private IReadOnlyCollection<RestaurantSearchItemDTO> _restaurantNames;
+        private IReadOnlyCollection<RestaurantSearchItemDTO> _restaurantsName;
 
         [ObservableProperty]
-        private IReadOnlyCollection<RestaurantPreviewDTO> _restaurantsPreview;
+        private IReadOnlyCollection<RestaurantTagDTO> _restaurantsTag;
 
         [ObservableProperty]
-        private RestaurantPreviewDTO? _selectedRestaurantPreview;
-
-        private RestaurantInfoViewModel _restaurantInfoViewModel;
-        private RestaurantReservationViewModel _restaurantReservationViewModel;
+        private ObservableCollection<RestaurantPreviewDTO> _restaurantsPreview = [];
 
         [ObservableProperty]
-        private RestaurantViewModelBase selectedView;
-
-        [ObservableProperty]
-        private bool infoOpened = false;
+        private RestaurantTagDTO? _selectedTag;
 
         [ObservableProperty]
         private bool searching;
 
-        private bool CanOpenRestaurantInfo => SelectedRestaurantPreview != null && !InfoOpened;
-        [RelayCommand(CanExecute = nameof(CanOpenRestaurantInfo), AllowConcurrentExecutions = false)]
-        public async Task OpenRestaurantInfo()
+        [RelayCommand(AllowConcurrentExecutions = false)]
+        public async Task OpenRestaurantInfo(RestaurantPreviewDTO restaurantPreview)
         {
-            await OpenRestaurantInfo(SelectedRestaurantPreview!.Id);
-        }
-
-        private int _selectedRestaurantId;
-        private async Task OpenRestaurantInfo(int id)
-        {
-            _selectedRestaurantId = id;
-
-            InfoOpened = true;
-
-            await _restaurantInfoViewModel.OpenRestaurantInfo(id);
-
-            CloseSelectedViewCommand = CloseRestaurantInfoCommand;
+            await OpenRestaurantInfo(restaurantPreview!.Id);
         }
 
         [RelayCommand(AllowConcurrentExecutions = false)]
@@ -76,81 +45,103 @@ namespace Restorator.Desktop.ViewModels
         {
             var item = (RestaurantSearchItemDTO)args.SelectedItem;
 
-            if (item.Id != SelectedRestaurantPreview?.Id)
-                await OpenRestaurantInfo(item.Id);
+            await OpenRestaurantInfo(item.Id);
+        }
+        private async Task OpenRestaurantInfo(int id)
+        {
+            await _navigationService.NavigateWithHierarchyAsync<RestaurantInfoViewModel>(viewmodel => viewmodel.LoadRestaurantInfo(id));
         }
 
-        [RelayCommand]
-        public async Task OpenRestaurantReservation()
+        private int _currentPage;
+        private bool CanLoadRestaurants { get; set; }
+
+        [RelayCommand(CanExecute = nameof(CanInitialize))]
+        public async Task InitializeViewModel()
         {
-            //SelectedView = _restaurantReservationViewModel;
-
-            await _restaurantReservationViewModel.LoadReservationPlan(_selectedRestaurantId);
-
-            var dialog = new ReservationContentDialog(_restaurantReservationViewModel);
-
-            await _contentDialogService.ShowAsync(dialog, new CancellationToken());
-
-            //CloseSelectedViewCommand = CloseRestaurantReservationCommand;
-        }
-
-        [RelayCommand(AllowConcurrentExecutions = false)]
-        public async Task SearchRestaurants()
-        {
-            SelectedRestaurantPreview = null;
+            SelectedTag = null;
 
             Searching = true;
 
-            RestaurantNames = await _restaurantService.GetRestaurantNames();
+            _currentPage = 1;
 
-            RestaurantsPreview = await _restaurantService.GetRestaurantPreviews(new GetRestaurantsPreviewDTO()
-            {
-                CurrentPage = 1,
-                PageSize = 10
-            });
+            RestaurantsName = await _restaurantService.GetRestaurantNames();
 
-            /*
-            new List<string>()
-            {
-                "Синабонная Бо Синна",
-                "Дорсия",
-                "Под котлами",
-                "Павлин-Мавлин"
-            };
-            new List<RestaurantPreviewDTO>()
-            {
-                new RestaurantPreviewDTO
-                {
-                    Id = 1,
-                    Name = "Синабонная Бо Синна",
-                    Description = "Погрузитесь в мир сладких грез и пряных ароматов в “Синабонной Бо Синна”, где каждый ролл создан с душой и любовью, вдохновлённый самим Бо Синна! Здесь каждое блюдо — это произведение кулинарного искусства, приготовленное с заботой о ваших вкусовых рецепторах. Мы специализируемся на классических и авторских синабонах, приготовленных из нежнейшего теста, щедро сдобренных ароматной корицей и сливочным кремом, в точности как это делал сам маэстро.",
-                },
-                new RestaurantPreviewDTO
-                {
-                    Id = 2,
-                    Name = "Дорсия",
-                    Description = "“Дорсия” – это не просто ресторан, это воплощение изысканности, амбиций и безупречного вкуса, место, где каждый вечер становится спектаклем. За этими стенами, среди приглушенного света и безукоризненного сервиса, не раз проводил свои вечера сам Патрик Бейтман. Здесь царит атмосфера утонченной роскоши, где каждый элемент – от хрустальных бокалов до минималистичных картин на стенах – тщательно отобран, чтобы создать идеальную сцену для наслаждения высокой кухней. Приходите и вы, чтобы почувствовать себя настоящим сигмой!",
-                },
-            };
-            */
+            RestaurantsTag = await _restaurantService.GetRestaurantTags();
+
+            await SearchRestaurants();
 
             Searching = false;
+
+            Initialized = true;
         }
 
         [ObservableProperty]
-        private ICommand closeSelectedViewCommand;
+        private bool tagEmpty = true;
 
         [RelayCommand]
-        public void CloseRestaurantInfo()
+        public async Task ChangeSearchTag(RestaurantTagDTO restaurantTag)
         {
-            InfoOpened = false;
-            SelectedRestaurantPreview = null;
+            if (SelectedTag == restaurantTag)
+            {
+                SelectedTag = null;
+
+                TagEmpty = true;
+            }
+            else
+            {
+                TagEmpty = false;
+
+                SelectedTag = restaurantTag;
+            }
+
+            await ResetSearch();
+        }
+
+        [RelayCommand]
+        public async Task ResetSearch()
+        {
+            _currentPage = 1;
+
+            RestaurantsPreview.Clear();
+
+            await SearchRestaurants();
+        }
+
+        [RelayCommand]
+        public async Task ResetSelectedTag()
+        {
+            if (SelectedTag == null)
+                return;
+
+            SelectedTag = null;
+
+            await ResetSearch();
+        }
+
+        [RelayCommand(AllowConcurrentExecutions = false, CanExecute = nameof(CanLoadRestaurants))]
+        public async Task SearchRestaurants()
+        {
+            var restaurants = await _restaurantService.GetRestaurantPreviews(new GetRestaurantsPreviewDTO()
+            {
+                CurrentPage = _currentPage++,
+                PageSize = 10,
+                Filter = new GetRestaurantsPreviewFilter()
+                {
+                    RequireApproved = true,
+                    Tag = SelectedTag,
+                }
+            });
+
+            CanLoadRestaurants = restaurants.HasNextPage;
+
+            foreach (var restaurant in restaurants)
+                RestaurantsPreview.Add(restaurant);
         }
 
         [RelayCommand]
         public void Logout()
         {
-            //
+            //!!!
         }
     }
 }

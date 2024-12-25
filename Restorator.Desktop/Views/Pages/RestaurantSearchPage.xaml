@@ -5,89 +5,107 @@
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
       xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+      xmlns:behaviors="clr-namespace:Restorator.Desktop.Behaviors"
       xmlns:viewmodels="clr-namespace:Restorator.Desktop.ViewModels"
+      xmlns:pages="clr-namespace:Restorator.Desktop.Views.Pages"
       d:DataContext="{d:DesignInstance Type=viewmodels:RestaurantSearchViewModel}"
       mc:Ignorable="d" 
-      d:DesignHeight="450" d:DesignWidth="800" Margin="20" Name="searchPage">
-    <Grid>
+      d:DesignHeight="450" d:DesignWidth="800" >
+    <Grid Margin="20,40">
         <Grid.RowDefinitions>
-            <RowDefinition/>
-            <RowDefinition Height="5*"/>
+            <RowDefinition Height="100"/>
+            <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
-
-        <DockPanel>
-            <ui:AutoSuggestBox OriginalItemsSource="{Binding RestaurantNames}" 
-                               PlaceholderText="Введите название ресторана" DisplayMemberPath="Name">
+        <StackPanel>
+            <ui:AutoSuggestBox OriginalItemsSource="{Binding RestaurantsName}" 
+                           PlaceholderText="Введите название ресторана" DisplayMemberPath="Name">
                 <i:Interaction.Triggers>
                     <i:EventTrigger EventName="SuggestionChosen">
                         <i:InvokeCommandAction Command="{Binding OpenRestaurantInfoFromSuggestionCommand}" PassEventArgsToCommand="True"/>
                     </i:EventTrigger>
                 </i:Interaction.Triggers>
             </ui:AutoSuggestBox>
-        </DockPanel>
 
-        <DockPanel Grid.Row="1">
-            <ListBox Name="previewsList" ScrollViewer.HorizontalScrollBarVisibility="Disabled"
-                                 ItemsSource="{Binding RestaurantsPreview}" 
-                                 SelectedItem="{Binding SelectedRestaurantPreview}">
-                <ListBox.ItemTemplate>
-                    <DataTemplate>
-                        <StackPanel>
-                            <ui:TextBlock Text="{Binding Name}" FontTypography="Subtitle" />
-                            <ui:TextBlock Text="{Binding Description}" FontTypography="Body" TextTrimming="CharacterEllipsis" />
-                        </StackPanel>
-                    </DataTemplate>
-                </ListBox.ItemTemplate>
+            <DockPanel>
+                <RadioButton Content="Все" Command="{Binding ResetSelectedTagCommand}" IsChecked="{Binding TagEmpty, Mode=TwoWay}"
+                           Style="{StaticResource {x:Type ToggleButton}}"  GroupName="RestaurantTags"/>
 
-                <i:Interaction.Triggers>
-                    <i:DataTrigger Binding="{Binding InfoOpened}" Value="False">
-                        <i:ChangePropertyAction PropertyName="Visibility" Value="Visible"/>
-                    </i:DataTrigger>
+                <ItemsControl ItemsSource="{Binding RestaurantsTag}">
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <ui:VirtualizingWrapPanel/>
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
 
-                    <i:DataTrigger Binding="{Binding InfoOpened}" Value="True">
-                        <i:ChangePropertyAction PropertyName="Visibility" Value="Collapsed"/>
-                    </i:DataTrigger>
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <RadioButton Content="{Binding Name}" CommandParameter="{Binding}"
+                                       Command="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type pages:RestaurantSearchPage}}, Path=DataContext.ChangeSearchTagCommand}"
+                                       Style="{StaticResource {x:Type ToggleButton}}" GroupName="RestaurantTags" />
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+            </DockPanel>
+        </StackPanel>
 
-                    <i:EventTrigger EventName="SelectionChanged">
-                        <i:InvokeCommandAction Command="{Binding OpenRestaurantInfoCommand}"/>
-                    </i:EventTrigger>
-                </i:Interaction.Triggers>
-            </ListBox>
+        <ui:DynamicScrollViewer Grid.Row="1">
+            <StackPanel>
+                <ItemsControl ItemsSource="{Binding RestaurantsPreview}">
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <ui:VirtualizingWrapPanel/>
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <ui:Button Command="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type pages:RestaurantSearchPage}}, Path=DataContext.OpenRestaurantInfoCommand}"
+                                       CommandParameter="{Binding }">
+                                <ui:Button.Template>
+                                    <ControlTemplate TargetType="ui:Button">
+                                        <StackPanel>
+                                            <Border Height="150" CornerRadius="10">
+                                                <Border.Background>
+                                                    <ImageBrush Stretch="UniformToFill" ImageSource="{Binding Image, FallbackValue={StaticResource NoImage}}"/>
+                                                </Border.Background>
+                                            </Border>
 
-            <Grid Visibility="Collapsed">
-                <Viewbox>
-                    <ContentPresenter Content="{Binding SelectedView}" Width="{Binding ElementName=searchPage, Path=ActualWidth}" Margin="20, 0"/>
-                </Viewbox>
+                                            <ui:TextBlock Text="{Binding Name}" FontTypography="Subtitle" TextWrapping="Wrap" />
+                                            <ContentPresenter/>
+                                        </StackPanel>
 
-                <ui:Button HorizontalAlignment="Right" VerticalAlignment="Top" Icon="{ui:SymbolIcon ArrowReply32}" Appearance="Danger"
-                               Command="{Binding CloseSelectedViewCommand}"/>
+                                        <ControlTemplate.Triggers>
+                                            <Trigger Property="IsMouseOver" Value="True">
+                                                <Setter Property="Opacity" Value="0.8"/>
+                                            </Trigger>
+                                        </ControlTemplate.Triggers>
+                                    </ControlTemplate>
+                                </ui:Button.Template>
+                            </ui:Button>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
 
-                <i:Interaction.Triggers>
-                    <i:DataTrigger Binding="{Binding InfoOpened}" Value="True">
-                        <i:ChangePropertyAction PropertyName="Visibility" Value="Visible"/>
-                    </i:DataTrigger>
-                    <i:DataTrigger Binding="{Binding InfoOpened}" Value="False">
-                        <i:ChangePropertyAction PropertyName="Visibility" Value="Collapsed"/>
-                    </i:DataTrigger>
-                </i:Interaction.Triggers>
-            </Grid>
-        </DockPanel>
+                <ui:ProgressRing IsIndeterminate="True" HorizontalAlignment="Center" Visibility="Collapsed" Width="60">
+                    <i:Interaction.Triggers>
+                        <i:DataTrigger Binding="{Binding Searching}" Value="True">
+                            <i:ChangePropertyAction PropertyName="Visibility" Value="Visible"/>
+                        </i:DataTrigger>
+                        <i:DataTrigger Binding="{Binding Searching}" Value="False">
+                            <i:ChangePropertyAction PropertyName="Visibility" Value="Collapsed"/>
+                        </i:DataTrigger>
+                    </i:Interaction.Triggers>
+                </ui:ProgressRing>
+            </StackPanel>
 
-        <ui:ProgressRing Grid.RowSpan="2" IsIndeterminate="True" HorizontalAlignment="Center" Visibility="Collapsed">
-            <i:Interaction.Triggers>
-                <i:DataTrigger Binding="{Binding Searching}" Value="True">
-                    <i:ChangePropertyAction PropertyName="Visibility" Value="Visible"/>
-                </i:DataTrigger>
-                <i:DataTrigger Binding="{Binding Searching}" Value="False">
-                    <i:ChangePropertyAction PropertyName="Visibility" Value="Collapsed"/>
-                </i:DataTrigger>
-            </i:Interaction.Triggers>
-        </ui:ProgressRing>
+            <i:Interaction.Behaviors>
+                <behaviors:DynamicScrollViewerLazyLoadBehavior LoadDataCommand="{Binding SearchRestaurantsCommand}"/>
+            </i:Interaction.Behaviors>
+        </ui:DynamicScrollViewer>
     </Grid>
 
     <i:Interaction.Triggers>
         <i:EventTrigger EventName="Loaded">
-            <i:InvokeCommandAction Command="{Binding SearchRestaurantsCommand}"/>
+            <i:InvokeCommandAction Command="{Binding InitializeViewModelCommand}"/>
         </i:EventTrigger>
     </i:Interaction.Triggers>
 </Page>

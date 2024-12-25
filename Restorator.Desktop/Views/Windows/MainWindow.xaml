@@ -9,8 +9,7 @@
                  mc:Ignorable="d"
                  Title="Ресторатор" Height="450" Width="800" WindowCornerPreference="Round">
     <Grid>
-        <ui:TitleBar/>
-
+        <ui:TitleBar Height="25"/>
         <Frame Name="RootNavigation" NavigationUIVisibility="Hidden"/>
 
         <ContentPresenter x:Name="RootContentDialog" />

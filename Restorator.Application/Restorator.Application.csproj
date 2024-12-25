@@ -4,7 +4,12 @@
     <TargetFramework>net8.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
+    <Configurations>Debug;Release;CollegeDebug;HomeDebug;COLLEGE_DEBUG;HOME_DEBUG</Configurations>
   </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="LinqKit.Microsoft.EntityFrameworkCore" Version="8.1.7" />
+  </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\Restorator.DataAccess\Restorator.DataAccess.csproj" />

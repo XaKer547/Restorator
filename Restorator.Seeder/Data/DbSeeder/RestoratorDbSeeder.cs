@@ -21,6 +21,8 @@ namespace Restorator.Seeder.Data.DbSeeder
 
             await SeedTableTemplatesAsync();
 
+            await SeedRestaurantTagsAsync();
+
             await SeedRestaurantTemplatesAsync();
 
             await SeedRestaurantsAsync();

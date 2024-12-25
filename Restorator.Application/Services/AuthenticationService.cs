@@ -18,7 +18,7 @@ namespace Restorator.Application.Services
             _context = context;
         }
 
-        async Task<Result<SessionInfo>> IAuthenticationService.SignInAsync(SignInDTO signIn)
+        public async Task<Result<SessionInfo>> SignInAsync(SignInDTO signIn)
         {
             var user = await _context.Users.Include(u => u.Role)
                 .SingleOrDefaultAsync(u => u.Password == AccountPasswordHelper.HashUserPassword(signIn.Password) && u.Login == signIn.Login);
@@ -30,8 +30,7 @@ namespace Restorator.Application.Services
 
             return Result.Ok(sessionInfo);
         }
-
-        async Task<Result> IAuthenticationService.SignUpAsync(SignUpDTO signUp)
+        public async Task<Result> SignUpAsync(SignUpDTO signUp)
         {
             if (_context.Users.Any(u => u.Login == signUp.Login))
                 return Result.Fail("Такой логин занят");
