@@ -5,7 +5,6 @@
        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
        xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-       xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
        xmlns:controls="clr-namespace:Restorator.Desktop.Controls"
        xmlns:converters="clr-namespace:Restorator.Desktop.Converters"
        xmlns:models="clr-namespace:Restorator.Desktop.Models"
@@ -14,7 +13,7 @@
        xmlns:sys="clr-namespace:System;assembly=netstandard"
        d:DataContext="{d:DesignInstance {x:Type viewmodels:RestaurantReservationViewModel}}"
        mc:Ignorable="d" 
-       d:DesignHeight="1526.82" d:DesignWidth="1212.66" Margin="0,25">
+       d:DesignHeight="1526.82" d:DesignWidth="1212.66" Margin="0,25" MinWidth="750">
     <Page.Resources>
         <converters:DoubleToAngleConverter x:Key="doubleAngeConverter"/>
     </Page.Resources>
@@ -63,49 +62,72 @@
             </ItemsControl>
         </Viewbox>
 
-        <StackPanel HorizontalAlignment="Right" Margin="20,0">
-            <ui:CalendarDatePicker Name="calendarPicker" Date="{Binding SelectedDate, Mode=TwoWay}" IsTodayHighlighted="True">
-                <ui:CalendarDatePicker.Resources>
-                    <Style TargetType="Calendar" BasedOn="{StaticResource DefaultCalendarStyle}">
-                        <Setter Property="DisplayDateStart" Value="{x:Static sys:DateTime.Today}"/>
-                    </Style>
-                </ui:CalendarDatePicker.Resources>
-                <Grid>
-                    <ui:TextBlock Text="Сегодня">
-                        <i:Interaction.Triggers>
-                            <i:DataTrigger Binding="{Binding IsToday}" Value="False">
-                                <i:ChangePropertyAction PropertyName="Visibility" Value="Collapsed"/>
-                            </i:DataTrigger>
-                            <i:DataTrigger Binding="{Binding IsToday}" Value="True">
-                                <i:ChangePropertyAction PropertyName="Visibility" Value="Visible"/>
-                            </i:DataTrigger>
-                        </i:Interaction.Triggers>
-                    </ui:TextBlock>
 
-                    <ui:TextBlock Text="{Binding SelectedDate, StringFormat=m}">
-                        <i:Interaction.Triggers>
-                            <i:DataTrigger Binding="{Binding IsToday}" Value="True">
-                                <i:ChangePropertyAction PropertyName="Visibility" Value="Collapsed"/>
-                            </i:DataTrigger>
-                            <i:DataTrigger Binding="{Binding IsToday}" Value="False">
-                                <i:ChangePropertyAction PropertyName="Visibility" Value="Visible"/>
-                            </i:DataTrigger>
-                        </i:Interaction.Triggers>
-                    </ui:TextBlock>
-                </Grid>
-            </ui:CalendarDatePicker>
+        <Grid Margin="20,0">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="2*"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
 
-            <xctk:TimelinePanel Height="50" Width="100"/>
+            <StackPanel HorizontalAlignment="Right" Margin="25,0">
+                <ui:CalendarDatePicker Name="calendarPicker" Date="{Binding SelectedDate, Mode=TwoWay}" IsTodayHighlighted="True">
+                    <ui:CalendarDatePicker.Resources>
+                        <Style TargetType="Calendar" BasedOn="{StaticResource DefaultCalendarStyle}">
+                            <Setter Property="DisplayDateStart" Value="{x:Static sys:DateTime.Today}"/>
+                        </Style>
+                    </ui:CalendarDatePicker.Resources>
+                    <Grid>
+                        <ui:TextBlock Text="Сегодня">
+                            <i:Interaction.Triggers>
+                                <i:DataTrigger Binding="{Binding IsToday}" Value="False">
+                                    <i:ChangePropertyAction PropertyName="Visibility" Value="Collapsed"/>
+                                </i:DataTrigger>
+                                <i:DataTrigger Binding="{Binding IsToday}" Value="True">
+                                    <i:ChangePropertyAction PropertyName="Visibility" Value="Visible"/>
+                                </i:DataTrigger>
+                            </i:Interaction.Triggers>
+                        </ui:TextBlock>
 
-            <!--<xctk:TimePicker>
-                <xctk:TimePicker.Resources>
-                    --><!--<Style TargetType="Button" BasedOn="{StaticResource {x:Type ui:Button}}"/>--><!--
-                    <Style TargetType="Button" BasedOn="{StaticResource {x:Type ui:Button}}"/>
-                </xctk:TimePicker.Resources>
-            </xctk:TimePicker>-->
-            
-            <controls:TimePicker/>
+                        <ui:TextBlock Text="{Binding SelectedDate, StringFormat=m}">
+                            <i:Interaction.Triggers>
+                                <i:DataTrigger Binding="{Binding IsToday}" Value="True">
+                                    <i:ChangePropertyAction PropertyName="Visibility" Value="Collapsed"/>
+                                </i:DataTrigger>
+                                <i:DataTrigger Binding="{Binding IsToday}" Value="False">
+                                    <i:ChangePropertyAction PropertyName="Visibility" Value="Visible"/>
+                                </i:DataTrigger>
+                            </i:Interaction.Triggers>
+                        </ui:TextBlock>
+                    </Grid>
+                </ui:CalendarDatePicker>
+            </StackPanel>
 
-        </StackPanel>
+
+            <Grid Grid.Row="1">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                </Grid.ColumnDefinitions>
+
+                <DockPanel>
+                    <ui:TextBlock Text="Приду в " VerticalAlignment="Center" FontTypography="Body"/>
+                    <controls:TimePicker MinuteInterval="5" VerticalAlignment="Center"
+                                         SelectedTime="{Binding ReservationStartTime, Mode=OneWayToSource}"
+                                         StartTime="{Binding BeginWorkTime}" EndTime="{Binding EndWorkTime}" IsEnabled="{Binding CanSearchReserve}">
+                    </controls:TimePicker>
+                </DockPanel>
+
+                <DockPanel Grid.Column="1" >
+                    <ui:TextBlock Text="Буду до" VerticalAlignment="Center" FontTypography="Body"/>
+                    <controls:TimePicker MinuteInterval="5" VerticalAlignment="Center"
+                                         SelectedTime="{Binding ReservationEndTime, Mode=OneWayToSource}"
+                                         StartTime="{Binding ReservationStartTime}"
+                                         EndTime="{Binding EndWorkTime}" IsEnabled="{Binding CanSearchReserve}"/>
+                </DockPanel>
+            </Grid>
+
+            <Button Grid.Row="2" Content="Перейти к оформлению" HorizontalAlignment="Center" Margin="0,20" Command="{Binding ConfirmTableReservationCommand}"/>
+        </Grid>
     </DockPanel>
 </Page>

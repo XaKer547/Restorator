@@ -19,7 +19,7 @@ namespace Restorator.Desktop.Controls
 
         public static readonly DependencyProperty MinTimeProperty =
         DependencyProperty.Register(
-            "MinTime",
+            "StartTime",
             typeof(TimeOnly),
             typeof(SliderTimePicker),
             new FrameworkPropertyMetadata(TimeOnly.MinValue, OnMinTimeChanged)
@@ -34,7 +34,7 @@ namespace Restorator.Desktop.Controls
 
         public static readonly DependencyProperty MaxTimeProperty =
             DependencyProperty.Register(
-                "MaxTime",
+                "EndTime",
                 typeof(TimeOnly),
                 typeof(SliderTimePicker),
                 new FrameworkPropertyMetadata(TimeOnly.MaxValue, OnMaxTimeChanged)

@@ -16,9 +16,11 @@ namespace Restorator.Application.Services
             _context = context;
         }
 
-        public async Task<Result> CancelReservation(int reservationId)
+        public async Task<Result> CancelReservation(CancelReservationDTO cancelReservation)
         {
             var reseravation = _context.Reservations.SingleOrDefault(r => r.Id == reservationId);
+            
+            //get existing
 
             if (reseravation is null)
                 return Result.Fail("Бронирование не найдено");
@@ -34,10 +36,10 @@ namespace Restorator.Application.Services
 
         public async Task<Result<RestaurantPlanDTO>> GetRestaurantPlan(GetRestaurantPlanDTO getRestaurantPlan)
         {
-            var reservations = _context.Reservations
-                .AsNoTracking()
-                .Where(reservation => reservation.Restaurant.Id == getRestaurantPlan.RestaurantId
-                && reservation.ReservationStart < getRestaurantPlan.ReservationEnd && reservation.ReservationEnd > getRestaurantPlan.ReservationStart)
+            var reservations = _context.Reservations.AsNoTracking()
+                .Where(reservation => reservation.Restaurant.Id == getRestaurantPlan.RestaurantId && !reservation.Canceled
+                && getRestaurantPlan.ReservationStartDate >= reservation.ReservationStart && getRestaurantPlan.ReservationStartDate <= reservation.ReservationEnd
+                || getRestaurantPlan.ReservationEndDate >= reservation.ReservationStart && getRestaurantPlan.ReservationEndDate <= reservation.ReservationEnd)
                 .Select(r => new ReserveTableDTO
                 {
                     UserId = r.User.Id,
@@ -65,18 +67,6 @@ namespace Restorator.Application.Services
 
             if (plan is null)
                 return Result.Fail("Ресторан не найден");
-
-
-            var tables = _context.Restaurants.AsNoTracking().Where(r => r.Id == plan.Id)
-                 .Select(r => r.Template.Tables.Select(t => new TableDTO
-                 {
-                     Id = t.Id,
-                     Height = t.Template.Height,
-                     Width = t.Template.Width,
-                     Rotation = t.Template.Rotation,
-                     X = t.X,
-                     Y = t.Y,
-                 })).ToArray();
 
             return Result.Ok(plan);
         }
@@ -131,8 +121,8 @@ namespace Restorator.Application.Services
                     User = user,
                     Restaurant = restaurant,
                     Table = table,
-                    ReservationStart = reserveTable.ReservationDate,
-                    ReservationEnd = reserveTable.ReservationDate.AddHours(reserveTable.Hours),
+                    ReservationStart = reserveTable.ReservationStartDate,
+                    ReservationEnd = reserveTable.ReservationEndDate,
                 };
 
                 _context.Reservations.Add(reservation);

@@ -10,8 +10,9 @@ namespace Restorator.Desktop.Controls
     /// </summary>
     public partial class TimePicker : UserControl
     {
+        #region Dependencies
         public static readonly DependencyProperty SelectedTimeProperty = DependencyProperty.Register(
-            "SelectedTime", typeof(TimeOnly?), typeof(TimePicker), new FrameworkPropertyMetadata(TimeOnly.FromDateTime(DateTime.Now), FrameworkPropertyMetadataOptions.BindsTwoWayByDefault, OnSelectedTimeChanged));
+         "SelectedTime", typeof(TimeOnly?), typeof(TimePicker), new FrameworkPropertyMetadata(TimeOnly.FromDateTime(DateTime.Now), FrameworkPropertyMetadataOptions.BindsTwoWayByDefault, OnSelectedTimeChanged));
 
         public static readonly DependencyProperty MinuteIntervalProperty = DependencyProperty.Register(
             "MinuteInterval", typeof(int), typeof(TimePicker), new FrameworkPropertyMetadata(1, FrameworkPropertyMetadataOptions.BindsTwoWayByDefault, OnMinuteIntervalChanged));
@@ -23,50 +24,15 @@ namespace Restorator.Desktop.Controls
             "Minute", typeof(int), typeof(TimePicker), new FrameworkPropertyMetadata(DateTime.Now.Minute, OnMinuteChanged));
 
         public static readonly DependencyProperty MaxTimeProperty = DependencyProperty.Register(
-            "MaxTime", typeof(TimeOnly), typeof(TimePicker), new FrameworkPropertyMetadata(TimeOnly.Parse("12:00"), OnMaxTimeChanged));
+            "EndTime", typeof(TimeOnly), typeof(TimePicker), new FrameworkPropertyMetadata(TimeOnly.Parse("12:00"), OnEndTimeChanged));
 
         public static readonly DependencyProperty MinTimeProperty = DependencyProperty.Register(
-            "MinTime", typeof(TimeOnly), typeof(TimePicker), new FrameworkPropertyMetadata(TimeOnly.MinValue, OnMinTimeChanged));
+            "StartTime", typeof(TimeOnly), typeof(TimePicker), new FrameworkPropertyMetadata(TimeOnly.MinValue, OnStartTimeChanged));
+        #endregion
 
         private bool _isUpdatingTime = false;
         private DispatcherTimer? _timer;
         private int _currentChange = 0;
-
-        public TimeOnly SelectedTime
-        {
-            get { return (TimeOnly)GetValue(SelectedTimeProperty); }
-            set { SetValue(SelectedTimeProperty, value); }
-        }
-
-        public TimeOnly MaxTime
-        {
-            get { return (TimeOnly)GetValue(MaxTimeProperty); }
-            set { SetValue(MaxTimeProperty, value); }
-        }
-
-        public TimeOnly MinTime
-        {
-            get { return (TimeOnly)GetValue(MinTimeProperty); }
-            set { SetValue(MinTimeProperty, value); }
-        }
-
-        public int Hour
-        {
-            get { return (int)GetValue(HourProperty); }
-            set { SetValue(HourProperty, value); }
-        }
-
-        public int Minute
-        {
-            get { return (int)GetValue(MinuteProperty); }
-            set { SetValue(MinuteProperty, value); }
-        }
-
-        public int MinuteInterval
-        {
-            get { return (int)GetValue(MinuteIntervalProperty); }
-            set { SetValue(MinuteIntervalProperty, value); }
-        }
 
         static TimePicker()
         {
@@ -127,22 +93,65 @@ namespace Restorator.Desktop.Controls
             }
         }
 
-        private static void OnMinTimeChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        public TimeOnly SelectedTime
+        {
+            get { return (TimeOnly)GetValue(SelectedTimeProperty); }
+            set { SetValue(SelectedTimeProperty, value); }
+        }
+
+        public TimeOnly EndTime
+        {
+            get { return (TimeOnly)GetValue(MaxTimeProperty); }
+            set { SetValue(MaxTimeProperty, value); }
+        }
+
+        public TimeOnly StartTime
+        {
+            get { return (TimeOnly)GetValue(MinTimeProperty); }
+            set { SetValue(MinTimeProperty, value); }
+        }
+
+        public int Hour
+        {
+            get { return (int)GetValue(HourProperty); }
+            set { SetValue(HourProperty, value); }
+        }
+
+        public int Minute
+        {
+            get { return (int)GetValue(MinuteProperty); }
+            set
+            {
+                SetValue(MinuteProperty, value);
+            }
+        }
+
+        public int MinuteInterval
+        {
+            get { return (int)GetValue(MinuteIntervalProperty); }
+            set { SetValue(MinuteIntervalProperty, value); }
+        }
+
+        private static void OnStartTimeChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             TimePicker timePicker = (TimePicker)d;
 
             TimeOnly interval = (TimeOnly)e.NewValue;
 
             timePicker.SetValue(MinTimeProperty, interval);
+
+            UpdateTime(timePicker);
         }
 
-        private static void OnMaxTimeChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        private static void OnEndTimeChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             TimePicker timePicker = (TimePicker)d;
 
             TimeOnly interval = (TimeOnly)e.NewValue;
 
             timePicker.SetValue(MaxTimeProperty, interval);
+
+            UpdateTime(timePicker);
         }
 
         private static void OnMinuteIntervalChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
@@ -152,6 +161,8 @@ namespace Restorator.Desktop.Controls
             int interval = (int)e.NewValue;
 
             timePicker.SetValue(MinuteIntervalProperty, interval);
+
+            timePicker.Minute += interval - (timePicker.Minute % interval);
         }
 
         private static void OnSelectedTimeChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
@@ -160,29 +171,68 @@ namespace Restorator.Desktop.Controls
 
             if (!timePicker._isUpdatingTime)
             {
-                timePicker.Hour = timePicker.SelectedTime.Hour;
-                timePicker.Minute = timePicker.SelectedTime.Minute;
+                int hour = timePicker.InHourBounds(timePicker.SelectedTime.Hour, ((TimeOnly)e.OldValue).Hour);
+
+                int minute = timePicker.SelectedTime.Minute;
+
+                if (timePicker.Hour != hour)
+                    minute = 0;
+                else
+                    minute = timePicker.Minute;
+
+                timePicker.Hour = hour;
+
+                timePicker.Minute = minute;
             }
         }
 
         private static void OnHourChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             TimePicker timePicker = (TimePicker)d;
-            int hour = (int)e.NewValue;
-            if (hour > timePicker.MaxTime.Hour)
-            {
-                hour = timePicker.MinTime.Hour;
-            }
-            else if (hour < timePicker.MinTime.Hour)
-            {
-                hour = timePicker.MaxTime.Hour;
-            }
+
+            int hour = timePicker.InHourBounds((int)e.NewValue, (int)e.OldValue);
+
             timePicker.SetValue(HourProperty, hour);
+
             if (!timePicker._isUpdatingTime)
             {
                 UpdateTime(timePicker);
             }
         }
+
+        private bool InHourBounds(int hour)
+        {
+            if (hour >= 24)
+                hour = 0;
+            else if (hour < 0)
+                hour = 23;
+
+            bool inBounds;
+
+            if (StartTime < EndTime)
+                inBounds = !(hour >= StartTime.Hour && hour <= EndTime.Hour);
+            else
+                inBounds = hour >= StartTime.Hour || hour <= EndTime.Hour;
+
+            return inBounds;
+        }
+        private int InHourBounds(int newValue, int oldValue)
+        {
+            if (newValue >= 24)
+                newValue = 0;
+            else if (newValue < 0)
+                newValue = 23;
+
+            if (InHourBounds(newValue))
+                return newValue;
+
+            if (newValue < oldValue)
+                return EndTime.Hour;
+            else
+                return StartTime.Hour;
+        }
+
+
 
         private static void OnMinuteChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
@@ -217,6 +267,9 @@ namespace Restorator.Desktop.Controls
                     timePicker._isUpdatingTime = false;
                 }
             }
+
+            minute += (minute % timePicker.MinuteInterval);
+
             timePicker.SetValue(MinuteProperty, minute);
             if (!timePicker._isUpdatingTime)
             {

@@ -8,6 +8,6 @@ namespace Restorator.Domain.Services
         Task<Result<bool>> ReservedTableBelongsToUser(int reservationId, int userId);
         Task<Result<RestaurantPlanDTO>> GetRestaurantPlan(GetRestaurantPlanDTO getRestaurantPlan);
         Task<Result> ReserveTables(CreateRestaurantReservationDTO reserveTable);
-        Task<Result> CancelReservation(int reservationId);
+        Task<Result> CancelReservation(CancelReservationDTO cancelReservation);
     }
 }

@@ -72,7 +72,7 @@ namespace Restorator.Desktop.ViewModels
         [RelayCommand]
         public async Task OpenRestaurantReservation()
         {
-            await _navigationService.NavigateWithHierarchyAsync<RestaurantReservationViewModel>(viewModel => viewModel.LoadReservationPlan(_restaurantId));
+            await _navigationService.NavigateWithHierarchyAsync<RestaurantReservationViewModel>(viewModel => viewModel.LoadRestaurantPlan(_restaurantId));
         }
 
         [RelayCommand]
