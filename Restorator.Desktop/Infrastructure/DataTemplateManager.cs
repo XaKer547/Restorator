@@ -8,7 +8,7 @@ namespace Restorator.Desktop.Infrastructure
     public class DataTemplateManager
     {
         private readonly ResourceDictionary _resources = [];
-
+        private readonly Dictionary<Type, Type> _registeredTemplates = [];
         public DataTemplateManager RegisterDataTemplate<TViewModel, TView>()
          where TViewModel : ViewModelBase
          where TView : FrameworkElement
@@ -26,6 +26,11 @@ namespace Restorator.Desktop.Infrastructure
             return this;
         }
 
+        public Type? TryGetRegisteredViewModel(Type viewType)
+        {
+            return _registeredTemplates[viewType];
+        }
+
         public void InitilizeTemplates(ResourceDictionary resourceDictionary)
         {
             resourceDictionary.MergedDictionaries.Add(_resources);
@@ -38,7 +43,7 @@ namespace Restorator.Desktop.Infrastructure
             FrameworkElement.LanguageProperty.OverrideMetadata(typeof(FrameworkElement), new FrameworkPropertyMetadata(
                 XmlLanguage.GetLanguage(culture.IetfLanguageTag)));
         }
-        private static DataTemplate CreateTemplate(Type viewModelType, Type viewType)
+        private DataTemplate CreateTemplate(Type viewModelType, Type viewType)
         {
             const string xamlTemplate = "<DataTemplate DataType=\"{{x:Type vm:{0}}}\"><v:{1} /></DataTemplate>";
             var xaml = string.Format(xamlTemplate, viewModelType.Name, viewType.Name);
@@ -57,6 +62,8 @@ namespace Restorator.Desktop.Infrastructure
             context.XmlnsDictionary.Add("v", "v");
 
             var template = (DataTemplate)XamlReader.Parse(xaml, context);
+
+            _registeredTemplates.Add(viewType, viewModelType);
 
             return template;
         }

@@ -27,10 +27,13 @@ namespace Restorator.Desktop.ViewModels
         private byte[] plan;
 
         [ObservableProperty]
-        private TimeOnly reservationStartTime;
+        private DateTime reservationStartTime;
 
         [ObservableProperty]
-        private TimeOnly reservationEndTime;
+        private DateTime reservationEndTimeLimit;
+
+        [ObservableProperty]
+        private DateTime reservationEndTime;
 
         [ObservableProperty]
         private DateTime selectedDate = DateTime.Today;
@@ -45,12 +48,12 @@ namespace Restorator.Desktop.ViewModels
         private int hours;
 
         [ObservableProperty]
-        private TimeOnly beginWorkTime;
+        private DateTime beginWorkTime;
 
-        private TimeOnly _beginWorkTimeBuffer;
+        private DateTime _beginWorkTimeBuffer;
 
         [ObservableProperty]
-        private TimeOnly endWorkTime;
+        private DateTime endWorkTime;
 
         public RestaurantReservationViewModel(IContentDialogService contentDialogService,
                                     IReservationService reservationService,
@@ -64,8 +67,6 @@ namespace Restorator.Desktop.ViewModels
             _snackbarService = snackbarService;
 
             _userId = 1;//sessionManager.GetSessionInfo().UserId;
-
-            CheckReservationSearchAvaibility();
         }
 
         private int _restaurantId;
@@ -90,14 +91,21 @@ namespace Restorator.Desktop.ViewModels
 
             Plan = plan.Scheme;
 
-            _beginWorkTimeBuffer = plan.BeginWorkTime;
+            _beginWorkTimeBuffer = SelectedDate.Add(plan.BeginWorkTime.ToTimeSpan());
 
-            if (IsToday)
-                BeginWorkTime = TimeOnly.FromDateTime(DateTime.Now);
-            else
-                BeginWorkTime = _beginWorkTimeBuffer;
+            UpdateBeginWorkTime();
 
-            EndWorkTime = plan.EndWorkTime;
+            var endTimeBuffer = SelectedDate.Add(plan.EndWorkTime.ToTimeSpan());
+
+            if (EndWorkTime <= BeginWorkTime)
+                endTimeBuffer = endTimeBuffer.AddDays(1);
+
+            EndWorkTime = endTimeBuffer;
+
+            reservationStartTime = BeginWorkTime;
+            reservationEndTime = BeginWorkTime;
+
+            CheckReservationSearchAvaibility();
 
             Tables = plan.Tables.Select(t => new TableModel
             {
@@ -111,37 +119,132 @@ namespace Restorator.Desktop.ViewModels
             }).ToImmutableList();
         }
 
+        private bool _waitingRefresh;
         async partial void OnSelectedDateChanged(DateTime value)
         {
             IsToday = value == DateTime.Today;
 
-            await RefreshReservationPlanCommand.ExecuteAsync(null);
+            var daysPast = SelectedDate.Day - ReservationStartTime.Day;
+
+            UpdateWorkTime();
+
+            ReservationEndTime = ReservationEndTime.AddDays(daysPast);
+            ReservationStartTime = ReservationStartTime.AddDays(daysPast);
         }
 
-        async partial void OnReservationStartTimeChanged(TimeOnly value)
+        private async void UpdateWorkTime()
         {
-            await RefreshReservationPlanCommand.ExecuteAsync(null);
+            _waitingRefresh = true;
+
+            _beginWorkTimeBuffer = SelectedDate.Add(BeginWorkTime.TimeOfDay);
+
+            UpdateBeginWorkTime();
+
+            var endTimeBuffer = SelectedDate.Add(EndWorkTime.TimeOfDay);
+
+            if (EndWorkTime <= BeginWorkTime)
+                endTimeBuffer = endTimeBuffer.AddDays(1);
+
+            EndWorkTime = endTimeBuffer;
+
+            await RefreshReservationPlan();
+
+            _waitingRefresh = false;
         }
 
-        async partial void OnReservationEndTimeChanged(TimeOnly value)
+        async partial void OnReservationStartTimeChanged(DateTime value)
         {
-            await RefreshReservationPlanCommand.ExecuteAsync(null);
+            if (ReservationStartTime > ReservationEndTime)
+            {
+                _waitingRefresh = true;
+
+                ReservationEndTime = ReservationStartTime;
+
+                _waitingRefresh = false;
+
+                return;
+            }
+
+            if (ReservationStartTime < BeginWorkTime)
+            {
+                ReservationStartTime = BeginWorkTime;
+                return;
+            }
+
+            if (!_waitingRefresh)
+                await RefreshReservationPlan();
+        }
+
+        async partial void OnReservationEndTimeChanged(DateTime value)
+        {
+            var onNewDay = ReservationEndTime.Day > ReservationStartTime.Day;
+
+            if (ReservationEndTime > EndWorkTime)
+            {
+                _waitingRefresh = true;
+
+                ReservationEndTime = EndWorkTime;
+
+                _waitingRefresh = false;
+
+                return;
+            }
+
+            if (value.Hour < ReservationStartTime.Hour && !onNewDay)
+            {
+                _waitingRefresh = true;
+
+                ReservationEndTime = ReservationEndTime.AddDays(1);
+
+                _waitingRefresh = false;
+
+                return;
+            }
+            else if (value.Hour > ReservationStartTime.Hour && onNewDay)
+            {
+                _waitingRefresh = true;
+
+                ReservationEndTime = ReservationEndTime.AddDays(-1);
+
+                _waitingRefresh = false;
+
+                return;
+            }
+
+            if (!onNewDay && ReservationStartTime > ReservationEndTime)
+            {
+                _waitingRefresh = true;
+
+                ReservationEndTime = ReservationStartTime;
+
+                _waitingRefresh = false;
+
+                return;
+            }
+
+            if (!_waitingRefresh)
+                await RefreshReservationPlan();
         }
 
         partial void OnIsTodayChanged(bool value)
         {
-            if (IsToday)
-                BeginWorkTime = TimeOnly.FromDateTime(DateTime.Now);
-            else
-                BeginWorkTime = _beginWorkTimeBuffer;
+            UpdateBeginWorkTime();
 
             CheckReservationSearchAvaibility();
         }
 
-        partial void OnReservationStartTimeChanging(TimeOnly value)
+        private void UpdateBeginWorkTime()
         {
-            //if (ReservationEndTime <= value)
-            //    ReservationEndTime = value;
+            if (IsToday)
+            {
+                var date = DateOnly.FromDateTime(DateTime.Now);
+
+                var time = TimeOnly.FromDateTime(DateTime.Now);
+
+                BeginWorkTime = new DateTime(date, new TimeOnly(time.Hour, time.Minute));
+            }
+            else
+                BeginWorkTime = _beginWorkTimeBuffer;
         }
 
         private void CheckReservationSearchAvaibility()
@@ -149,25 +252,13 @@ namespace Restorator.Desktop.ViewModels
             if (!IsToday)
                 return;
 
-            DateTime endWork = DateTime.Today;
-
-            if (EndWorkTime <= BeginWorkTime)
-            {
-                endWork = endWork.AddDays(1);
-            }
-
-            endWork.Add(EndWorkTime.ToTimeSpan());
-
-            CanSearchReserve = (IsToday && DateTime.Now < endWork) ^ !IsToday;
+            CanSearchReserve = (IsToday && BeginWorkTime < EndWorkTime) ^ !IsToday;
         }
 
         [RelayCommand(CanExecute = nameof(CanSearchReserve), AllowConcurrentExecutions = false)]
         public async Task RefreshReservationPlan()
         {
-            DateTime reservationEndDate = SelectedDate;
 
-            if (EndWorkTime <= BeginWorkTime && ReservationStartTime > ReservationEndTime)
-                reservationEndDate = reservationEndDate.AddDays(1);
 
             var result = await _reservationService.GetRestaurantPlan(BuildRestaurantPlanQuery());
 
@@ -203,23 +294,19 @@ namespace Restorator.Desktop.ViewModels
 
             return new GetRestaurantPlanDTO()
             {
-                ReservationStartDate = SelectedDate.Add(ReservationStartTime.ToTimeSpan()),
-                ReservationEndDate = reservationEndDate.Add(ReservationEndTime.ToTimeSpan()),
+                ReservationStartDate = ReservationStartTime,
+                ReservationEndDate = ReservationEndTime,
                 RestaurantId = _restaurantId,
                 UserId = _userId,
             };
         }
 
 
-        //pass Date from filter? Get today and now
-
         //TODO:
         // сортировка по количеству бронирований?
-        // бронирование с какого-то времени на n часов!!
-
-        private readonly List<int> _reservedTables = [];
+        private readonly HashSet<int> _reservedTables = [];
         [RelayCommand(CanExecute = nameof(CanSearchReserve))]
-        public async void TableReservation(TableModel table)
+        public async Task TableReservation(TableModel table)
         {
             if (table.State == Domain.Models.Enums.TableStates.Avaible)
             {
@@ -245,16 +332,30 @@ namespace Restorator.Desktop.ViewModels
                     if (confirm != ContentDialogResult.Primary)
                         return;
 
-                    var result = await _reservationService.CancelReservation(new CancelReservationDTO()
+                    var result = await _reservationService.GetReservation(new GetReservationInfoDTO
                     {
-                        RestaurantId = _restaurantId,
                         UserId = _userId,
-                        TableId = table.Id,
-
-
+                        RestaurantId = _restaurantId,
+                        ReservationStartDate = ReservationStartTime,
+                        ReservationEndDate = ReservationEndTime,
                     });
 
                     if (result.IsFailed)
+                    {
+                        _snackbarService.Show("Ой", "Что-то пошло не так", ControlAppearance.Danger);
+
+                        return;
+                    };
+
+                    var info = result.Value;
+
+                    var cancelResult = await _reservationService.CancelReservation(new CancelReservationDTO
+                    {
+                        ReservationId = info.Id,
+                        UserId = _userId
+                    });
+
+                    if (cancelResult.IsFailed)
                     {
                         _snackbarService.Show("Ой", "Что-то пошло не так", ControlAppearance.Danger);
 
@@ -281,8 +382,8 @@ namespace Restorator.Desktop.ViewModels
 
             var dialog = new ConfirmReservationReservationContentDialog(new ConfirmRestaurantReservationModel()
             {
-                ReservationStart = ReservationStartTime,
-                ReservationEnd = ReservationEndTime,
+                ReservationStart = TimeOnly.FromDateTime(ReservationStartTime),
+                ReservationEnd = TimeOnly.FromDateTime(ReservationEndTime),
                 TablesCount = _reservedTables.Count,
             });
 
@@ -291,20 +392,13 @@ namespace Restorator.Desktop.ViewModels
             if (confirmation != ContentDialogResult.Primary)
                 return;
 
-            DateTime reservationEndDate = SelectedDate;
-
-            if (EndWorkTime <= BeginWorkTime)
-            {
-                reservationEndDate = reservationEndDate.AddDays(1);
-            }
-
             var reservation = new CreateRestaurantReservationDTO
             {
                 UserId = _userId,
                 RestaurantId = _restaurantId,
                 ReservedTables = _reservedTables,
-                ReservationStartDate = SelectedDate.Add(ReservationStartTime.ToTimeSpan()),
-                ReservationEndDate = reservationEndDate.Add(ReservationEndTime.ToTimeSpan()),
+                ReservationStartDate = ReservationStartTime,
+                ReservationEndDate = ReservationEndTime,
             };
 
             var result = await _reservationService.ReserveTables(reservation);

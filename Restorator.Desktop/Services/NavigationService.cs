@@ -15,6 +15,7 @@ namespace Restorator.Desktop.Services
         void NavigateWithHierarchy<T>() where T : ViewModelBase;
         void NavigateWithHierarchy<T>(Action<T> action) where T : ViewModelBase;
         Task NavigateWithHierarchyAsync<T>(Func<T, Task> action) where T : ViewModelBase;
+        Task NavigateWithHierarchyAsync<T>() where T : ViewModelBase;
 
         void NavigateBack();
         Task NavigateBackAsync();
@@ -31,6 +32,10 @@ namespace Restorator.Desktop.Services
         public NavigationService(IServiceProvider serviceProvider)
         {
             _serviceProvider = serviceProvider;
+        }
+        public void SetNavigationControl(Frame navigationControl)
+        {
+            _navigationControl = navigationControl;
         }
 
         public void Navigate<T>() where T : ViewModelBase
@@ -82,6 +87,7 @@ namespace Restorator.Desktop.Services
 
             _navigationControl.Navigate(_currentViewModel);
         }
+
         public async Task NavigateWithHierarchyAsync<T>(Func<T, Task> action) where T : ViewModelBase
         {
             var item = _serviceProvider.GetRequiredService<T>();
@@ -94,10 +100,17 @@ namespace Restorator.Desktop.Services
 
             _navigationControl.Navigate(_currentViewModel);
         }
-
-        public void SetNavigationControl(Frame navigationControl)
+        public Task NavigateWithHierarchyAsync<T>() where T : ViewModelBase
         {
-            _navigationControl = navigationControl;
+            var item = _serviceProvider.GetRequiredService<T>();
+
+            _hierarchy.Push(_currentViewModel);
+
+            _currentViewModel = item;
+
+            _navigationControl.Navigate(_currentViewModel);
+
+            return Task.CompletedTask;
         }
 
         public void NavigateBack()

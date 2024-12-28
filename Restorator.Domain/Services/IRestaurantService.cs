@@ -9,7 +9,10 @@ namespace Restorator.Domain.Services
         Task<Result<RestaurantInfoDTO>> GetRestaurantInfo(int restaurantId);
         Task<IReadOnlyCollection<RestaurantSearchItemDTO>> GetRestaurantNames();
         Task<IReadOnlyCollection<RestaurantTagDTO>> GetRestaurantTags();
+        Task<IReadOnlyCollection<RestaurantPreviewDTO>> GetOwnedRestaurantPreviews(GetOwnedRestaurantsPreviewDTO getRestaurantsPreview);
         Task<PaginatedList<RestaurantPreviewDTO>> GetRestaurantPreviews(GetRestaurantsPreviewDTO getRestaurantsPreview);
         Task<Result> ChangeRestaurantApproval(ChangeRestaurantApprovalDTO changeRestaurantApproval);
+        Task<Result> DeleteRestaurant(int restaurantId);
+        Task<Result> UpdateRestaurant(UpdateRestraurantDTO updateRestraurantDTO);
     }
 }

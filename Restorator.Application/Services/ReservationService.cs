@@ -1,10 +1,12 @@
 ﻿using FluentResults;
+using LinqKit;
 using Microsoft.EntityFrameworkCore;
 using Restorator.DataAccess.Data;
 using Restorator.DataAccess.Data.Entities;
 using Restorator.Domain.Models;
 using Restorator.Domain.Models.Enums;
 using Restorator.Domain.Services;
+using System.Collections.Immutable;
 
 namespace Restorator.Application.Services
 {
@@ -18,12 +20,14 @@ namespace Restorator.Application.Services
 
         public async Task<Result> CancelReservation(CancelReservationDTO cancelReservation)
         {
-            var reseravation = _context.Reservations.SingleOrDefault(r => r.Id == reservationId);
-            
-            //get existing
+            var reseravation = _context.Reservations.Include(r => r.User)
+                .SingleOrDefault(r => r.Id == cancelReservation.ReservationId);
 
             if (reseravation is null)
                 return Result.Fail("Бронирование не найдено");
+
+            if (reseravation.User.Id != cancelReservation.UserId)
+                return Result.Fail("");
 
             reseravation.Canceled = true;
 
@@ -32,6 +36,59 @@ namespace Restorator.Application.Services
             await _context.SaveChangesAsync();
 
             return Result.Ok();
+        }
+
+        public async Task<Result<ReservationInfoDTO>> GetReservation(GetReservationInfoDTO getReservationInfo)
+        {
+            var reservation = await _context.Reservations.Include(r => r.Restaurant)
+                .Include(r => r.User)
+                .AsNoTracking()
+                .SingleOrDefaultAsync(reservation => reservation.Restaurant.Id == getReservationInfo.RestaurantId && !reservation.Canceled && reservation.User.Id == getReservationInfo.UserId
+                && getReservationInfo.ReservationStartDate >= reservation.ReservationStart && getReservationInfo.ReservationStartDate <= reservation.ReservationEnd
+                || getReservationInfo.ReservationEndDate >= reservation.ReservationStart && getReservationInfo.ReservationEndDate <= reservation.ReservationEnd);
+
+            if (reservation is null)
+                return Result.Fail("Бронирование не найдено");
+
+            var info = new ReservationInfoDTO
+            {
+                Id = reservation.Id,
+                UserId = reservation.User.Id,
+                Username = reservation.User.Username,
+                RestaurantId = reservation.Restaurant.Id,
+                RestaurantName = reservation.Restaurant.Name,
+                ReservationStart = reservation.ReservationStart,
+                ReservationEnd = reservation.ReservationEnd
+            };
+
+            return Result.Ok(info);
+        }
+        public async Task<Result<IReadOnlyCollection<ReservationInfoDTO>>> GetReservations(GetReservationsDTO getReservations)
+        {
+            var predicate = PredicateBuilder.New<Reservation>(r => r.ReservationEnd.Day == getReservations.SelectedDate.Day || r.ReservationStart.Day == getReservations.SelectedDate.Day);
+
+            if (getReservations.UserId.HasValue)
+                predicate = predicate.And(r => r.User.Id == getReservations.UserId.Value);
+
+            if (getReservations.RestaurantId.HasValue)
+                predicate = predicate.And(r => r.Restaurant.Id == getReservations.RestaurantId);
+
+            if (getReservations.SkipCanceled.HasValue)
+                predicate = predicate.And(r => r.Canceled == getReservations.SkipCanceled.Value);
+
+            return await _context.Reservations
+                 .AsNoTracking()
+                 .Where(predicate)
+                 .Select(r => new ReservationInfoDTO
+                 {
+                     Id = r.Id,
+                     UserId = r.User.Id,
+                     Username = r.User.Username,
+                     RestaurantId = r.Restaurant.Id,
+                     RestaurantName = r.Restaurant.Name,
+                     ReservationStart = r.ReservationStart,
+                     ReservationEnd = r.ReservationEnd
+                 }).ToListAsync();
         }
 
         public async Task<Result<RestaurantPlanDTO>> GetRestaurantPlan(GetRestaurantPlanDTO getRestaurantPlan)

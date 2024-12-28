@@ -105,10 +105,15 @@ namespace Restorator.DataAccess.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int>("OwnerId")
+                        .HasColumnType("int");
+
                     b.Property<int>("TemplateId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("OwnerId");
 
                     b.HasIndex("TemplateId");
 
@@ -268,7 +273,7 @@ namespace Restorator.DataAccess.Migrations
             modelBuilder.Entity("Restorator.DataAccess.Data.Entities.Reservation", b =>
                 {
                     b.HasOne("Restorator.DataAccess.Data.Entities.Restaurant", "Restaurant")
-                        .WithMany()
+                        .WithMany("Reservations")
                         .HasForeignKey("RestaurantId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -280,9 +285,9 @@ namespace Restorator.DataAccess.Migrations
                         .IsRequired();
 
                     b.HasOne("Restorator.DataAccess.Data.Entities.User", "User")
-                        .WithMany()
+                        .WithMany("Reservations")
                         .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.Navigation("Restaurant");
@@ -294,11 +299,19 @@ namespace Restorator.DataAccess.Migrations
 
             modelBuilder.Entity("Restorator.DataAccess.Data.Entities.Restaurant", b =>
                 {
+                    b.HasOne("Restorator.DataAccess.Data.Entities.User", "Owner")
+                        .WithMany("Restaurants")
+                        .HasForeignKey("OwnerId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("Restorator.DataAccess.Data.Entities.RestaurantTemplate", "Template")
                         .WithMany("Restaurants")
                         .HasForeignKey("TemplateId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("Owner");
 
                     b.Navigation("Template");
                 });
@@ -329,6 +342,11 @@ namespace Restorator.DataAccess.Migrations
                     b.Navigation("Role");
                 });
 
+            modelBuilder.Entity("Restorator.DataAccess.Data.Entities.Restaurant", b =>
+                {
+                    b.Navigation("Reservations");
+                });
+
             modelBuilder.Entity("Restorator.DataAccess.Data.Entities.RestaurantTemplate", b =>
                 {
                     b.Navigation("Restaurants");
@@ -339,6 +357,13 @@ namespace Restorator.DataAccess.Migrations
             modelBuilder.Entity("Restorator.DataAccess.Data.Entities.Role", b =>
                 {
                     b.Navigation("Users");
+                });
+
+            modelBuilder.Entity("Restorator.DataAccess.Data.Entities.User", b =>
+                {
+                    b.Navigation("Reservations");
+
+                    b.Navigation("Restaurants");
                 });
 #pragma warning restore 612, 618
         }

@@ -66,31 +66,6 @@ namespace Restorator.DataAccess.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Restaurants",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Image = table.Column<byte[]>(type: "varbinary(max)", nullable: false),
-                    MenuImage = table.Column<byte[]>(type: "varbinary(max)", nullable: false),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Description = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    BeginWorkTime = table.Column<TimeOnly>(type: "time", nullable: false),
-                    EndWorkTime = table.Column<TimeOnly>(type: "time", nullable: false),
-                    TemplateId = table.Column<int>(type: "int", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Restaurants", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Restaurants_RestaurantTemplates_TemplateId",
-                        column: x => x.TemplateId,
-                        principalTable: "RestaurantTemplates",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "Users",
                 columns: table => new
                 {
@@ -140,25 +115,34 @@ namespace Restorator.DataAccess.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "RestaurantRestaurantTag",
+                name: "Restaurants",
                 columns: table => new
                 {
-                    RestaurantsId = table.Column<int>(type: "int", nullable: false),
-                    TagsId = table.Column<int>(type: "int", nullable: false)
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    OwnerId = table.Column<int>(type: "int", nullable: false),
+                    Image = table.Column<byte[]>(type: "varbinary(max)", nullable: true),
+                    MenuImage = table.Column<byte[]>(type: "varbinary(max)", nullable: true),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Description = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    BeginWorkTime = table.Column<TimeOnly>(type: "time", nullable: false),
+                    EndWorkTime = table.Column<TimeOnly>(type: "time", nullable: false),
+                    Approved = table.Column<bool>(type: "bit", nullable: false),
+                    TemplateId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_RestaurantRestaurantTag", x => new { x.RestaurantsId, x.TagsId });
+                    table.PrimaryKey("PK_Restaurants", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_RestaurantRestaurantTag_RestaurantTags_TagsId",
-                        column: x => x.TagsId,
-                        principalTable: "RestaurantTags",
+                        name: "FK_Restaurants_RestaurantTemplates_TemplateId",
+                        column: x => x.TemplateId,
+                        principalTable: "RestaurantTemplates",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_RestaurantRestaurantTag_Restaurants_RestaurantsId",
-                        column: x => x.RestaurantsId,
-                        principalTable: "Restaurants",
+                        name: "FK_Restaurants_Users_OwnerId",
+                        column: x => x.OwnerId,
+                        principalTable: "Users",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -195,6 +179,29 @@ namespace Restorator.DataAccess.Migrations
                         name: "FK_Reservations_Users_UserId",
                         column: x => x.UserId,
                         principalTable: "Users",
+                        principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateTable(
+                name: "RestaurantRestaurantTag",
+                columns: table => new
+                {
+                    RestaurantsId = table.Column<int>(type: "int", nullable: false),
+                    TagsId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_RestaurantRestaurantTag", x => new { x.RestaurantsId, x.TagsId });
+                    table.ForeignKey(
+                        name: "FK_RestaurantRestaurantTag_RestaurantTags_TagsId",
+                        column: x => x.TagsId,
+                        principalTable: "RestaurantTags",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_RestaurantRestaurantTag_Restaurants_RestaurantsId",
+                        column: x => x.RestaurantsId,
+                        principalTable: "Restaurants",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -218,6 +225,11 @@ namespace Restorator.DataAccess.Migrations
                 name: "IX_RestaurantRestaurantTag_TagsId",
                 table: "RestaurantRestaurantTag",
                 column: "TagsId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Restaurants_OwnerId",
+                table: "Restaurants",
+                column: "OwnerId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Restaurants_TemplateId",
@@ -253,9 +265,6 @@ namespace Restorator.DataAccess.Migrations
                 name: "Tables");
 
             migrationBuilder.DropTable(
-                name: "Users");
-
-            migrationBuilder.DropTable(
                 name: "RestaurantTags");
 
             migrationBuilder.DropTable(
@@ -265,10 +274,13 @@ namespace Restorator.DataAccess.Migrations
                 name: "TableTemplates");
 
             migrationBuilder.DropTable(
-                name: "Roles");
+                name: "RestaurantTemplates");
 
             migrationBuilder.DropTable(
-                name: "RestaurantTemplates");
+                name: "Users");
+
+            migrationBuilder.DropTable(
+                name: "Roles");
         }
     }
 }

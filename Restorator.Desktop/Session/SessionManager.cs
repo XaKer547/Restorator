@@ -10,6 +10,8 @@ namespace Restorator.Desktop.Session
         void SetSession(SessionInfo sessionInfo);
         SessionInfo GetSessionInfo();
         void RemoveSession();
+
+        bool HaveSession();
     }
     public class SessionManager : ISessionManager
     {
@@ -20,6 +22,11 @@ namespace Restorator.Desktop.Session
             using var stream = _userStore.OpenFile("session.json", FileMode.Open);
 
             return JsonSerializer.Deserialize<SessionInfo>(stream)!;
+        }
+
+        public bool HaveSession()
+        {
+            return _userStore.FileExists("session.json");
         }
 
         public void RemoveSession()

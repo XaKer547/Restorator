@@ -22,7 +22,8 @@ namespace Restorator.Seeder.Data.DbSeeder
                     BeginWorkTime = new TimeOnly(12, 0),
                     EndWorkTime = new TimeOnly(0, 0),
                     Approved = true,
-                    Tags = [.. _context.RestaurantTags.Where(t => t.Id == 1)]
+                    Tags = [.. _context.RestaurantTags.Where(t => t.Id == 1)],
+                    OwnerId = 3
                 },
             };
 

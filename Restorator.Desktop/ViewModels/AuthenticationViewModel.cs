@@ -38,7 +38,7 @@ namespace Restorator.Desktop.ViewModels
         [RelayCommand]
         public void NavigateToUserMenu()
         {
-            _navigationService.Navigate<RestaurantSearchViewModel>();
+            _navigationService.Navigate<MenuViewModel>();
         }
     }
 }

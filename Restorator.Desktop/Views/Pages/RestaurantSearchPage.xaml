@@ -27,7 +27,7 @@
             </ui:AutoSuggestBox>
 
             <DockPanel>
-                <RadioButton Content="Все" Command="{Binding ResetSelectedTagCommand}" IsChecked="{Binding TagEmpty, Mode=TwoWay}"
+                <RadioButton Content="Все" Command="{Binding ResetSelectedTagCommand}" IsChecked="{Binding TagEmpty, Mode=TwoWay, FallbackValue=True}"
                            Style="{StaticResource {x:Type ToggleButton}}"  GroupName="RestaurantTags"/>
 
                 <ItemsControl ItemsSource="{Binding RestaurantsTag}">

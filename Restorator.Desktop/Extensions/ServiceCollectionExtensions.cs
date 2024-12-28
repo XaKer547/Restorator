@@ -4,6 +4,7 @@ using Restorator.Application.Services;
 using Restorator.DataAccess.Data;
 using Restorator.Desktop.Controls;
 using Restorator.Desktop.Infrastructure;
+using Restorator.Desktop.Services;
 using Restorator.Desktop.Session;
 using Restorator.Desktop.ViewModels;
 using Restorator.Desktop.ViewModels.Abstract;
@@ -32,16 +33,13 @@ namespace Restorator.Desktop.Extensions
             services.AddSingleton<IContentDialogService, ContentDialogService>();
             services.AddSingleton<INavigationViewPageProvider, DependencyInjectionNavigationViewPageProvider>();
             services.AddSingleton<Services.INavigationService, Services.NavigationService>();
+            services.AddSingleton<IPageService, PageService>();
+
             services.AddSingleton<ISessionManager, SessionManager>();
 
             services.AddScoped<IAuthenticationService, AuthenticationService>();
             services.AddScoped<IRestaurantService, RestaurantService>();
             services.AddScoped<IReservationService, ReservationService>();
-
-            services.AddMediatR(opt =>
-            {
-                opt.RegisterServicesFromAssembly(Assembly.GetExecutingAssembly());
-            });
 
             services.AddDbContext<RestoratorDbContext>(opt =>
             {
@@ -67,9 +65,13 @@ namespace Restorator.Desktop.Extensions
                 .RegisterDataTemplate<AuthenticationViewModel, AuthenticationPage>()
                 .RegisterDataTemplate<SignInViewModel, SignInControl>()
                 .RegisterDataTemplate<SignUpViewModel, SignUpControl>()
+                .RegisterDataTemplate<MenuViewModel, MenuPage>()
                 .RegisterDataTemplate<RestaurantInfoViewModel, RestaurantInfoPage>()
                 .RegisterDataTemplate<RestaurantReservationViewModel, RestraurantReservationPage>()
-                .RegisterDataTemplate<RestaurantSearchViewModel, RestaurantSearchPage>();
+                .RegisterDataTemplate<UserReservationsViewModel, UserReservationsPage>()
+                .RegisterDataTemplate<RestaurantSearchViewModel, RestaurantSearchPage>()
+                .RegisterDataTemplate<RestaurantEditorViewModel, RestaurantEditorPage>()
+                .RegisterDataTemplate<RestaurantManagementViewModel, RestaurantManagementPage>();
 
             manager.SetControlsCulture();
 

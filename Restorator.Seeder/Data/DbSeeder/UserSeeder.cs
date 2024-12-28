@@ -27,6 +27,13 @@ namespace Restorator.Seeder.Data.DbSeeder
                     Username = "Cool adm",
                     Login = "admin",
                     Password = AccountPasswordHelper.HashUserPassword("admin")
+                },
+                new()
+                {
+                    Role = _context.Roles.FromEnum(Roles.Manager),
+                    Username = "Манагер",
+                    Login = "Manager",
+                    Password = AccountPasswordHelper.HashUserPassword("Manager")
                 }
             };
 

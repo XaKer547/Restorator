@@ -1,0 +1,99 @@
+﻿using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
+using Restorator.Desktop.Session;
+using Restorator.Desktop.ViewModels.Abstract;
+using Restorator.Domain.Models;
+using Restorator.Domain.Services;
+using System.Collections.ObjectModel;
+using Wpf.Ui;
+using Wpf.Ui.Extensions;
+
+namespace Restorator.Desktop.ViewModels
+{
+    public partial class UserReservationsViewModel : ViewModelBase
+    {
+        private readonly IReservationService _reservationService;
+        private readonly ISnackbarService _snackbarService;
+        private readonly IContentDialogService _contentDialogService;
+        public UserReservationsViewModel(IReservationService reservationService,
+                                         ISessionManager sessionManager,
+                                         ISnackbarService snackbarService,
+                                         IContentDialogService contentDialogService)
+        {
+            _reservationService = reservationService;
+            _snackbarService = snackbarService;
+            _contentDialogService = contentDialogService;
+
+            _userId = sessionManager.GetSessionInfo().UserId;
+        }
+        private readonly int _userId;
+
+        [ObservableProperty]
+        private ObservableCollection<ReservationInfoDTO> reservations = [];
+
+        [ObservableProperty]
+        private DateTime selectedDate = DateTime.Today;
+
+
+        async partial void OnSelectedDateChanged(DateTime value)
+        {
+            await LoadReservationHistory();
+        }
+
+        [RelayCommand]
+        public async Task LoadReservationHistory()
+        {
+            Reservations.Clear();
+
+            var result = await _reservationService.GetReservations(new GetReservationsDTO()
+            {
+                SelectedDate = SelectedDate,
+                UserId = _userId,
+                SkipCanceled = true,
+            });
+
+            if (result.IsFailed)
+            {
+                _snackbarService.Show("Ой-ой", "Что-то пошло не так", Wpf.Ui.Controls.ControlAppearance.Danger);
+
+                return;
+            }
+
+            foreach (var reservation in result.Value)
+                Reservations.Add(reservation);
+        }
+
+        [RelayCommand]
+        public async Task CancelReservation(ReservationInfoDTO reservationInfo)
+        {
+            if (!reservationInfo.CanCancel)
+            {
+                _snackbarService.Show("Так не пойдет", "Нельзя отменить бронирование, которое уже прошло", Wpf.Ui.Controls.ControlAppearance.Danger);
+
+                return;
+            }
+
+            var confirm = await _contentDialogService.ShowAsync(new Dialogs.CancelTableReservationDialog(), new CancellationToken());
+
+            if (confirm != Wpf.Ui.Controls.ContentDialogResult.Primary)
+                return;
+
+            var result = await _reservationService.CancelReservation(new CancelReservationDTO()
+            {
+                ReservationId = reservationInfo.Id,
+                UserId = _userId,
+            });
+
+            if (result.IsFailed)
+            {
+                _snackbarService.Show("Ой-ой", "Что-то пошло не так", Wpf.Ui.Controls.ControlAppearance.Danger);
+
+                return;
+            }
+
+            Reservations.Remove(reservationInfo);
+
+            _snackbarService.Show("Отмена прошла успешно", "Надеемся, что вы вернетесь", Wpf.Ui.Controls.ControlAppearance.Success);
+        }
+    }
+}

@@ -9,5 +9,7 @@ namespace Restorator.Domain.Services
         Task<Result<RestaurantPlanDTO>> GetRestaurantPlan(GetRestaurantPlanDTO getRestaurantPlan);
         Task<Result> ReserveTables(CreateRestaurantReservationDTO reserveTable);
         Task<Result> CancelReservation(CancelReservationDTO cancelReservation);
+        Task<Result<ReservationInfoDTO>> GetReservation(GetReservationInfoDTO getReservationInfo);
+        Task<Result<IReadOnlyCollection<ReservationInfoDTO>>> GetReservations(GetReservationsDTO getReservations);
     }
 }

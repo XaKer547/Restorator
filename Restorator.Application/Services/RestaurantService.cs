@@ -18,6 +18,17 @@ namespace Restorator.Application.Services
             _context = context;
         }
 
+        public async Task<IReadOnlyCollection<RestaurantPreviewDTO>> GetOwnedRestaurantPreviews(GetOwnedRestaurantsPreviewDTO getRestaurantsPreview)
+        {
+            return await _context.Restaurants.AsNoTracking()
+                .Where(r => r.Owner.Id == getRestaurantsPreview.UserId)
+                .Select(r => new RestaurantPreviewDTO
+                {
+                    Id = r.Id,
+                    Name = r.Name,
+                    Image = r.Image,
+                }).ToArrayAsync();
+        }
         public async Task<Result> ChangeRestaurantApproval(ChangeRestaurantApprovalDTO changeRestaurantApproval)
         {
             var user = _context.Users.SingleOrDefault(u => u.Id == changeRestaurantApproval.UserId);
@@ -64,17 +75,26 @@ namespace Restorator.Application.Services
                     Image = r.Image,
                 }).AsPageAsync(getRestaurantsPreview.CurrentPage, getRestaurantsPreview.PageSize);
         }
-        public async Task<Result> CreateRestaurant(CreateRestaurantDTO createRestaurant)
+        public async Task<Result> CreateRestaurant(CreateRestaurantDTO createRestraurant)
         {
+            var user = await _context.Users.SingleOrDefaultAsync(u => u.Id == createRestraurant.UserId);
+
+            if (user == null)
+                return Result.Fail("Пользователя не существует");
+
+            var tags = _context.RestaurantTags.Where(t => createRestraurant.TagsId.Contains(t.Id));
+
             var restaurant = new Restaurant()
             {
-                Name = createRestaurant.Name,
-                Description = createRestaurant.Description,
-                BeginWorkTime = createRestaurant.BeginWorkTime,
-                EndWorkTime = createRestaurant.EndWorkTime,
-                TemplateId = createRestaurant.TemplateId,
-                Image = createRestaurant.Image,
-                MenuImage = createRestaurant.Menu,
+                Owner = user,
+                Name = createRestraurant.Name,
+                Description = createRestraurant.Description,
+                BeginWorkTime = createRestraurant.BeginWorkTime,
+                EndWorkTime = createRestraurant.EndWorkTime,
+                TemplateId = createRestraurant.TemplateId,
+                Image = createRestraurant.Image,
+                MenuImage = createRestraurant.Menu,
+                Tags = [.. tags]
             };
 
             _context.Restaurants.Add(restaurant);
@@ -113,7 +133,6 @@ namespace Restorator.Application.Services
                     Name = r.Name,
                 }).ToArrayAsync();
         }
-
         public async Task<IReadOnlyCollection<RestaurantTagDTO>> GetRestaurantTags()
         {
             return await _context.RestaurantTags.AsNoTracking()
@@ -122,6 +141,44 @@ namespace Restorator.Application.Services
                    Id = r.Id,
                    Name = r.Name,
                }).ToArrayAsync();
+        }
+        public async Task<Result> DeleteRestaurant(int restaurantId)
+        {
+            var restaurant = _context.Restaurants.SingleOrDefault(r => r.Id == restaurantId);
+
+            if (restaurant is null)
+                return Result.Fail("Ресторан не найден");
+
+            _context.Restaurants.Remove(restaurant);
+
+            await _context.SaveChangesAsync();
+
+            return Result.Ok();
+        }
+
+        public async Task<Result> UpdateRestaurant(UpdateRestraurantDTO updateRestraurant)
+        {
+            var restaurant = _context.Restaurants.SingleOrDefault(r => r.Id == updateRestraurant.RestaurantId);
+
+            if (restaurant is null)
+                return Result.Fail("Ресторан не найден");
+
+            restaurant.Name = updateRestraurant.Name;
+            restaurant.Description = updateRestraurant.Description;
+
+            restaurant.BeginWorkTime = updateRestraurant.BeginWorkTime;
+            restaurant.EndWorkTime = updateRestraurant.EndWorkTime;
+
+            restaurant.Image = updateRestraurant.Image;
+            restaurant.MenuImage = updateRestraurant.Menu;
+
+            restaurant.Tags = [.. _context.RestaurantTags.Where(t => updateRestraurant.Tags.Contains(t.Id))];
+
+            _context.Restaurants.Update(restaurant);
+
+            await _context.SaveChangesAsync();
+
+            return Result.Ok();
         }
     }
 }

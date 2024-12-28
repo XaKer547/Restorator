@@ -16,17 +16,14 @@ namespace Restorator.DataAccess.Data
         public DbSet<Table> Tables => Set<Table>();
         public DbSet<TableTemplate> TableTemplates => Set<TableTemplate>();
 
-        //protected override void OnModelCreating(ModelBuilder modelBuilder)
-        //{
-        //    modelBuilder.Entity<Restaurant>()
-        //        .Property(r => r.BeginWorkTime)
-        //        .HasConversion(r => r.ToTimeSpan(), r => TimeOnly.FromTimeSpan(r));
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<User>()
+                .HasMany(u => u.Reservations)
+                .WithOne(r => r.User)
+                .OnDelete(DeleteBehavior.NoAction);
 
-        //    modelBuilder.Entity<Restaurant>()
-        //        .Property(r => r.EndWorkTime)
-        //        .HasConversion(r => r.ToTimeSpan(), r => TimeOnly.FromTimeSpan(r));
-
-        //    base.OnModelCreating(modelBuilder);
-        //}
+            base.OnModelCreating(modelBuilder);
+        }
     }
 }
