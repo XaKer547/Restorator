@@ -1,11 +1,11 @@
-﻿using CommunityToolkit.Mvvm.ComponentModel;
+﻿using System.Collections.ObjectModel;
+using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Restorator.DataAccess.Data.Entities.Enums;
 using Restorator.Desktop.Dialogs;
 using Restorator.Desktop.Session;
 using Restorator.Desktop.ViewModels.Abstract;
 using Restorator.Desktop.Views.Pages;
-using System.Collections.ObjectModel;
 using Wpf.Ui;
 using Wpf.Ui.Controls;
 
@@ -58,17 +58,17 @@ namespace Restorator.Desktop.ViewModels
             if (_role == Roles.User)
             {
                 MenuItems.Add(new NavigationViewItem("Поиск", SymbolRegular.Search16, typeof(RestaurantSearchPage)));
-                MenuItems.Add(new NavigationViewItem("Бронирования", SymbolRegular.Sticker20, typeof(UserReservationsPage)));
+                MenuItems.Add(new NavigationViewItem("Бронирования", SymbolRegular.BookOpen16, typeof(UserReservationsPage)));
             }
 
             if (_role == Roles.Manager)
             {
-                MenuItems.Add(new NavigationViewItem("Управление", SymbolRegular.Sticker20, typeof(RestaurantManagementPage)));
+                MenuItems.Add(new NavigationViewItem("Управление", SymbolRegular.FolderPeople20, typeof(RestaurantManagementPage)));
             }
 
             if (_role == Roles.Admin)
             {
-                MenuItems.Add(new NavigationViewItem("Управление", SymbolRegular.Sticker20, typeof(RestaurantManagementPage)));
+                MenuItems.Add(new NavigationViewItem("Заявки", SymbolRegular.TaskListRtl20, typeof(RestaurantsVerificationPage)));
             }
         }
 

@@ -1,6 +1,7 @@
 ﻿using System.Collections.ObjectModel;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using Restorator.Desktop.Models;
 using Restorator.Desktop.Session;
 using Restorator.Desktop.ViewModels.Abstract;
 using Restorator.Domain.Models;
@@ -10,45 +11,56 @@ using Wpf.Ui.Extensions;
 
 namespace Restorator.Desktop.ViewModels
 {
-    public partial class UserReservationsViewModel : ViewModelBase
+    public partial class RestaurantReservationsManagementViewModel : ViewModelBase
     {
         private readonly IReservationService _reservationService;
         private readonly ISnackbarService _snackbarService;
         private readonly IContentDialogService _contentDialogService;
-        public UserReservationsViewModel(IReservationService reservationService,
-                                         ISessionManager sessionManager,
-                                         ISnackbarService snackbarService,
-                                         IContentDialogService contentDialogService)
+        private readonly Services.INavigationService _navigationService;
+        public RestaurantReservationsManagementViewModel(IReservationService reservationService,
+                                                         ISnackbarService snackbarService,
+                                                         IContentDialogService contentDialogService,
+                                                         Services.INavigationService navigationService,
+                                                         ISessionManager sessionManager)
         {
             _reservationService = reservationService;
             _snackbarService = snackbarService;
             _contentDialogService = contentDialogService;
+            _navigationService = navigationService;
 
             _userId = sessionManager.GetSessionInfo().UserId;
         }
         private readonly int _userId;
+        private int _restaurantId;
 
         [ObservableProperty]
-        private ObservableCollection<ReservationInfoDTO> reservations = [];
+        private ObservableCollection<ReservationModel> reservations = [];
 
         [ObservableProperty]
         private DateTime selectedDate = DateTime.Today;
 
+        [RelayCommand]
+        public async Task LoadRestaurantReservations(int restaurantId)
+        {
+            _restaurantId = restaurantId;
+
+            await RefreshRestaurantReservations();
+        }
+
         async partial void OnSelectedDateChanged(DateTime value)
         {
-            await LoadReservationHistory();
+            await RefreshRestaurantReservations();
         }
 
         [RelayCommand]
-        public async Task LoadReservationHistory()
+        public async Task RefreshRestaurantReservations()
         {
             Reservations.Clear();
 
             var result = await _reservationService.GetReservations(new GetReservationsDTO()
             {
                 SelectedDate = SelectedDate,
-                UserId = _userId,
-                SkipCanceled = true,
+                RestaurantId = _restaurantId
             });
 
             if (result.IsFailed)
@@ -58,20 +70,22 @@ namespace Restorator.Desktop.ViewModels
                 return;
             }
 
-            foreach (var reservation in result.Value)
+            var reservations = result.Value.Select(r => new ReservationModel
+            {
+                Id = r.Id,
+                Username = r.Username,
+                ReservationStart = r.ReservationStart,
+                ReservationEnd = r.ReservationEnd,
+                Canceled = r.Canceled,
+            });
+
+            foreach (var reservation in reservations)
                 Reservations.Add(reservation);
         }
 
         [RelayCommand]
-        public async Task CancelReservation(ReservationInfoDTO reservationInfo)
+        public async Task CancelReservation(ReservationModel reservationInfo)
         {
-            if (!reservationInfo.CanCancel)
-            {
-                _snackbarService.Show("Так не пойдет", "Нельзя отменить бронирование, которое уже прошло", Wpf.Ui.Controls.ControlAppearance.Danger);
-
-                return;
-            }
-
             var confirm = await _contentDialogService.ShowAsync(new Dialogs.CancelTableReservationDialog(), new CancellationToken());
 
             if (confirm != Wpf.Ui.Controls.ContentDialogResult.Primary)
@@ -82,7 +96,7 @@ namespace Restorator.Desktop.ViewModels
                 ReservationId = reservationInfo.Id,
                 UserId = _userId,
             });
-
+            
             if (result.IsFailed)
             {
                 _snackbarService.Show("Ой-ой", "Что-то пошло не так", Wpf.Ui.Controls.ControlAppearance.Danger);
@@ -90,9 +104,13 @@ namespace Restorator.Desktop.ViewModels
                 return;
             }
 
-            Reservations.Remove(reservationInfo);
+            reservationInfo.Canceled = true;
+        }
 
-            _snackbarService.Show("Отмена прошла успешно", "Надеемся, что вы вернетесь", Wpf.Ui.Controls.ControlAppearance.Success);
+        [RelayCommand]
+        public async Task CloseReservationsManagement()
+        {
+            await _navigationService.NavigateBackAsync();
         }
     }
 }

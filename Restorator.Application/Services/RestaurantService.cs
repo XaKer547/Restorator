@@ -31,7 +31,7 @@ namespace Restorator.Application.Services
         }
         public async Task<Result> ChangeRestaurantApproval(ChangeRestaurantApprovalDTO changeRestaurantApproval)
         {
-            var user = _context.Users.SingleOrDefault(u => u.Id == changeRestaurantApproval.UserId);
+            var user = _context.Users.Include(u => u.Role).SingleOrDefault(u => u.Id == changeRestaurantApproval.UserId);
 
             if (user is null)
                 return Result.Fail("Пользователь не найден");
@@ -54,17 +54,20 @@ namespace Restorator.Application.Services
         }
         public async Task<PaginatedList<RestaurantPreviewDTO>> GetRestaurantPreviews(GetRestaurantsPreviewDTO getRestaurantsPreview)
         {
-            var filter = getRestaurantsPreview.Filter;
-
             var predicate = PredicateBuilder.New<Restaurant>(false);
 
-            var original = predicate;
+            var searchFilter = getRestaurantsPreview.Filter;
 
-            if (filter.RequireApproved.HasValue)
-                predicate = predicate.And(r => r.Approved == filter.RequireApproved);
+            if (searchFilter is not null)
+            {
+                if (searchFilter.RequireApproved.HasValue)
+                    predicate = predicate.And(r => r.Approved == searchFilter.RequireApproved);
 
-            if (filter.Tag is not null)
-                predicate = predicate.And(r => r.Tags.Any(t => t.Id == filter.Tag.Id));
+                if (searchFilter.Tag is not null)
+                    predicate = predicate.And(r => r.Tags.Any(t => t.Id == searchFilter.Tag.Id));
+            }
+
+            var paginationFilter = getRestaurantsPreview.PaginationFilter;
 
             return await _context.Restaurants.AsNoTracking()
                 .Where(predicate)
@@ -73,7 +76,7 @@ namespace Restorator.Application.Services
                     Id = r.Id,
                     Name = r.Name,
                     Image = r.Image,
-                }).AsPageAsync(getRestaurantsPreview.CurrentPage, getRestaurantsPreview.PageSize);
+                }).AsPageAsync(paginationFilter.CurrentPage, paginationFilter.PageSize);
         }
         public async Task<Result> CreateRestaurant(CreateRestaurantDTO createRestraurant)
         {
@@ -82,7 +85,7 @@ namespace Restorator.Application.Services
             if (user == null)
                 return Result.Fail("Пользователя не существует");
 
-            var tags = _context.RestaurantTags.Where(t => createRestraurant.TagsId.Contains(t.Id));
+            var tags = _context.RestaurantTags.Where(t => createRestraurant.Tags.Contains(t.Id));
 
             var restaurant = new Restaurant()
             {
@@ -105,7 +108,8 @@ namespace Restorator.Application.Services
         }
         public async Task<Result<RestaurantInfoDTO>> GetRestaurantInfo(int restaurantId)
         {
-            var restaurant = await _context.Restaurants.AsNoTracking()
+            var restaurant = await _context.Restaurants.Include(r => r.Tags)
+                .AsNoTracking()
                 .SingleOrDefaultAsync(r => r.Id == restaurantId);
 
             if (restaurant is null)
@@ -117,9 +121,15 @@ namespace Restorator.Application.Services
                 Image = restaurant.Image,
                 Menu = restaurant.MenuImage,
                 Name = restaurant.Name,
+                Approved = restaurant.Approved,
                 Description = restaurant.Description,
                 BeginWorkTime = restaurant.BeginWorkTime,
                 EndWorkTime = restaurant.EndWorkTime,
+                Tags = restaurant.Tags.Select(t => new RestaurantTagDTO()
+                {
+                    Id = t.Id,
+                    Name = t.Name,
+                })
             };
 
             return Result.Ok(info);
@@ -158,7 +168,8 @@ namespace Restorator.Application.Services
 
         public async Task<Result> UpdateRestaurant(UpdateRestraurantDTO updateRestraurant)
         {
-            var restaurant = _context.Restaurants.SingleOrDefault(r => r.Id == updateRestraurant.RestaurantId);
+            var restaurant = _context.Restaurants.Include(r => r.Tags)
+                .SingleOrDefault(r => r.Id == updateRestraurant.RestaurantId);
 
             if (restaurant is null)
                 return Result.Fail("Ресторан не найден");
@@ -170,15 +181,36 @@ namespace Restorator.Application.Services
             restaurant.EndWorkTime = updateRestraurant.EndWorkTime;
 
             restaurant.Image = updateRestraurant.Image;
+
             restaurant.MenuImage = updateRestraurant.Menu;
 
-            restaurant.Tags = [.. _context.RestaurantTags.Where(t => updateRestraurant.Tags.Contains(t.Id))];
+            var tags = _context.RestaurantTags.Where(t => updateRestraurant.Tags.Contains(t.Id))
+                .ToList();
+
+            restaurant.Tags.Clear();
+
+            foreach (var tag in tags)
+            {
+                if (restaurant.Tags.Any(t => t.Id == tag.Id))
+                    continue;
+
+                restaurant.Tags.Add(tag);
+            }
 
             _context.Restaurants.Update(restaurant);
 
             await _context.SaveChangesAsync();
 
             return Result.Ok();
+        }
+
+        public async Task<IReadOnlyCollection<RestaurantTemplateDTO>> GetRestaurantTemplates()
+        {
+            return await _context.RestaurantTemplates.Select(t => new RestaurantTemplateDTO
+            {
+                Id = t.Id,
+                Image = t.Image,
+            }).ToListAsync();
         }
     }
 }

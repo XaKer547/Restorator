@@ -27,7 +27,7 @@
             </ui:AutoSuggestBox>
 
             <DockPanel>
-                <RadioButton Content="Все" Command="{Binding ResetSelectedTagCommand}" IsChecked="{Binding TagEmpty, Mode=TwoWay, FallbackValue=True}"
+                <RadioButton Content="Все" Command="{Binding ResetSelectedTagCommand}" IsChecked="{Binding TagEmpty, Mode=TwoWay, TargetNullValue=True}"
                            Style="{StaticResource {x:Type ToggleButton}}"  GroupName="RestaurantTags"/>
 
                 <ItemsControl ItemsSource="{Binding RestaurantsTag}">
@@ -58,14 +58,15 @@
                     </ItemsControl.ItemsPanel>
                     <ItemsControl.ItemTemplate>
                         <DataTemplate>
-                            <ui:Button Command="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type pages:RestaurantSearchPage}}, Path=DataContext.OpenRestaurantInfoCommand}"
+                            <ui:Button MinWidth="250"
+                                       Command="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type pages:RestaurantSearchPage}}, Path=DataContext.OpenRestaurantInfoCommand}"
                                        CommandParameter="{Binding }">
                                 <ui:Button.Template>
                                     <ControlTemplate TargetType="ui:Button">
                                         <StackPanel>
                                             <Border Height="150" CornerRadius="10">
                                                 <Border.Background>
-                                                    <ImageBrush Stretch="UniformToFill" ImageSource="{Binding Image, FallbackValue={StaticResource NoImage}}"/>
+                                                    <ImageBrush Stretch="UniformToFill" ImageSource="{Binding Image, TargetNullValue={StaticResource NoImage}}"/>
                                                 </Border.Background>
                                             </Border>
 

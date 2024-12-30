@@ -123,8 +123,6 @@ namespace Restorator.Desktop.ViewModels
         {
             var restaurants = await _restaurantService.GetRestaurantPreviews(new GetRestaurantsPreviewDTO()
             {
-                CurrentPage = _currentPage++,
-                PageSize = 10,
                 Filter = new GetRestaurantsPreviewFilter()
                 {
                     RequireApproved = true,
@@ -136,12 +134,6 @@ namespace Restorator.Desktop.ViewModels
 
             foreach (var restaurant in restaurants)
                 RestaurantsPreview.Add(restaurant);
-        }
-
-        [RelayCommand]
-        public void Logout()
-        {
-            //!!!
         }
     }
 }

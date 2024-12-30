@@ -1,14 +1,14 @@
-﻿using Restorator.Domain.Models;
-using System.IO;
+﻿using System.IO;
 using System.IO.IsolatedStorage;
 using System.Text.Json;
+using Restorator.Domain.Models;
 
 namespace Restorator.Desktop.Session
 {
     public interface ISessionManager
     {
         void SetSession(SessionInfo sessionInfo);
-        SessionInfo GetSessionInfo();
+        SessionInfo? GetSessionInfo();
         void RemoveSession();
 
         bool HaveSession();
@@ -17,28 +17,44 @@ namespace Restorator.Desktop.Session
     {
         private readonly IsolatedStorageFile _userStore = IsolatedStorageFile.GetUserStoreForAssembly();
 
-        public SessionInfo GetSessionInfo()
+        public SessionInfo? GetSessionInfo()
         {
             using var stream = _userStore.OpenFile("session.json", FileMode.Open);
 
-            return JsonSerializer.Deserialize<SessionInfo>(stream)!;
+            return JsonSerializer.Deserialize<SessionInfo>(stream);
         }
 
         public bool HaveSession()
         {
-            return _userStore.FileExists("session.json");
+            if (!_userStore.FileExists("session.json"))
+            {
+                _userStore.CreateFile("session.json");
+
+                return false;
+            }
+
+            var info = GetSessionInfo();
+
+            if (info is null)
+                return false;
+
+            return info.Role is not null;
         }
 
         public void RemoveSession()
         {
-            _userStore.Close();
+            using var stream = _userStore.OpenFile("session.json", FileMode.Open);
 
-            _userStore.Remove();
+            using var writer = new StreamWriter(stream);
+
+            writer.BaseStream.SetLength(0);
+
+            writer.Write("{\n}");
         }
 
         public void SetSession(SessionInfo sessionInfo)
         {
-            using var stream = _userStore.OpenFile("session.json", FileMode.Create);
+            using var stream = _userStore.OpenFile("session.json", FileMode.OpenOrCreate);
 
             var json = JsonSerializer.Serialize(sessionInfo);
 

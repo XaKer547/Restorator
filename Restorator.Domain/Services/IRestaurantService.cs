@@ -14,5 +14,6 @@ namespace Restorator.Domain.Services
         Task<Result> ChangeRestaurantApproval(ChangeRestaurantApprovalDTO changeRestaurantApproval);
         Task<Result> DeleteRestaurant(int restaurantId);
         Task<Result> UpdateRestaurant(UpdateRestraurantDTO updateRestraurantDTO);
+        Task<IReadOnlyCollection<RestaurantTemplateDTO>> GetRestaurantTemplates();
     }
 }

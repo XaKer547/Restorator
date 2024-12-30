@@ -1,12 +1,13 @@
-﻿using FluentResults;
+﻿using System.Collections.Immutable;
+using FluentResults;
 using LinqKit;
 using Microsoft.EntityFrameworkCore;
 using Restorator.DataAccess.Data;
 using Restorator.DataAccess.Data.Entities;
+using Restorator.DataAccess.Data.Entities.Enums;
 using Restorator.Domain.Models;
 using Restorator.Domain.Models.Enums;
 using Restorator.Domain.Services;
-using System.Collections.Immutable;
 
 namespace Restorator.Application.Services
 {
@@ -26,8 +27,13 @@ namespace Restorator.Application.Services
             if (reseravation is null)
                 return Result.Fail("Бронирование не найдено");
 
-            if (reseravation.User.Id != cancelReservation.UserId)
-                return Result.Fail("");
+            var user = _context.Users.AsNoTracking()
+                .Include(u => u.Role)
+                .SingleOrDefault(u => u.Id == cancelReservation.UserId);
+
+            if (user.Role != Roles.Manager)
+                if (reseravation.User.Id != user.Id)
+                    return Result.Fail("");
 
             reseravation.Canceled = true;
 
@@ -65,7 +71,7 @@ namespace Restorator.Application.Services
         }
         public async Task<Result<IReadOnlyCollection<ReservationInfoDTO>>> GetReservations(GetReservationsDTO getReservations)
         {
-            var predicate = PredicateBuilder.New<Reservation>(r => r.ReservationEnd.Day == getReservations.SelectedDate.Day || r.ReservationStart.Day == getReservations.SelectedDate.Day);
+            var predicate = PredicateBuilder.New<Reservation>(r => (r.ReservationEnd.Date == getReservations.SelectedDate.Date || r.ReservationStart.Date == getReservations.SelectedDate.Date));
 
             if (getReservations.UserId.HasValue)
                 predicate = predicate.And(r => r.User.Id == getReservations.UserId.Value);
@@ -74,7 +80,7 @@ namespace Restorator.Application.Services
                 predicate = predicate.And(r => r.Restaurant.Id == getReservations.RestaurantId);
 
             if (getReservations.SkipCanceled.HasValue)
-                predicate = predicate.And(r => r.Canceled == getReservations.SkipCanceled.Value);
+                predicate = predicate.And(r => r.Canceled != getReservations.SkipCanceled.Value);
 
             return await _context.Reservations
                  .AsNoTracking()
@@ -87,7 +93,8 @@ namespace Restorator.Application.Services
                      RestaurantId = r.Restaurant.Id,
                      RestaurantName = r.Restaurant.Name,
                      ReservationStart = r.ReservationStart,
-                     ReservationEnd = r.ReservationEnd
+                     ReservationEnd = r.ReservationEnd,
+                     Canceled = r.Canceled
                  }).ToListAsync();
         }
 

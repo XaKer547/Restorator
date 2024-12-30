@@ -7,6 +7,7 @@ using Restorator.Desktop.ViewModels.Abstract;
 using Restorator.Domain.Models;
 using Restorator.Domain.Services;
 using System.Collections.Immutable;
+using System.Collections.ObjectModel;
 using Wpf.Ui;
 using Wpf.Ui.Controls;
 using Wpf.Ui.Extensions;
@@ -21,7 +22,7 @@ namespace Restorator.Desktop.ViewModels
         private readonly Services.INavigationService _navigationService;
 
         [ObservableProperty]
-        private IReadOnlyCollection<TableModel> _tables = [];
+        private ObservableCollection<TableModel> _tables = [];
 
         [ObservableProperty]
         private byte[] plan;
@@ -66,7 +67,7 @@ namespace Restorator.Desktop.ViewModels
             _navigationService = navigationService;
             _snackbarService = snackbarService;
 
-            _userId = 1;//sessionManager.GetSessionInfo().UserId;
+            _userId = sessionManager.GetSessionInfo()!.UserId;
         }
 
         private int _restaurantId;
@@ -107,7 +108,7 @@ namespace Restorator.Desktop.ViewModels
 
             CheckReservationSearchAvaibility();
 
-            Tables = plan.Tables.Select(t => new TableModel
+            var tables = plan.Tables.Select(t => new TableModel
             {
                 Id = t.Id,
                 X = t.X,
@@ -117,6 +118,9 @@ namespace Restorator.Desktop.ViewModels
                 Rotation = t.Rotation,
                 State = t.State,
             }).ToImmutableList();
+
+            foreach (var table in tables)
+                Tables.Add(table);
         }
 
         private bool _waitingRefresh;
@@ -258,8 +262,6 @@ namespace Restorator.Desktop.ViewModels
         [RelayCommand(CanExecute = nameof(CanSearchReserve), AllowConcurrentExecutions = false)]
         public async Task RefreshReservationPlan()
         {
-
-
             var result = await _reservationService.GetRestaurantPlan(BuildRestaurantPlanQuery());
 
             if (result.IsFailed)
@@ -271,9 +273,11 @@ namespace Restorator.Desktop.ViewModels
                 return;
             };
 
+            Tables.Clear();
+
             var plan = result.Value;
 
-            Tables = plan.Tables.Select(t => new TableModel
+            var tables = plan.Tables.Select(t => new TableModel
             {
                 Id = t.Id,
                 X = t.X,
@@ -283,14 +287,14 @@ namespace Restorator.Desktop.ViewModels
                 Rotation = t.Rotation,
                 State = t.State,
             }).ToImmutableList();
+
+            foreach (var table in tables)
+                Tables.Add(table);
         }
 
         private GetRestaurantPlanDTO BuildRestaurantPlanQuery()
         {
             DateTime reservationEndDate = SelectedDate;
-
-            if (EndWorkTime <= BeginWorkTime && ReservationStartTime > ReservationEndTime)
-                reservationEndDate = reservationEndDate.AddDays(1);
 
             return new GetRestaurantPlanDTO()
             {
@@ -302,8 +306,6 @@ namespace Restorator.Desktop.ViewModels
         }
 
 
-        //TODO:
-        // сортировка по количеству бронирований?
         private readonly HashSet<int> _reservedTables = [];
         [RelayCommand(CanExecute = nameof(CanSearchReserve))]
         public async Task TableReservation(TableModel table)
@@ -319,7 +321,7 @@ namespace Restorator.Desktop.ViewModels
 
             if (table.State == Domain.Models.Enums.TableStates.OccupiedByUser)
             {
-                if (_reservedTables.Any(t => t == table.Id))
+                if (!_reservedTables.Any(t => t == table.Id))
                 {
                     var confirm = await _contentDialogService.ShowSimpleDialogAsync(new SimpleContentDialogCreateOptions()
                     {
@@ -409,6 +411,8 @@ namespace Restorator.Desktop.ViewModels
 
                 return;
             };
+
+            _reservedTables.Clear();
 
             _snackbarService.Show("Ура!", "Будем ждать вас к назначенному времени!", ControlAppearance.Success);
 

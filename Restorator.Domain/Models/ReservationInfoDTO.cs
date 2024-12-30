@@ -10,6 +10,7 @@ namespace Restorator.Domain.Models
         public string RestaurantName { get; set; }
         public DateTime ReservationStart { get; set; }
         public DateTime ReservationEnd { get; set; }
-        public bool CanCancel => ReservationEnd > DateTime.Now;
+        public bool Canceled { get; set; }
+        public bool CanCancel => DateTime.Now < ReservationEnd && !Canceled;
     }
 }

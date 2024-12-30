@@ -1,18 +1,18 @@
-﻿using CommunityToolkit.Mvvm.ComponentModel;
+﻿using System.Collections.ObjectModel;
+using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Restorator.Desktop.Services;
 using Restorator.Desktop.Session;
 using Restorator.Desktop.ViewModels.Abstract;
 using Restorator.Domain.Models;
 using Restorator.Domain.Services;
-using System.Collections.ObjectModel;
 
 namespace Restorator.Desktop.ViewModels
 {
     public partial class RestaurantManagementViewModel : ViewModelBase
     {
         private readonly IRestaurantService _restaurantService;
-        private INavigationService _navigationService;
+        private readonly INavigationService _navigationService;
         public RestaurantManagementViewModel(IRestaurantService restaurantService,
                                              ISessionManager sessionManager,
                                              INavigationService navigationService)
@@ -47,15 +47,21 @@ namespace Restorator.Desktop.ViewModels
         }
 
         [RelayCommand]
+        public async Task OpenRestaurantReservations(RestaurantPreviewDTO restaurantPreview)
+        {
+            await _navigationService.NavigateWithHierarchyAsync<RestaurantReservationsManagementViewModel>(viewmodel => viewmodel.LoadRestaurantReservations(restaurantPreview.Id));
+        }
+
+        [RelayCommand]
         public async Task OpenRestaurantEditor(RestaurantPreviewDTO restaurantPreview)
         {
-            await _navigationService.NavigateWithHierarchyAsync<RestaurantEditorViewModel>(viewmodel => viewmodel.LoadRestaurantInfo(restaurantPreview.Id));
+            await _navigationService.NavigateWithHierarchyAsync<EditRestaurantViewModel>(viewmodel => viewmodel.LoadRestaurantInfo(restaurantPreview.Id));
         }
 
         [RelayCommand]
         public async Task OpenRestaurantMaker()
         {
-            await _navigationService.NavigateWithHierarchyAsync<RestaurantEditorViewModel>();
+            await _navigationService.NavigateWithHierarchyAsync<CreateRestaurantViewModel>();
         }
     }
 }

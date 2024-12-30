@@ -20,7 +20,6 @@
         <ui:DataGrid ItemsSource="{Binding Reservations}" AutoGenerateColumns="False" 
                      IsReadOnly="True" ColumnWidth="*">
             <ui:DataGrid.Columns>
-                <!--<DataGridTextColumn Header="Пользователь" Binding="{Binding Username}" MinWidth="125"/>-->
                 <DataGridTextColumn Header="Название" Binding="{Binding RestaurantName}"/>
                 <DataGridTextColumn Header="Начало" Binding="{Binding ReservationStart, StringFormat=HH:mm}"/>
                 <DataGridTextColumn Header="Конец" Binding="{Binding ReservationEnd, StringFormat=HH:mm}"/>
@@ -34,7 +33,8 @@
                         <DataTemplate>
                             <ui:Button Content="Отменить" Appearance="Danger"
                                        IsEnabled="{Binding CanCancel}"
-                                       Command="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type pages:UserReservationsPage}}, Path=DataContext.CancelReservationCommand}"/>
+                                       Command="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type pages:UserReservationsPage}}, Path=DataContext.CancelReservationCommand}"
+                                       CommandParameter="{Binding }"/>
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>

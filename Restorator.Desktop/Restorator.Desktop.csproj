@@ -44,6 +44,7 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="9.0.0" />
+    <PackageReference Include="Sdl.MultiSelectComboBox" Version="1.0.103" />
     <PackageReference Include="System.Windows.Extensions" Version="9.0.0" />
     <PackageReference Include="WPF-UI" Version="3.0.5" />
     <PackageReference Include="WPF-UI.DependencyInjection" Version="4.0.0-rc.3" />

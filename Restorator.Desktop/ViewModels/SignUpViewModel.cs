@@ -29,12 +29,16 @@ namespace Restorator.Desktop.ViewModels
         [ObservableProperty]
         private string password;
 
+        [ObservableProperty]
+        private string username;
+
         [RelayCommand]
         public async Task SignUp()
         {
             var signUnDto = new SignUpDTO()
             {
                 Login = Login,
+                Username = Username,
                 Password = Password
             };
 

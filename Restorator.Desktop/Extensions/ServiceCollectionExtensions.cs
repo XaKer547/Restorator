@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using System.Reflection;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Restorator.Application.Services;
 using Restorator.DataAccess.Data;
@@ -11,7 +12,6 @@ using Restorator.Desktop.ViewModels.Abstract;
 using Restorator.Desktop.Views.Pages;
 using Restorator.Desktop.Views.Windows;
 using Restorator.Domain.Services;
-using System.Reflection;
 using Wpf.Ui;
 using Wpf.Ui.Abstractions;
 using Wpf.Ui.DependencyInjection;
@@ -43,9 +43,9 @@ namespace Restorator.Desktop.Extensions
 
             services.AddDbContext<RestoratorDbContext>(opt =>
             {
-#if COLLEGEDEBUG || DEBUG
+#if COLLEGEDEBUG 
                 opt.UseSqlServer("Server=b2-225-002\\SQLEXPRESS;Database=Restorator;TrustServerCertificate=true;Trusted_connection=true");
-#elif HOMEDEBUG
+#elif HOMEDEBUG || DEBUG
                 opt.UseSqlServer("Server=DESKTOP-F1TRK20\\SQLEXPRESS;Database=Restorator;TrustServerCertificate=true;Trusted_connection=true");
 #endif
             });
@@ -70,7 +70,11 @@ namespace Restorator.Desktop.Extensions
                 .RegisterDataTemplate<RestaurantReservationViewModel, RestraurantReservationPage>()
                 .RegisterDataTemplate<UserReservationsViewModel, UserReservationsPage>()
                 .RegisterDataTemplate<RestaurantSearchViewModel, RestaurantSearchPage>()
-                .RegisterDataTemplate<RestaurantEditorViewModel, RestaurantEditorPage>()
+                .RegisterDataTemplate<EditRestaurantViewModel, RestaurantEditorPage>()
+                .RegisterDataTemplate<CreateRestaurantViewModel, RestaurantMakerPage>()
+                .RegisterDataTemplate<RestaurantReservationsManagementViewModel, ReservsationsManagementPage>()
+                .RegisterDataTemplate<RestaurantsVerificationViewModel, RestaurantsVerificationPage>()
+                .RegisterDataTemplate<RestaurantVerificationViewModel, RestaurantVerificationPage>()
                 .RegisterDataTemplate<RestaurantManagementViewModel, RestaurantManagementPage>();
 
             manager.SetControlsCulture();

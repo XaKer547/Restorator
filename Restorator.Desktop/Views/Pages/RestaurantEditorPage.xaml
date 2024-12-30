@@ -3,31 +3,65 @@
       xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+      xmlns:sdl="http://schemas.sdl.com/xaml"
       xmlns:controls="clr-namespace:iNKORE.UI.WPF.Modern.Controls;assembly=iNKORE.UI.WPF.Modern.Controls"
       xmlns:viewmodels="clr-namespace:Restorator.Desktop.ViewModels"
-      d:DataContext="{d:DesignInstance Type=viewmodels:RestaurantEditorViewModel}"
+      d:DataContext="{d:DesignInstance Type=viewmodels:EditRestaurantViewModel}"
       mc:Ignorable="d" 
       d:DesignHeight="450" d:DesignWidth="800">
     <Grid Margin="0,25,0,0">
         <ui:PassiveScrollViewer >
+
             <StackPanel Margin="20">
                 <StackPanel>
                     <Viewbox>
-                        <Border CornerRadius="10" Background="Black" >
-                            <ui:Button CornerRadius="10" Width="300" Height="75" HorizontalContentAlignment="Left" VerticalContentAlignment="Bottom" Command="{Binding LoadRestaurantMenuImageCommand}">
-                                <ui:Button.Background>
-                                    <ImageBrush Stretch="UniformToFill" ImageSource="{Binding Image, FallbackValue={StaticResource NoImage}}" Opacity="0.5"/>
-                                </ui:Button.Background>
+                        <Border CornerRadius="10" Background="Black">
+                            <Grid Width="300" Height="75">
+                                <ui:Button CornerRadius="10" Width="300" IsTabStop="False" Height="75" HorizontalContentAlignment="Left" VerticalContentAlignment="Bottom"
+                                           Command="{Binding LoadRestaurantImageCommand}">
+                                    <ui:Button.Template>
+                                        <ControlTemplate TargetType="ui:Button">
+                                            <Border CornerRadius="10">
+                                                <Border.Background>
+                                                    <ImageBrush Stretch="UniformToFill" ImageSource="{Binding Image, TargetNullValue={StaticResource NoImage}}" Opacity="0.5"/>
+                                                </Border.Background>
+                                            </Border>
+                                            <ControlTemplate.Triggers>
+                                                <Trigger Property="IsMouseOver" Value="True">
+                                                    <Setter Property="Opacity" Value="0.8"/>
+                                                </Trigger>
+                                            </ControlTemplate.Triggers>
+                                        </ControlTemplate>
+                                    </ui:Button.Template>
+                                </ui:Button>
 
-                                <TextBox Text="{Binding RestaurantName}" HorizontalAlignment="Left" VerticalAlignment="Bottom" Foreground="White" Margin="2.5,0">
+                                <TextBox Text="{Binding RestaurantName}" HorizontalAlignment="Left" VerticalAlignment="Bottom" Foreground="White" Margin="2.5, 2">
                                     <TextBox.Background>
                                         <SolidColorBrush Color="Black" Opacity="0.5"/>
                                     </TextBox.Background>
                                 </TextBox>
-                            </ui:Button>
+                            </Grid>
                         </Border>
                     </Viewbox>
+
+                    <StackPanel Orientation="Horizontal">
+                        <ui:TextBlock FontTypography="Subtitle" Text="Статус ресторана: "/>
+                        <ui:TextBlock FontTypography="Subtitle">
+                            <i:Interaction.Triggers>
+                                <i:DataTrigger Binding="{Binding Approved}" Value="True">
+                                    <i:ChangePropertyAction PropertyName="Text" Value="подтвержден"/>
+                                    <i:ChangePropertyAction PropertyName="Foreground" Value="LightGreen"/>
+                                </i:DataTrigger>
+
+                                <i:DataTrigger Binding="{Binding Approved}"  Value="False">
+                                    <i:ChangePropertyAction PropertyName="Text" Value="не подтвержден"/>
+                                    <i:ChangePropertyAction PropertyName="Foreground" Value="Red"/>
+                                </i:DataTrigger>
+                            </i:Interaction.Triggers>
+                        </ui:TextBlock>
+                    </StackPanel>
 
                     <Expander Margin="0,15">
                         <Expander.Header>
@@ -36,13 +70,34 @@
                         <TextBox Text="{Binding Description}" FontSize="25" TextWrapping="Wrap" />
                     </Expander>
 
+                    <ui:TextBlock FontTypography="Subtitle" Text="Тэги"/>
+
+                    <sdl:MultiSelectComboBox Height="100" 
+                                             ItemsSource="{Binding Tags, Mode=OneWay}"
+                                             IsEditable="true"
+                                             SelectionMode="Multiple"
+                                             SelectedItems="{Binding RestaurantTags, Mode=TwoWay}"
+                                             EnableAutoComplete="False">
+                        <sdl:MultiSelectComboBox.DropdownItemTemplate>
+                            <DataTemplate>
+                                <ui:TextBlock Text="{Binding Name}"/>
+                            </DataTemplate>
+                        </sdl:MultiSelectComboBox.DropdownItemTemplate>
+
+                        <sdl:MultiSelectComboBox.SelectedItemTemplate>
+                            <DataTemplate>
+                                <ui:TextBlock Text="{Binding Name}"/>
+                            </DataTemplate>
+                        </sdl:MultiSelectComboBox.SelectedItemTemplate>
+                    </sdl:MultiSelectComboBox>
+
                     <DockPanel Margin="0,25">
                         <StackPanel>
                             <ui:TextBlock Text="Время работы" FontTypography="Title"/>
 
                             <DockPanel>
                                 <controls:TimePicker SelectedDateTime="{Binding BeginWorkTime}"/>
-                                <ui:TextBlock Text="-" FontTypography="Title" FontWeight="Normal"/>
+                                <ui:TextBlock Text=":" FontTypography="Title" FontWeight="Normal"/>
                                 <controls:TimePicker SelectedDateTime="{Binding EndWorkTime}"/>
                             </DockPanel>
                         </StackPanel>
@@ -51,7 +106,7 @@
                     <ui:TextBlock Text="Меню" FontTypography="Title" Margin="0,15"/>
 
                     <ui:Button Command="{Binding LoadRestaurantMenuImageCommand}">
-                        <ui:Image Source="{Binding Menu, FallbackValue={StaticResource NoImage}}" Width="100" HorizontalAlignment="Left"/>
+                        <ui:Image Source="{Binding Menu, TargetNullValue={StaticResource NoImage}}" Width="100" HorizontalAlignment="Left"/>
                     </ui:Button>
                 </StackPanel>
             </StackPanel>
@@ -59,5 +114,19 @@
 
         <ui:Button Content="{ui:SymbolIcon ArrowLeft16}" VerticalAlignment="Bottom" CornerRadius="50" Width="50" Height="50" Appearance="Primary" Foreground="White" Margin="25"
                 Command="{Binding CloseRestaurantEditorCommand}"/>
+
+        <StackPanel VerticalAlignment="Bottom" HorizontalAlignment="Right">
+            <ui:Button Content="{ui:SymbolIcon Delete16}" IsEnabled="{Binding EditingExistingRestaurant}" CornerRadius="50" Width="50" Height="50" FontSize="25" Appearance="Danger" Foreground="White" Margin="25"
+           Command="{Binding DeleteRestaurantCommand}"/>
+
+            <ui:Button Content="{ui:SymbolIcon Save16}" CornerRadius="50" Width="50" Height="50" FontSize="25" Appearance="Success" Foreground="White" Margin="25"
+           Command="{Binding UpdateRestaurantCommand}"/>
+        </StackPanel>
     </Grid>
+
+    <i:Interaction.Triggers>
+        <i:EventTrigger EventName="Loaded">
+            <i:InvokeCommandAction Command="{Binding LoadRestaurantTagsCommand}"/>
+        </i:EventTrigger>
+    </i:Interaction.Triggers>
 </Page>

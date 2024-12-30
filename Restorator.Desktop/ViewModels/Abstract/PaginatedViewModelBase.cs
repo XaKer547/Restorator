@@ -4,10 +4,5 @@
     {
         protected int pageIndex;
         protected int pageSize;
-
-
-
-
-
     }
 }

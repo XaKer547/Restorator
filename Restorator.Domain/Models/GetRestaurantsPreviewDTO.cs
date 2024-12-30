@@ -2,8 +2,12 @@
 {
     public class GetRestaurantsPreviewDTO
     {
-        public int PageSize { get; set; }
-        public int CurrentPage { get; set; }
-        public GetRestaurantsPreviewFilter Filter { get; set; }
+        public PaginationFilter PaginationFilter { get; set; } = new PaginationFilter()
+        {
+            CurrentPage = 1,
+            PageSize = 10
+        };
+
+        public GetRestaurantsPreviewFilter? Filter { get; set; }
     }
 }

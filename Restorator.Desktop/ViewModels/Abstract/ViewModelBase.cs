@@ -2,7 +2,7 @@
 
 namespace Restorator.Desktop.ViewModels.Abstract
 {
-    public abstract partial class ViewModelBase : ObservableObject
+    public abstract partial class ViewModelBase : ObservableValidator
     {
         [ObservableProperty]
         public bool initialized = false;

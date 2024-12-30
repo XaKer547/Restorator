@@ -1,4 +1,5 @@
-﻿namespace Restorator.Domain.Models
+﻿
+namespace Restorator.Domain.Models
 {
     public class RestaurantInfoDTO
     {
@@ -9,5 +10,7 @@
         public TimeOnly EndWorkTime { get; set; }
         public byte[]? Image { get; set; }
         public byte[]? Menu { get; set; }
+        public bool Approved { get; set; }
+        public IEnumerable<RestaurantTagDTO> Tags { get; set; }
     }
 }
