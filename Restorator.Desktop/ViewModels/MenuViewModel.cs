@@ -29,14 +29,20 @@ namespace Restorator.Desktop.ViewModels
             _navigationService = navigationService;
             _sessionManager = sessionManager;
 
-            var session = _sessionManager.GetSessionInfo();
 
-            if (session.Role is not null)
+            if (!_sessionManager.HaveSession())
             {
+                Username = "Гость";
+                _role = null;
+            }
+            else
+            {
+                var session = _sessionManager.GetSessionInfo();
+
                 _role = Enum.Parse<Roles>(session.Role);
+                Username = session.Username;
             }
 
-            Username = session?.Username ?? "Гость";
 
             _contentDialogService = contentDialogService;
             _menuNavigationService = menuNavigationService;
