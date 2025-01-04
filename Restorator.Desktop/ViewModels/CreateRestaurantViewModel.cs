@@ -32,8 +32,6 @@ namespace Restorator.Desktop.ViewModels
 
             if (HasErrors)
             {
-                //snackbar
-
                 return;
             }
 

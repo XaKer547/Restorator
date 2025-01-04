@@ -33,6 +33,7 @@ namespace Restorator.Desktop.Extensions
             services.AddSingleton<IContentDialogService, ContentDialogService>();
             services.AddSingleton<INavigationViewPageProvider, DependencyInjectionNavigationViewPageProvider>();
             services.AddSingleton<Services.INavigationService, Services.NavigationService>();
+            services.AddSingleton<Wpf.Ui.INavigationService, Wpf.Ui.NavigationService>();
             services.AddSingleton<IPageService, PageService>();
 
             services.AddSingleton<ISessionManager, SessionManager>();

@@ -10,7 +10,9 @@
       d:DataContext="{d:DesignInstance Type=viewmodels:RestaurantsReservationsManagementViewModel}"
       mc:Ignorable="d" 
       d:DesignHeight="450" d:DesignWidth="800">
-
+    <Page.Resources>
+        <BooleanToVisibilityConverter x:Key="boolToVisibilityConverter"/>
+    </Page.Resources>
     <Grid>
         <StackPanel Margin="0,25">
             <ui:CalendarDatePicker Date="{Binding SelectedDate, Mode=TwoWay}" IsTodayHighlighted="True">
@@ -48,6 +50,11 @@
                     </DataGridTemplateColumn>
                 </ui:DataGrid.Columns>
             </ui:DataGrid>
+        </StackPanel>
+
+        <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" Visibility="{Binding NoReservations, Converter={StaticResource boolToVisibilityConverter}}">
+            <ui:TextBlock FontTypography="Title" Text="У вас пока еще не забронировали ничего на этот день..."/>
+            <ui:TextBlock FontTypography="Subtitle" Text="Будем надеяться на лучшее"/>
         </StackPanel>
 
         <ui:Button Content="{ui:SymbolIcon ArrowLeft16}" VerticalAlignment="Bottom" CornerRadius="50" Width="50" Height="50" Appearance="Primary" Foreground="White" Margin="25"

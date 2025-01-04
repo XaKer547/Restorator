@@ -44,7 +44,7 @@ namespace Restorator.Desktop.ViewModels
 
             if (!result.IsSuccess)
             {
-                _snackbarService.Show("Ой-ой", "Кажется такого пользователя нет", Wpf.Ui.Controls.ControlAppearance.Danger);
+                _snackbarService.Show("Ошибка", "Кажется такого пользователя нет", Wpf.Ui.Controls.ControlAppearance.Danger);
 
                 return;
             }

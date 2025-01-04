@@ -66,7 +66,7 @@ namespace Restorator.Desktop.ViewModels
 
             if (result.IsFailed)
             {
-                _snackbarService.Show("Ой-ой", "Что-то пошло не так", Wpf.Ui.Controls.ControlAppearance.Danger);
+                _snackbarService.Show("Ошибка", "Что-то пошло не так", Wpf.Ui.Controls.ControlAppearance.Danger);
 
                 await _navigationService.NavigateBackAsync();
 

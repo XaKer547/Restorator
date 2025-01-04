@@ -40,5 +40,11 @@ namespace Restorator.Desktop.ViewModels
         {
             _navigationService.Navigate<MenuViewModel>();
         }
+
+        [RelayCommand]
+        public void CancelAuthorization()
+        {
+            _navigationService.NavigateBack();
+        }
     }
 }

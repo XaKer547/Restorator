@@ -3,6 +3,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Restorator.Desktop.Session;
 using Restorator.Desktop.ViewModels.Abstract;
+using Restorator.Desktop.Views.Pages;
 using Restorator.Domain.Models;
 using Restorator.Domain.Services;
 using Wpf.Ui;
@@ -15,16 +16,19 @@ namespace Restorator.Desktop.ViewModels
         private readonly IReservationService _reservationService;
         private readonly ISnackbarService _snackbarService;
         private readonly IContentDialogService _contentDialogService;
+        private readonly INavigationService _navigationService;
         public UserReservationsViewModel(IReservationService reservationService,
                                          ISessionManager sessionManager,
                                          ISnackbarService snackbarService,
-                                         IContentDialogService contentDialogService)
+                                         IContentDialogService contentDialogService,
+                                         INavigationService navigationService)
         {
             _reservationService = reservationService;
             _snackbarService = snackbarService;
             _contentDialogService = contentDialogService;
 
             _userId = sessionManager.GetSessionInfo().UserId;
+            _navigationService = navigationService;
         }
         private readonly int _userId;
 
@@ -33,6 +37,9 @@ namespace Restorator.Desktop.ViewModels
 
         [ObservableProperty]
         private DateTime selectedDate = DateTime.Today;
+
+        [ObservableProperty]
+        private bool noReservations;
 
         async partial void OnSelectedDateChanged(DateTime value)
         {
@@ -48,18 +55,25 @@ namespace Restorator.Desktop.ViewModels
             {
                 SelectedDate = SelectedDate,
                 UserId = _userId,
-                SkipCanceled = true,
             });
 
             if (result.IsFailed)
             {
-                _snackbarService.Show("Ой-ой", "Что-то пошло не так", Wpf.Ui.Controls.ControlAppearance.Danger);
+                _snackbarService.Show("Ошибка", "Что-то пошло не так", Wpf.Ui.Controls.ControlAppearance.Danger);
 
                 return;
             }
 
             foreach (var reservation in result.Value)
                 Reservations.Add(reservation);
+
+            NoReservations = !Reservations.Any();
+        }
+
+        [RelayCommand]
+        public void OpenSearch()
+        {
+            _navigationService.Navigate(typeof(RestaurantSearchPage));
         }
 
         [RelayCommand]
@@ -85,7 +99,7 @@ namespace Restorator.Desktop.ViewModels
 
             if (result.IsFailed)
             {
-                _snackbarService.Show("Ой-ой", "Что-то пошло не так", Wpf.Ui.Controls.ControlAppearance.Danger);
+                _snackbarService.Show("Ошибка", "Что-то пошло не так", Wpf.Ui.Controls.ControlAppearance.Danger);
 
                 return;
             }

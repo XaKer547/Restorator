@@ -39,6 +39,9 @@ namespace Restorator.Desktop.ViewModels
         [ObservableProperty]
         private DateTime selectedDate = DateTime.Today;
 
+        [ObservableProperty]
+        private bool noReservations;
+
         [RelayCommand]
         public async Task LoadRestaurantReservations(int restaurantId)
         {
@@ -65,7 +68,7 @@ namespace Restorator.Desktop.ViewModels
 
             if (result.IsFailed)
             {
-                _snackbarService.Show("Ой-ой", "Что-то пошло не так", Wpf.Ui.Controls.ControlAppearance.Danger);
+                _snackbarService.Show("Ошибка", "Что-то пошло не так", Wpf.Ui.Controls.ControlAppearance.Danger);
 
                 return;
             }
@@ -81,6 +84,8 @@ namespace Restorator.Desktop.ViewModels
 
             foreach (var reservation in reservations)
                 Reservations.Add(reservation);
+
+            NoReservations = !Reservations.Any();
         }
 
         [RelayCommand]
@@ -96,10 +101,10 @@ namespace Restorator.Desktop.ViewModels
                 ReservationId = reservationInfo.Id,
                 UserId = _userId,
             });
-            
+
             if (result.IsFailed)
             {
-                _snackbarService.Show("Ой-ой", "Что-то пошло не так", Wpf.Ui.Controls.ControlAppearance.Danger);
+                _snackbarService.Show("Ошибка", "Что-то пошло не так", Wpf.Ui.Controls.ControlAppearance.Danger);
 
                 return;
             }

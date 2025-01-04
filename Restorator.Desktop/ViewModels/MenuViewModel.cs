@@ -17,11 +17,13 @@ namespace Restorator.Desktop.ViewModels
         private readonly Services.INavigationService _navigationService;
         private readonly ISessionManager _sessionManager;
         private readonly IContentDialogService _contentDialogService;
+        private readonly INavigationService _menuNavigationService;
 
         public MenuViewModel(IPageService pageService,
                              Services.INavigationService navigationService,
                              ISessionManager sessionManager,
-                             IContentDialogService contentDialogService)
+                             IContentDialogService contentDialogService,
+                             INavigationService menuNavigationService)
         {
             _pageService = pageService;
             _navigationService = navigationService;
@@ -29,10 +31,15 @@ namespace Restorator.Desktop.ViewModels
 
             var session = _sessionManager.GetSessionInfo();
 
-            Username = session.Username;
+            if (session.Role is not null)
+            {
+                _role = Enum.Parse<Roles>(session.Role);
+            }
 
-            _role = Enum.Parse<Roles>(session.Role);
+            Username = session?.Username ?? "Гость";
+
             _contentDialogService = contentDialogService;
+            _menuNavigationService = menuNavigationService;
         }
 
         [ObservableProperty]
@@ -41,16 +48,20 @@ namespace Restorator.Desktop.ViewModels
         [ObservableProperty]
         private ObservableCollection<object> menuItems = [];
 
-        private readonly Roles _role;
+        [ObservableProperty]
+        private ObservableCollection<object> footerItems = [];
 
+        private Roles? _role;
 
         [RelayCommand]
         public void ConfigurePageService(INavigationView navigationView)
         {
+            navigationView.SetPageService(_pageService);
+
+            _menuNavigationService.SetNavigationControl(navigationView);
+
             if (navigationView.MenuItems.Count == 0)
                 InitializeNavigationItems();
-
-            navigationView.SetPageService(_pageService);
         }
 
         private void InitializeNavigationItems()
@@ -70,6 +81,37 @@ namespace Restorator.Desktop.ViewModels
             {
                 MenuItems.Add(new NavigationViewItem("Заявки", SymbolRegular.TaskListRtl20, typeof(RestaurantsVerificationPage)));
             }
+
+            if (_role is null)
+            {
+                MenuItems.Add(new NavigationViewItem("Поиск", SymbolRegular.Search16, typeof(RestaurantSearchPage)));
+
+                FooterItems.Add(new NavigationViewItem
+                {
+                    Icon = new SymbolIcon(SymbolRegular.DoorArrowRight16),
+                    Content = "Войти",
+                    Command = LoginCommand
+                });
+            }
+            else
+            {
+                FooterItems.Add(new NavigationViewItem
+                {
+                    Icon = new SymbolIcon(SymbolRegular.DoorArrowLeft16),
+                    Content = "Выйти",
+                    Command = LogoutCommand
+                });
+            }
+
+            var item = (NavigationViewItem)MenuItems.First();
+
+            _menuNavigationService.Navigate(item.TargetPageType);
+        }
+
+        [RelayCommand]
+        public async Task Login()
+        {
+            await _navigationService.NavigateWithHierarchyAsync<AuthenticationViewModel>();
         }
 
         [RelayCommand]
@@ -82,7 +124,13 @@ namespace Restorator.Desktop.ViewModels
 
             _sessionManager.RemoveSession();
 
-            _navigationService.Navigate<AuthenticationViewModel>();
+            MenuItems.Clear();
+            FooterItems.Clear();
+
+            _role = null;
+            Username = "Гость";
+
+            InitializeNavigationItems();
         }
     }
 }
