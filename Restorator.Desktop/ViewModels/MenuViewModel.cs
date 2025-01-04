@@ -62,6 +62,10 @@ namespace Restorator.Desktop.ViewModels
 
             if (navigationView.MenuItems.Count == 0)
                 InitializeNavigationItems();
+
+            var item = (NavigationViewItem)MenuItems.First();
+
+            _menuNavigationService.Navigate(item.TargetPageType);
         }
 
         private void InitializeNavigationItems()
@@ -102,10 +106,6 @@ namespace Restorator.Desktop.ViewModels
                     Command = LogoutCommand
                 });
             }
-
-            var item = (NavigationViewItem)MenuItems.First();
-
-            _menuNavigationService.Navigate(item.TargetPageType);
         }
 
         [RelayCommand]

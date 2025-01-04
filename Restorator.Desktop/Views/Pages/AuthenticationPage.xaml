@@ -31,7 +31,7 @@
                 <ContentControl Content="{Binding CurrentViewModel}" Margin="0,20,0,0"/>
 
                 <ui:TextBlock HorizontalAlignment="Right">
-                    <Hyperlink TextDecorations="None" Foreground="Black" Command="{Binding CancelAuthorizationCommand}">
+                    <Hyperlink TextDecorations="None" Foreground="Black" Command="{Binding NavigateToUserMenuCommand}">
                         Назад
                     </Hyperlink>
                 </ui:TextBlock>

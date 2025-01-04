@@ -1,6 +1,7 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Restorator.Desktop.Dialogs;
+using Restorator.Desktop.Session;
 using Restorator.Desktop.ViewModels.Abstract;
 using Restorator.Domain.Services;
 using Wpf.Ui;
@@ -14,15 +15,18 @@ namespace Restorator.Desktop.ViewModels
         private readonly ISnackbarService _snackbarService;
         private readonly Services.INavigationService _navigationService;
         private readonly IContentDialogService _contentDialogService;
+        private readonly ISessionManager _sessionManager;
         public RestaurantInfoViewModel(IRestaurantService restaurantService,
                                        ISnackbarService snackbarService,
                                        Services.INavigationService navigationService,
-                                       IContentDialogService contentDialogService)
+                                       IContentDialogService contentDialogService,
+                                       ISessionManager sessionManager)
         {
             _restaurantService = restaurantService;
             _snackbarService = snackbarService;
             _navigationService = navigationService;
             _contentDialogService = contentDialogService;
+            _sessionManager = sessionManager;
         }
 
         [ObservableProperty]
@@ -72,6 +76,13 @@ namespace Restorator.Desktop.ViewModels
         [RelayCommand]
         public async Task OpenRestaurantReservation()
         {
+            if (!_sessionManager.HaveSession())
+            {
+                await _navigationService.NavigateWithHierarchyAsync<AuthenticationViewModel>();
+
+                return;
+            }
+
             await _navigationService.NavigateWithHierarchyAsync<RestaurantReservationViewModel>(viewModel => viewModel.LoadRestaurantPlan(_restaurantId));
         }
 
