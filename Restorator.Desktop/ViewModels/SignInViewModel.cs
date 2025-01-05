@@ -1,4 +1,5 @@
-﻿using CommunityToolkit.Mvvm.ComponentModel;
+﻿using System.ComponentModel.DataAnnotations;
+using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Restorator.Desktop.Session;
 using Restorator.Desktop.ViewModels.Abstract;
@@ -25,15 +26,28 @@ namespace Restorator.Desktop.ViewModels
             _snackbarService = snackbarService;
         }
 
+        [Required(AllowEmptyStrings = false, ErrorMessage = "Логин и пароль обязательны для заполнения")]
         [ObservableProperty]
         private string login;
 
+        [Required(AllowEmptyStrings = false, ErrorMessage = "Логин и пароль обязательны для заполнения")]
         [ObservableProperty]
         private string password;
 
         [RelayCommand]
         public async Task SignIn()
         {
+            ValidateAllProperties();
+
+            if (HasErrors)
+            {
+                var error = GetErrors().First();
+
+                _snackbarService.Show("Так не пойдет", error.ErrorMessage, Wpf.Ui.Controls.ControlAppearance.Danger);
+
+                return;
+            }
+
             var signInDto = new SignInDTO()
             {
                 Login = Login,

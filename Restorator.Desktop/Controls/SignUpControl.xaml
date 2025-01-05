@@ -5,6 +5,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:enums="clr-namespace:Restorator.DataAccess.Data.Entities.Enums;assembly=Restorator.DataAccess"
              xmlns:viewmodels="clr-namespace:Restorator.Desktop.ViewModels"
              xmlns:pages="clr-namespace:Restorator.Desktop.Views.Pages"
              d:DataContext="{d:DesignInstance Type=viewmodels:SignUpViewModel}"
@@ -17,6 +18,15 @@
         <ui:TextBox Text="{Binding Username}" PlaceholderText="Как к вам обращаться?" Margin="0,15"/>
 
         <ui:PasswordBox Password="{Binding Password, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" PlaceholderText="Пароль" Icon="Password24" Margin="0,15"/>
+
+        <ui:TextBlock Text="Роль"/>
+
+        <StackPanel Orientation="Horizontal">
+            <RadioButton Content="Пользователь" GroupName="roleGroup" IsChecked="True"
+                         Command="{Binding ChangeSelectedRoleCommand}" CommandParameter="{x:Static enums:Roles.User}"/>
+            <RadioButton Content="Менеджер" GroupName="roleGroup" 
+                         Command="{Binding ChangeSelectedRoleCommand}" CommandParameter="{x:Static enums:Roles.User}"/>
+        </StackPanel>
 
         <ui:TextBlock HorizontalAlignment="Right">
             <Hyperlink Command="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type pages:AuthenticationPage}}, Path=DataContext.NavigateToSignInPageCommand}"

@@ -36,9 +36,9 @@ namespace Restorator.Desktop.ViewModels
         }
 
         [RelayCommand]
-        public void NavigateToUserMenu()
+        public async Task NavigateToUserMenu()
         {
-            _navigationService.NavigateBack();
+            await _navigationService.NavigateAsync<MenuViewModel>();
         }
     }
 }

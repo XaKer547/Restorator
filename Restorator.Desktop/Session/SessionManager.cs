@@ -28,7 +28,11 @@ namespace Restorator.Desktop.Session
         {
             if (!_userStore.FileExists("session.json"))
             {
-                _userStore.CreateFile("session.json");
+                using var stream = _userStore.CreateFile("session.json");
+
+                using var writer = new StreamWriter(stream);
+
+                writer.Write("{\n}");
 
                 return false;
             }
@@ -59,6 +63,8 @@ namespace Restorator.Desktop.Session
             var json = JsonSerializer.Serialize(sessionInfo);
 
             using var writer = new StreamWriter(stream);
+
+            writer.BaseStream.SetLength(0);
 
             writer.Write(json);
         }

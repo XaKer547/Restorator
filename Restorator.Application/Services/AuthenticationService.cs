@@ -2,8 +2,6 @@
 using Microsoft.EntityFrameworkCore;
 using Restorator.DataAccess.Data;
 using Restorator.DataAccess.Data.Entities;
-using Restorator.DataAccess.Data.Entities.Enums;
-using Restorator.DataAccess.Extensions;
 using Restorator.DataAccess.Helpers;
 using Restorator.Domain.Models;
 using Restorator.Domain.Services;
@@ -39,7 +37,7 @@ namespace Restorator.Application.Services
             {
                 Login = signUp.Login,
                 Username = signUp.Username,
-                Role = _context.Roles.FromEnum(Roles.User),
+                Role = _context.Roles.Single(r => r.Id == signUp.RoleId),
                 Password = AccountPasswordHelper.HashUserPassword(signUp.Password),
             };
 

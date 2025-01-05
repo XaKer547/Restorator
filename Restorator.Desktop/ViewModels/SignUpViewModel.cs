@@ -1,5 +1,7 @@
-﻿using CommunityToolkit.Mvvm.ComponentModel;
+﻿using System.ComponentModel.DataAnnotations;
+using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using Restorator.DataAccess.Data.Entities.Enums;
 using Restorator.Desktop.Session;
 using Restorator.Desktop.ViewModels.Abstract;
 using Restorator.Domain.Models;
@@ -23,21 +25,46 @@ namespace Restorator.Desktop.ViewModels
             _snackbarService = snackbarService;
         }
 
+        [Required(AllowEmptyStrings = false, ErrorMessage = "Логин и пароль обязательны для заполнения")]
         [ObservableProperty]
         private string login;
 
+        [Required(AllowEmptyStrings = false, ErrorMessage = "Логин и пароль обязательны для заполнения")]
         [ObservableProperty]
         private string password;
 
+        [Required(AllowEmptyStrings = false, ErrorMessage = "Нам нужно знать как к вам обращаться")]
         [ObservableProperty]
         private string username;
+
+        [ObservableProperty]
+        private Roles role;
 
         [RelayCommand]
         public async Task SignUp()
         {
+            ValidateAllProperties();
+
+            if (HasErrors)
+            {
+                var error = GetErrors().First();
+
+                _snackbarService.Show("Так не пойдет", error.ErrorMessage, Wpf.Ui.Controls.ControlAppearance.Danger);
+
+                return;
+            }
+
+            if (!ValidatePassword())
+            {
+                _snackbarService.Show("Так не пойдет", "В пароле должна быть хотя-бы одна цифра", Wpf.Ui.Controls.ControlAppearance.Danger);
+
+                return;
+            }
+
             var signUnDto = new SignUpDTO()
             {
                 Login = Login,
+                RoleId = (int)Role,
                 Username = Username,
                 Password = Password
             };
@@ -65,6 +92,20 @@ namespace Restorator.Desktop.ViewModels
             Authenticated = true;
 
             _snackbarService.Show("Добро пожаловать в семью", "Let's celebrate and eat some chick", Wpf.Ui.Controls.ControlAppearance.Success);
+        }
+
+        private bool ValidatePassword()
+        {
+            //i'm lazy to regex ASF
+
+            return Password.Any(p => char.IsDigit(p));
+        }
+
+
+        [RelayCommand]
+        public void ChangeSelectedRole(Roles role)
+        {
+            Role = role;
         }
     }
 }

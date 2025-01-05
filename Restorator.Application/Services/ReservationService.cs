@@ -31,6 +31,9 @@ namespace Restorator.Application.Services
                 .Include(u => u.Role)
                 .SingleOrDefault(u => u.Id == cancelReservation.UserId);
 
+            if(user is null)
+                return Result.Fail("Пользователь не найден");
+
             if (user.Role != Roles.Manager)
                 if (reseravation.User.Id != user.Id)
                     return Result.Fail("");
