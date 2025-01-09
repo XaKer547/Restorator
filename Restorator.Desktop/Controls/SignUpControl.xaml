@@ -25,7 +25,7 @@
             <RadioButton Content="Пользователь" GroupName="roleGroup" IsChecked="True"
                          Command="{Binding ChangeSelectedRoleCommand}" CommandParameter="{x:Static enums:Roles.User}"/>
             <RadioButton Content="Менеджер" GroupName="roleGroup" 
-                         Command="{Binding ChangeSelectedRoleCommand}" CommandParameter="{x:Static enums:Roles.User}"/>
+                         Command="{Binding ChangeSelectedRoleCommand}" CommandParameter="{x:Static enums:Roles.Manager}"/>
         </StackPanel>
 
         <ui:TextBlock HorizontalAlignment="Right">

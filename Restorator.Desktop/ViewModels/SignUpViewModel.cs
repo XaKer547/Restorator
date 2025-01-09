@@ -38,7 +38,7 @@ namespace Restorator.Desktop.ViewModels
         private string username;
 
         [ObservableProperty]
-        private Roles role;
+        private Roles role = Roles.User;
 
         [RelayCommand]
         public async Task SignUp()
