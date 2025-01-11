@@ -1,6 +1,7 @@
 ﻿<Page x:Class="Restorator.Desktop.Views.Pages.RestaurantTemplateGeneratorPage"
       xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
       xmlns:modern="http://schemas.inkore.net/lib/ui/wpf/modern"
+      xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
       xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
@@ -19,10 +20,10 @@
     <DockPanel>
         <Viewbox HorizontalAlignment="Left">
             <Grid>
-                <modern:FlipView ItemsSource="{Binding Templates}" IsTabStop="True">
+                <modern:FlipView ItemsSource="{Binding Templates}" SelectedItem="{Binding SelectedTemplate}" IsTabStop="True">
                     <modern:FlipView.ItemTemplate>
                         <DataTemplate>
-                            <Image Source="{Binding }"/>
+                            <Image Source="{Binding Content}"/>
                         </DataTemplate>
                     </modern:FlipView.ItemTemplate>
 
@@ -34,7 +35,7 @@
                 <ItemsControl ItemsSource="{Binding Tables}" IsTabStop="False">
                     <ItemsControl.ItemsPanel>
                         <ItemsPanelTemplate>
-                            <Canvas Width="1212.66" Height="1526.82">
+                            <Canvas Margin="10,0">
                                 <Canvas.Background>
                                     <ImageBrush Stretch="Uniform"/>
                                 </Canvas.Background>
@@ -66,15 +67,39 @@
             </Grid>
         </Viewbox>
 
-        <StackPanel>
-            <TextBlock Text="{Binding  SelectedTable.X}"/>
-            <Slider IsTabStop="False" Minimum="0" Maximum="1212.66" Value="{Binding SelectedTable.X, Mode=TwoWay}" Width="200"/>
+        <StackPanel Margin="20,0" HorizontalAlignment="Stretch" MinWidth="200">
+            <TextBlock Text="{Binding  SelectedTable.X, StringFormat=X: {0}}"/>
+            <Slider IsTabStop="False" Minimum="0" Maximum="1012" Value="{Binding SelectedTable.X, Mode=TwoWay}"/>
 
-            <TextBlock Text="{Binding  SelectedTable.Y}"/>
-            <Slider IsTabStop="False"  Minimum="0" Maximum="1526.82" Value="{Binding SelectedTable.Y, Mode=TwoWay}"/>
+            <TextBlock Text="{Binding  SelectedTable.Y, StringFormat=Y: {0}}"/>
+            <Slider IsTabStop="False"  Minimum="0" Maximum="1344" Value="{Binding SelectedTable.Y, Mode=TwoWay}"/>
+
+            <TextBlock Text="{Binding  SelectedTable.Rotation, StringFormat=Поворот: {0}}"/>
+            <Slider IsTabStop="False" Minimum="0"  Maximum="90" TickFrequency="45" IsSnapToTickEnabled="True" TickPlacement="BottomRight" 
+                    Value="{Binding SelectedTable.Rotation, Mode=TwoWay}"/>
+
+            <DockPanel>
+                <ui:Button IsTabStop="False" Appearance="Primary" Content="+" HorizontalAlignment="Center" Margin="0,20" Command="{Binding AddNewTableCommand}"/>
+                <ui:Button IsTabStop="False" Appearance="Primary" Content="-" HorizontalAlignment="Center" Margin="0,20" Command="{Binding RemoveTableCommand}"/>
+            </DockPanel>
+            
+            <TextBlock Text="{Binding SelectedTemplate.Filename, StringFormat=Выбран шаблон: {0}}"/>
+
+            <ui:DynamicScrollViewer MaxHeight="300">
+                <ui:TextBox IsReadOnly="True" Text="{Binding SeederScript}"/>
+            </ui:DynamicScrollViewer>
+
+
+            <DockPanel>
+                <ui:Button Content="Создать скрипт" Margin="20, 0" Command="{Binding GenerateSeederScriptCommand}"/>
+
+                <ui:Button Content="Скопировать в буффер" Command="{Binding CopyScriptToBufferCommand}"/>
+            </DockPanel>
         </StackPanel>
 
-        <Button IsTabStop="False"  Grid.Row="2" Content="Сгенерить лист" HorizontalAlignment="Center" Margin="0,20" Command="{Binding AddNewTableCommand}"/>
+        <StackPanel Grid.Column="1" Margin="20,0">
+        </StackPanel>
+
     </DockPanel>
 
     <i:Interaction.Triggers>
