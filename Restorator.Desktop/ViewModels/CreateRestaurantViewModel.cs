@@ -5,18 +5,22 @@ using Restorator.Desktop.Session;
 using Restorator.Domain.Models;
 using Restorator.Domain.Services;
 using Wpf.Ui;
+using Wpf.Ui.Extensions;
 
 namespace Restorator.Desktop.ViewModels
 {
     public partial class CreateRestaurantViewModel : RestaurantEditorViewModelBase
     {
         private readonly IRestaurantService _restaurantService;
+        private readonly ISnackbarService _snackbarService;
         public CreateRestaurantViewModel(IRestaurantService restaurantService,
                                          Services.INavigationService navigationService,
                                          ISessionManager sessionManager,
-                                         IContentDialogService contentDialogService) : base(restaurantService, navigationService, sessionManager, contentDialogService)
+                                         IContentDialogService contentDialogService,
+                                         ISnackbarService snackbarService) : base(restaurantService, navigationService, sessionManager, contentDialogService)
         {
             _restaurantService = restaurantService;
+            _snackbarService = snackbarService;
         }
 
         [ObservableProperty]
@@ -28,10 +32,12 @@ namespace Restorator.Desktop.ViewModels
         [RelayCommand]
         public async Task CreateRestaurant()
         {
-            ValidateAllProperties();
-
             if (HasErrors)
             {
+                var error = GetErrors().First();
+
+                _snackbarService.Show("Так не пойдет", error.ErrorMessage, Wpf.Ui.Controls.ControlAppearance.Danger);
+
                 return;
             }
 

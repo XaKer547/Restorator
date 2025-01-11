@@ -54,23 +54,6 @@
                         </Grid.ColumnDefinitions>
 
                         <StackPanel>
-                            <StackPanel Orientation="Horizontal">
-                                <ui:TextBlock FontTypography="Subtitle" Text="Статус ресторана: "/>
-                                <ui:TextBlock FontTypography="Subtitle">
-                                    <i:Interaction.Triggers>
-                                        <i:DataTrigger Binding="{Binding Approved}" Value="True">
-                                            <i:ChangePropertyAction PropertyName="Text" Value="подтвержден"/>
-                                            <i:ChangePropertyAction PropertyName="Foreground" Value="LightGreen"/>
-                                        </i:DataTrigger>
-
-                                        <i:DataTrigger Binding="{Binding Approved}"  Value="False">
-                                            <i:ChangePropertyAction PropertyName="Text" Value="не подтвержден"/>
-                                            <i:ChangePropertyAction PropertyName="Foreground" Value="Red"/>
-                                        </i:DataTrigger>
-                                    </i:Interaction.Triggers>
-                                </ui:TextBlock>
-                            </StackPanel>
-
                             <Expander Margin="0,15" IsExpanded="True">
                                 <Expander.Header>
                                     <ui:TextBlock Text="Описание ресторана" FontTypography="Title" FontWeight="Normal" TextWrapping="Wrap" />

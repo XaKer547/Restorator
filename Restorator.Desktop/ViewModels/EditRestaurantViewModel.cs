@@ -4,6 +4,7 @@ using Restorator.Desktop.Session;
 using Restorator.Domain.Models;
 using Restorator.Domain.Services;
 using Wpf.Ui;
+using Wpf.Ui.Extensions;
 
 namespace Restorator.Desktop.ViewModels
 {
@@ -12,14 +13,17 @@ namespace Restorator.Desktop.ViewModels
         private readonly IRestaurantService _restaurantService;
         private readonly IContentDialogService _contentDialogService;
         private readonly Services.INavigationService _navigationService;
+        private readonly ISnackbarService _snackbarService;
         public EditRestaurantViewModel(IRestaurantService restaurantService,
                                        Services.INavigationService navigationService,
                                        ISessionManager sessionManager,
-                                       IContentDialogService contentDialogService) : base(restaurantService, navigationService, sessionManager, contentDialogService)
+                                       IContentDialogService contentDialogService,
+                                       ISnackbarService snackbarService) : base(restaurantService, navigationService, sessionManager, contentDialogService)
         {
             _restaurantService = restaurantService;
             _contentDialogService = contentDialogService;
             _navigationService = navigationService;
+            _snackbarService = snackbarService;
         }
 
         private int _restaurantId;
@@ -31,6 +35,9 @@ namespace Restorator.Desktop.ViewModels
 
             if (result.IsFailed)
             {
+                _snackbarService.Show("Ошибка", "Что-то пошло не так", Wpf.Ui.Controls.ControlAppearance.Danger);
+
+                await _navigationService.NavigateBackAsync();
 
                 return;
             }
@@ -77,6 +84,17 @@ namespace Restorator.Desktop.ViewModels
         [RelayCommand]
         public async Task UpdateRestaurant()
         {
+            ValidateAllProperties();
+
+            if (HasErrors)
+            {
+                var error = GetErrors().First();
+
+                _snackbarService.Show("Так не пойдет", error.ErrorMessage, Wpf.Ui.Controls.ControlAppearance.Danger);
+
+                return;
+            }
+
             var result = await _restaurantService.UpdateRestaurant(new UpdateRestraurantDTO
             {
                 RestaurantId = _restaurantId,

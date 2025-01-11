@@ -54,7 +54,7 @@ namespace Restorator.Application.Services
         }
         public async Task<PaginatedList<RestaurantPreviewDTO>> GetRestaurantPreviews(GetRestaurantsPreviewDTO getRestaurantsPreview)
         {
-            var predicate = PredicateBuilder.New<Restaurant>(false);
+            var predicate = PredicateBuilder.New<Restaurant>(true);
 
             var searchFilter = getRestaurantsPreview.Filter;
 

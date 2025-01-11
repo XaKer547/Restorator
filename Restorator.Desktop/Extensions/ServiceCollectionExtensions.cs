@@ -76,6 +76,7 @@ namespace Restorator.Desktop.Extensions
                 .RegisterDataTemplate<RestaurantReservationsManagementViewModel, ReservsationsManagementPage>()
                 .RegisterDataTemplate<RestaurantsVerificationViewModel, RestaurantsVerificationPage>()
                 .RegisterDataTemplate<RestaurantVerificationViewModel, RestaurantVerificationPage>()
+                .RegisterDataTemplate<RestaurantTemplateGeneratorViewModel, RestaurantTemplateGeneratorPage>()
                 .RegisterDataTemplate<RestaurantManagementViewModel, RestaurantManagementPage>();
 
             manager.SetControlsCulture();
