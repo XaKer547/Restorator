@@ -19,8 +19,10 @@ namespace Restorator.Desktop.Models
         [ObservableProperty]
         private double rotation;
 
+        [ObservableProperty]
+        private double height;
 
-        public double Height { get; set; }
-        public double Width { get; set; }
+        [ObservableProperty]
+        private double width;
     }
 }

@@ -1,6 +1,6 @@
-﻿using CommunityToolkit.Mvvm.ComponentModel;
+﻿using System.Windows.Controls;
+using CommunityToolkit.Mvvm.ComponentModel;
 using Restorator.Desktop.ViewModels;
-using System.Windows.Controls;
 using Wpf.Ui.Controls;
 
 namespace Restorator.Desktop.Views.Pages

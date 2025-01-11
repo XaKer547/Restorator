@@ -1,7 +1,6 @@
 ﻿using Restorator.Desktop.Session;
 using Restorator.Desktop.ViewModels;
 using Wpf.Ui;
-using Wpf.Ui.Appearance;
 using Wpf.Ui.Controls;
 
 namespace Restorator.Desktop.Views.Windows
@@ -17,8 +16,6 @@ namespace Restorator.Desktop.Views.Windows
             ISnackbarService snackbarService,
             ISessionManager sessionManager)
         {
-            SystemThemeWatcher.Watch(this);
-
             DataContext = viewModel;
 
             InitializeComponent();
@@ -26,6 +23,8 @@ namespace Restorator.Desktop.Views.Windows
             navigationService.SetNavigationControl(RootNavigation);
             contentDialogService.SetDialogHost(RootContentDialog);
             snackbarService.SetSnackbarPresenter(SnackbarPresenter);
+
+            //navigationService.Navigate<RestaurantTemplateGeneratorViewModel>();
 
             navigationService.Navigate<MenuViewModel>();
         }

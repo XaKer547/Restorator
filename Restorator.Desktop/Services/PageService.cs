@@ -1,6 +1,6 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using System.Windows;
+using Microsoft.Extensions.DependencyInjection;
 using Restorator.Desktop.Infrastructure;
-using System.Windows;
 using Wpf.Ui;
 
 namespace Restorator.Desktop.Services
