@@ -13,8 +13,7 @@ namespace Restorator.Desktop.Views.Windows
         public MainWindow(MainWindowViewModel viewModel,
             Services.INavigationService navigationService,
             IContentDialogService contentDialogService,
-            ISnackbarService snackbarService,
-            ISessionManager sessionManager)
+            ISnackbarService snackbarService)
         {
             DataContext = viewModel;
 

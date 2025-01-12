@@ -137,6 +137,10 @@ namespace Restorator.Desktop.ViewModels
             Username = "Гость";
 
             InitializeNavigationItems();
+
+            var item = (NavigationViewItem)MenuItems.First();
+
+            _menuNavigationService.Navigate(item.TargetPageType);
         }
     }
 }

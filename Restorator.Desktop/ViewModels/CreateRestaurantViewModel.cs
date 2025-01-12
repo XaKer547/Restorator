@@ -32,6 +32,8 @@ namespace Restorator.Desktop.ViewModels
         [RelayCommand]
         public async Task CreateRestaurant()
         {
+            ValidateAllProperties();
+
             if (HasErrors)
             {
                 var error = GetErrors().First();

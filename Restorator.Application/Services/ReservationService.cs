@@ -31,7 +31,7 @@ namespace Restorator.Application.Services
                 .Include(u => u.Role)
                 .SingleOrDefault(u => u.Id == cancelReservation.UserId);
 
-            if(user is null)
+            if (user is null)
                 return Result.Fail("Пользователь не найден");
 
             if (user.Role != Roles.Manager)
@@ -176,7 +176,10 @@ namespace Restorator.Application.Services
                 return Result.Fail("Стол не найден");
 
             var restaurant = await _context.Restaurants.
-                SingleOrDefaultAsync(r => r.Id == reserveTable.RestaurantId && r.Template.Tables.All(t => tables.Contains(t)));
+                SingleOrDefaultAsync(r => r.Id == reserveTable.RestaurantId);
+
+            //задачка Aka "Этот стол принадлежит этому ресторану?"
+            //&& r.Template.Tables.All(t => tables.Contains(t)));
 
             if (restaurant is null)
                 return Result.Fail("Ресторан не найден");

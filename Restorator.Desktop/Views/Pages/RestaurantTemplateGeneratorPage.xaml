@@ -69,10 +69,10 @@
 
         <StackPanel Margin="20,0" HorizontalAlignment="Stretch" MinWidth="200">
             <TextBlock Text="{Binding  SelectedTable.X, StringFormat=X: {0}}"/>
-            <Slider IsTabStop="False" Minimum="0" Maximum="1012" Value="{Binding SelectedTable.X, Mode=TwoWay}"/>
+            <Slider IsTabStop="False" Minimum="0" Maximum="1060" Value="{Binding SelectedTable.X, Mode=TwoWay}"/>
 
             <TextBlock Text="{Binding  SelectedTable.Y, StringFormat=Y: {0}}"/>
-            <Slider IsTabStop="False"  Minimum="0" Maximum="1344" Value="{Binding SelectedTable.Y, Mode=TwoWay}"/>
+            <Slider IsTabStop="False"  Minimum="0" Maximum="1400" Value="{Binding SelectedTable.Y, Mode=TwoWay}"/>
 
             <TextBlock Text="{Binding  SelectedTable.Rotation, StringFormat=Поворот: {0}}"/>
             <Slider IsTabStop="False" Minimum="0"  Maximum="90" TickFrequency="45" IsSnapToTickEnabled="True" TickPlacement="BottomRight" 
@@ -82,6 +82,9 @@
                 <ui:Button IsTabStop="False" Appearance="Primary" Content="+" HorizontalAlignment="Center" Margin="0,20" Command="{Binding AddNewTableCommand}"/>
                 <ui:Button IsTabStop="False" Appearance="Primary" Content="-" HorizontalAlignment="Center" Margin="0,20" Command="{Binding RemoveTableCommand}"/>
             </DockPanel>
+
+            <ui:Button Appearance="Danger" Foreground="White" Content="Удалить все столы" 
+                       Command="{Binding ClearSchemeCommand}"/>
 
             <TextBlock Text="{Binding SelectedTemplate.Filename, StringFormat=Выбран шаблон: {0}}"/>
 
@@ -101,7 +104,8 @@
             <ui:TextBlock FontTypography="Title" Text="Шаблон стола"/>
 
             <DockPanel>
-                <ui:Button Appearance="Info" Content="Квадрат" Margin="0,0,10,0" Command="{Binding SetSelectedTableSquareCommand}"/>
+                <ui:Button Appearance="Info" Content="Квадрат" Command="{Binding SetSelectedTableSquareCommand}"/>
+                <ui:Button Appearance="Info" Content="Квадрат(мини)" Margin="10,0" Command="{Binding SetSelectedTableMiniSquareCommand}"/>
                 <ui:Button Appearance="Info" Content="Прямоугольник" Command="{Binding SetSelectedTableRectanleCommand}"/>
             </DockPanel>
         </StackPanel>

@@ -33,7 +33,7 @@
                 <ItemsControl ItemsSource="{Binding RestaurantsTag}">
                     <ItemsControl.ItemsPanel>
                         <ItemsPanelTemplate>
-                            <ui:VirtualizingWrapPanel/>
+                            <WrapPanel Orientation="Horizontal"/>
                         </ItemsPanelTemplate>
                     </ItemsControl.ItemsPanel>
 
@@ -41,7 +41,8 @@
                         <DataTemplate>
                             <RadioButton Content="{Binding Name}" CommandParameter="{Binding}"
                                        Command="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type pages:RestaurantSearchPage}}, Path=DataContext.ChangeSearchTagCommand}"
-                                       Style="{StaticResource {x:Type ToggleButton}}" GroupName="RestaurantTags" />
+                                       Style="{StaticResource {x:Type ToggleButton}}"
+                                       GroupName="RestaurantTags" Margin="10,0,0,0" />
                         </DataTemplate>
                     </ItemsControl.ItemTemplate>
                 </ItemsControl>
@@ -64,7 +65,7 @@
                                 <ui:Button.Template>
                                     <ControlTemplate TargetType="ui:Button">
                                         <StackPanel>
-                                            <Border Height="150" CornerRadius="10">
+                                            <Border Height="150" CornerRadius="10" BorderThickness="1" BorderBrush="LightGray">
                                                 <Border.Background>
                                                     <ImageBrush Stretch="UniformToFill" ImageSource="{Binding Image, TargetNullValue={StaticResource NoImage}}"/>
                                                 </Border.Background>

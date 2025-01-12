@@ -10,7 +10,7 @@ builder.Services.AddDbContext<RestoratorDbContext>(opt =>
 #if HOMEDEBUG 
     opt.UseSqlServer(builder.Configuration.GetConnectionString("Home"));
 #elif COLLEGEDEBUG || DEBUG
-    opt.UseSqlServer(builder.Configuration.GetConnectionString("College"));
+    opt.UseSqlServer(builder.Configuration.GetConnectionString("Home"));
 #endif
 });
 

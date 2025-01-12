@@ -1,4 +1,5 @@
 ﻿using System.Collections.ObjectModel;
+using System.Globalization;
 using System.IO;
 using System.Text;
 using System.Windows;
@@ -11,7 +12,9 @@ namespace Restorator.Desktop.ViewModels
 {
     public partial class RestaurantTemplateGeneratorViewModel : ViewModelBase
     {
-        private const string SchemeLocation = "C:\\Users\\user\\source\\repos\\XaKer547\\Restorator\\Restorator.Seeder\\Resources\\RestaurantsPlan";
+        private const string SchemeLocation =
+            "C:\\Users\\user\\source\\repos\\XaKer547\\Restorator\\Restorator.Seeder\\Resources\\RestaurantsPlan";
+
         //тут свой путь к сидеру пиши
 
         [ObservableProperty]
@@ -78,6 +81,22 @@ namespace Restorator.Desktop.ViewModels
         }
 
         [RelayCommand]
+        public void ClearScheme()
+        {
+            Tables.Clear();
+        }
+
+        [RelayCommand]
+        public void SetSelectedTableMiniSquare()
+        {
+            if (!CanChangeTable)
+                return;
+
+            SelectedTable!.Width = 100;
+            SelectedTable.Height = 108;
+        }
+
+        [RelayCommand]
         public void RemoveTable()
         {
             Tables.Remove(SelectedTable!);
@@ -126,7 +145,9 @@ namespace Restorator.Desktop.ViewModels
 
             var fileNameWithoutExtension = SelectedTemplate.Filename.Split('.')[0];
 
-            script.AppendLine($"\tImage = EmbeddedResourceHelper.GetRestaurantPlan(\"{fileNameWithoutExtension}\"),");
+            script.AppendLine(
+                $"\tImage = EmbeddedResourceHelper.GetRestaurantPlan(\"{fileNameWithoutExtension}\"),"
+            );
 
             script.AppendLine("\tTables = new List<Table>()\n\t\t{");
 
@@ -134,16 +155,38 @@ namespace Restorator.Desktop.ViewModels
             {
                 script.AppendLine("\t\t\tnew Table()\n\t\t\t{");
 
-                var templateId = table.Width == 183 && table.Height == 183 ? 1 : 2;
+                int templateId;
 
-                script.AppendLine($"\t\t\t\tTableTemplateId = {templateId}");
-                script.AppendLine($"\t\t\t\tX = {table.X + 10},"); //у меня margin стоит для того чтобы FlipView отработал
-                script.AppendLine($"\t\t\t\tY = {table.Y}");
+                if (table.Width == 183 && table.Height == 183) // надо бы сделать это по другому(
+                    templateId = 1;
+                else if (table.Width == 183 && table.Height == 110)
+                    templateId = 4;
+                else
+                    templateId = 7;
+
+                if (table.Rotation == 45)
+                    templateId++;
+                else if (table.Rotation == 90)
+                    templateId += 2;
+
+                script.AppendLine($"\t\t\t\tTableTemplateId = {templateId},");
+
+                //у меня margin стоит для того чтобы FlipView отработал
+                script.AppendLine(
+                    CultureInfo.InvariantCulture,
+                    $"\t\t\t\tX = {Math.Round(table.X, 2) + 10}F,"
+                );
+
+                script.AppendLine(
+                    CultureInfo.InvariantCulture,
+                    $"\t\t\t\tY = {Math.Round(table.Y, 2)}F,"
+                );
+
                 script.AppendLine("\t\t\t},");
             }
 
             script.AppendLine("\t\t}");
-            script.AppendLine("}");
+            script.AppendLine("},");
 
             SeederScript = script.ToString();
         }

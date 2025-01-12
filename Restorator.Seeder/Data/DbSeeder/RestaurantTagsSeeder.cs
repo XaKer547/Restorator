@@ -11,18 +11,10 @@ namespace Restorator.Seeder.Data.DbSeeder
 
             var tags = new List<RestaurantTag>()
             {
-                new ()
-                {
-                    Name = "Десерты"
-                },
-                new()
-                {
-                    Name = "Шаурма"
-                },
-                new()
-                {
-                Name = "Лаунж"
-                }
+                new() { Name = "Десерты" },
+                new() { Name = "Итальянская кухня" },
+                new() { Name = "Русская кухня" },
+                new() { Name = "Грузинская кухня" },
             };
 
             _context.RestaurantTags.AddRange(tags);
