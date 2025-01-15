@@ -127,10 +127,19 @@ namespace Restorator.Desktop.ViewModels
                 {
                     RequireApproved = true,
                     Tag = SelectedTag,
+                },
+                PaginationFilter = new PaginationFilter()
+                {
+                    CurrentPage = _currentPage,
+                    PageSize = 20
                 }
             });
 
-            CanLoadRestaurants = restaurants.HasNextPage;
+            _currentPage++;
+            
+            //пробуй)
+
+            CanLoadRestaurants = restaurants.HasNextPage; 
 
             foreach (var restaurant in restaurants)
                 RestaurantsPreview.Add(restaurant);

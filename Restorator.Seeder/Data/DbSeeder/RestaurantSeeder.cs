@@ -30,7 +30,7 @@ namespace Restorator.Seeder.Data.DbSeeder
                 {
                     Name = "GIACOMO",
                     Description =
-                        "GIACOMO — современная итальянская кухня от Kravchenko Group✨\r\n\r\nРимская пицца на хрустящем тесте, свежая паста ручной работы, открытая кухня, завораживающие подачи, десерты от шеф-кондитера, авторские коктейли, винная карта, которая никого не оставит равнодушным, стильный интерьер и современная итальянская музыка в самом сердце города!",
+                        "GIACOMO — современная итальянская кухня от Kravchenko Group\r\n\r\nРимская пицца на хрустящем тесте, свежая паста ручной работы, открытая кухня, завораживающие подачи, десерты от шеф-кондитера, авторские коктейли, винная карта, которая никого не оставит равнодушным, стильный интерьер и современная итальянская музыка в самом сердце города!",
                     TemplateId = 2,
                     Image = EmbeddedResourceHelper.GetRestaurantImage("GIACOMO"),
                     MenuImage = EmbeddedResourceHelper.GetRestaurantMenu("GIACOMO"),
@@ -82,6 +82,91 @@ namespace Restorator.Seeder.Data.DbSeeder
                     Tags = [.. _context.RestaurantTags.Where(t => t.Id == 4)],
                     OwnerId = 3,
                 },
+                 new Restaurant()
+                 {
+                    Name = "Телави",
+                    Description =
+                        "Ресторан «Телави» предлагает своим гостям блюда грузинской кухни, а также широкий выбор напитков, включая авторские чаи и лимонады.",
+                    TemplateId = 5,
+                    Image = EmbeddedResourceHelper.GetRestaurantImage("Телави"),
+                    MenuImage = EmbeddedResourceHelper.GetRestaurantMenu("Телави"),
+                    BeginWorkTime = new TimeOnly(12, 0),
+                    EndWorkTime = new TimeOnly(0, 0),
+                    Approved = true,
+                    Tags = [.. _context.RestaurantTags.Where(t => t.Id == 4)],
+                    OwnerId = 3,
+                 },
+                 new Restaurant()
+                 {
+                    Name = "ТатарАш",
+                    Description =
+                        "Ресторан «ТатарАш» предлагает своим гостям блюда татарской кухни.",
+                    TemplateId = 5,
+                    Image = EmbeddedResourceHelper.GetRestaurantImage("ТатарАш"),
+                    MenuImage = EmbeddedResourceHelper.GetRestaurantMenu("ТатарАш"),
+                    BeginWorkTime = new TimeOnly(12, 0),
+                    EndWorkTime = new TimeOnly(0, 0),
+                    Approved = true,
+                    Tags = [.. _context.RestaurantTags.Where(t => t.Id == 5)],
+                    OwnerId = 3,
+                 },
+                 new Restaurant()
+                 {
+                    Name = "Yoko Sushi Bar",
+                    Description =
+                        "Суши-бар «Yoko Sushi Bar» предлагает своим гостям блюда итальянской и японской кухни, а также широкий выбор напитков, включая авторские чаи.",
+                    TemplateId = 5,
+                    Image = EmbeddedResourceHelper.GetRestaurantImage("Yoko Sushi Bar"),
+                    MenuImage = EmbeddedResourceHelper.GetRestaurantMenu("Yoko Sushi Bar"),
+                    BeginWorkTime = new TimeOnly(12, 0),
+                    EndWorkTime = new TimeOnly(0, 0),
+                    Approved = true,
+                    Tags = [.. _context.RestaurantTags.Where(t => t.Id == 6)],
+                    OwnerId = 3,
+                 },
+                 new Restaurant()
+                 {
+                    Name = "Kinza",
+                    Description =
+                        "Ресторан «Kinza» предлагает своим гостям изысканные блюда, такие как хачапури, хинкали, салаты, паста и пицца, а также фирменные напитки, такие как чай с брусникой и специями.",
+                    TemplateId = 5,
+                    Image = EmbeddedResourceHelper.GetRestaurantImage("Kinza"), 
+                    //MenuImage = EmbeddedResourceHelper.GetRestaurantMenu("Kinza"), // я не вижу меню
+                    BeginWorkTime = new TimeOnly(12, 0),
+                    EndWorkTime = new TimeOnly(0, 0),
+                    Approved = true,
+                    Tags = [.. _context.RestaurantTags.Where(t => t.Id == 8)],
+                    OwnerId = 3,
+                 },
+                 new Restaurant()
+                 {
+                    Name = "Suly",
+                    Description =
+                        "Ресторан «Suly» предлагает своим гостям блюда вьетнамской кухни, приготовленные по традиционным рецептам. В меню представлены такие блюда, как фо-бо, том ям, лапша с различными соусами, креветки в кляре и многие другие.",
+                    TemplateId = 5,
+                    Image = EmbeddedResourceHelper.GetRestaurantImage("Suly"),
+                    MenuImage = EmbeddedResourceHelper.GetRestaurantMenu("Suly"),
+                    BeginWorkTime = new TimeOnly(12, 0),
+                    EndWorkTime = new TimeOnly(0, 0),
+                    Approved = true,
+                    Tags = [.. _context.RestaurantTags.Where(t => t.Id == 9)],
+                    OwnerId = 3,
+                 },
+                 new Restaurant()
+                 {
+                    Name = "Dali",
+                    Description =
+                        "Кофейня «Dali» — это уютное место с современным интерьером, где можно провести время за завтраком, перекусом или вечерним чаем.",
+                    TemplateId = 5,
+                    Image = EmbeddedResourceHelper.GetRestaurantImage("Dali"),
+                    MenuImage = EmbeddedResourceHelper.GetRestaurantMenu("Dali"),
+                    BeginWorkTime = new TimeOnly(12, 0),
+                    EndWorkTime = new TimeOnly(0, 0),
+                    Approved = true,
+                    Tags = [.. _context.RestaurantTags.Where(t => t.Id == 7)],
+                    OwnerId = 3,
+                 },
+
             };
 
             _context.Restaurants.AddRange(restaurants);

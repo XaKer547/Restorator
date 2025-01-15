@@ -47,7 +47,7 @@ namespace Restorator.Desktop.Extensions
 #if COLLEGEDEBUG 
                 opt.UseSqlServer("Server=b2-225-002\\SQLEXPRESS;Database=Restorator;TrustServerCertificate=true;Trusted_connection=true");
 #elif HOMEDEBUG || DEBUG
-                opt.UseSqlServer("Server=DESKTOP-F1TRK20\\SQLEXPRESS;Database=Restorator;TrustServerCertificate=true;Trusted_connection=true");
+                opt.UseSqlServer("Server=DESKTOP-35L2VVB;Database=Restorator;TrustServerCertificate=true;Trusted_connection=true");
 #endif
             });
 

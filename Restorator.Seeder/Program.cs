@@ -7,7 +7,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddDbContext<RestoratorDbContext>(opt =>
 {
-    opt.UseSqlServer(builder.Configuration.GetConnectionString("College"));
+    opt.UseSqlServer(builder.Configuration.GetConnectionString("Home"));
 });
 
 builder.Services.AddScoped<IDbSeeder, RestoratorDbSeeder>();

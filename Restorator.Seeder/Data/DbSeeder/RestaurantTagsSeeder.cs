@@ -15,6 +15,12 @@ namespace Restorator.Seeder.Data.DbSeeder
                 new() { Name = "Итальянская кухня" },
                 new() { Name = "Русская кухня" },
                 new() { Name = "Грузинская кухня" },
+                new() { Name = "Татарская кухня" },
+                new() { Name = "Итальянская и Японская кухня" },
+                new() { Name = "Кафейня" },
+                new() { Name = "Востояная кухня" },
+                new() { Name = "Вьетнамская кухня" },
+                new() { Name = "Пекарня" },
             };
 
             _context.RestaurantTags.AddRange(tags);

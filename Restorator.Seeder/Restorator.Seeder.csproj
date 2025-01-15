@@ -38,22 +38,44 @@
     <None Remove="Resources\50 мест%283%29.png" />
     <None Remove="Resources\50 мест%284%29.png" />
     <None Remove="Resources\50 мест%285%29.png" />
+    <None Remove="Resources\RestaurantsImage\Dali.png" />
     <None Remove="Resources\RestaurantsImage\GIACOMO.png" />
+    <None Remove="Resources\RestaurantsImage\Kinza.png" />
+    <None Remove="Resources\RestaurantsImage\Suly.png" />
+    <None Remove="Resources\RestaurantsImage\Yoko Sushi Bar.png" />
     <None Remove="Resources\RestaurantsImage\Антресоль.png" />
     <None Remove="Resources\RestaurantsImage\Синабонная Бо Синна.png" />
+    <None Remove="Resources\RestaurantsImage\ТатарАш.png" />
+    <None Remove="Resources\RestaurantsImage\Телави.png" />
+    <None Remove="Resources\RestaurantsMenu\Dali.png" />
+    <None Remove="Resources\RestaurantsMenu\Suly.png" />
+    <None Remove="Resources\RestaurantsMenu\Yoko Sushi Bar.png" />
     <None Remove="Resources\RestaurantsMenu\Алазани.png" />
     <None Remove="Resources\RestaurantsMenu\Антресоль.png" />
     <None Remove="Resources\RestaurantsMenu\Синабонная Бо Синна.png" />
+    <None Remove="Resources\RestaurantsMenu\ТатарАш.png" />
+    <None Remove="Resources\RestaurantsMenu\Телави.png" />
   </ItemGroup>
 
   <ItemGroup>
+    <EmbeddedResource Include="Resources\RestaurantsImage\Dali.png" />
     <EmbeddedResource Include="Resources\RestaurantsImage\GIACOMO.png" />
+    <EmbeddedResource Include="Resources\RestaurantsImage\Kinza.png" />
+    <EmbeddedResource Include="Resources\RestaurantsImage\Suly.png" />
+    <EmbeddedResource Include="Resources\RestaurantsImage\Yoko Sushi Bar.png" />
     <EmbeddedResource Include="Resources\RestaurantsImage\Антресоль.png" />
     <EmbeddedResource Include="Resources\RestaurantsImage\Синабонная Бо Синна.png" />
+    <EmbeddedResource Include="Resources\RestaurantsImage\ТатарАш.png" />
+    <EmbeddedResource Include="Resources\RestaurantsImage\Телави.png" />
+    <EmbeddedResource Include="Resources\RestaurantsMenu\Dali.png" />
     <EmbeddedResource Include="Resources\RestaurantsMenu\GIACOMO.png" />
+    <EmbeddedResource Include="Resources\RestaurantsMenu\Suly.png" />
+    <EmbeddedResource Include="Resources\RestaurantsMenu\Yoko Sushi Bar.png" />
     <EmbeddedResource Include="Resources\RestaurantsMenu\Алазани.png" />
     <EmbeddedResource Include="Resources\RestaurantsMenu\Антресоль.png" />
     <EmbeddedResource Include="Resources\RestaurantsMenu\Синабонная Бо Синна.png" />
+    <EmbeddedResource Include="Resources\RestaurantsMenu\ТатарАш.png" />
+    <EmbeddedResource Include="Resources\RestaurantsMenu\Телави.png" />
     <EmbeddedResource Include="Resources\RestaurantsPlan\100 мест%281%29.png" />
     <EmbeddedResource Include="Resources\RestaurantsPlan\100 мест%282%29.png" />
     <EmbeddedResource Include="Resources\RestaurantsPlan\100 мест%283%29.png" />
