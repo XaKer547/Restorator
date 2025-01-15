@@ -327,6 +327,12 @@ namespace Restorator.Seeder.Data.DbSeeder
                             X = 665,
                             Y = 1325.79F,
                         },
+                        new Table()
+                        {
+                            TableTemplateId = 2,
+                            X = 733.03F,
+                            Y = 137.05F,
+                        },
                     },
                 }, // 100 мест (1)
                 new RestaurantTemplate
@@ -357,6 +363,18 @@ namespace Restorator.Seeder.Data.DbSeeder
                             TableTemplateId = 7,
                             X = 722.49F,
                             Y = 53.34F,
+                        },
+                        new Table()
+                        {
+                            TableTemplateId = 2,
+                            X = 730.87F,
+                            Y = 1003.13F,
+                        },
+                        new Table()
+                        {
+                            TableTemplateId = 2,
+                            X = 736.16F,
+                            Y = 462.41F,
                         },
                     },
                 }, // 100+ мест (1)

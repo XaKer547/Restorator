@@ -1,5 +1,5 @@
-﻿using System.Windows.Controls;
-using Restorator.Desktop.ViewModels;
+﻿using Restorator.Desktop.ViewModels;
+using System.Windows.Controls;
 using Wpf.Ui.Abstractions.Controls;
 
 namespace Restorator.Desktop.Views.Pages

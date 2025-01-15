@@ -1,10 +1,10 @@
-﻿using System.Collections.ObjectModel;
-using CommunityToolkit.Mvvm.ComponentModel;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Restorator.Desktop.Services;
 using Restorator.Desktop.ViewModels.Abstract;
 using Restorator.Domain.Models;
 using Restorator.Domain.Services;
+using System.Collections.ObjectModel;
 
 namespace Restorator.Desktop.ViewModels
 {

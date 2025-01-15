@@ -1,7 +1,7 @@
-﻿using System.IO;
+﻿using Restorator.Domain.Models;
+using System.IO;
 using System.IO.IsolatedStorage;
 using System.Text.Json;
-using Restorator.Domain.Models;
 
 namespace Restorator.Desktop.Session
 {

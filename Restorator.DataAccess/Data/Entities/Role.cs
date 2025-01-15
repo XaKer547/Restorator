@@ -1,7 +1,7 @@
-﻿using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
-using Restorator.DataAccess.Data.Entities.Enums;
+﻿using Restorator.DataAccess.Data.Entities.Enums;
 using Restorator.DataAccess.Extensions;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Restorator.DataAccess.Data.Entities
 {

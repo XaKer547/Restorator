@@ -1,5 +1,4 @@
-﻿using Restorator.Desktop.Session;
-using Restorator.Desktop.ViewModels;
+﻿using Restorator.Desktop.ViewModels;
 using Wpf.Ui;
 using Wpf.Ui.Controls;
 

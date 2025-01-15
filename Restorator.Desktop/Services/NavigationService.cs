@@ -1,6 +1,6 @@
-﻿using System.Windows.Controls;
-using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.Extensions.DependencyInjection;
 using Restorator.Desktop.ViewModels.Abstract;
+using System.Windows.Controls;
 
 namespace Restorator.Desktop.Services
 {

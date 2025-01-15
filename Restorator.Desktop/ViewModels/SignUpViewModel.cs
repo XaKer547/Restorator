@@ -1,11 +1,11 @@
-﻿using System.ComponentModel.DataAnnotations;
-using CommunityToolkit.Mvvm.ComponentModel;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Restorator.DataAccess.Data.Entities.Enums;
 using Restorator.Desktop.Session;
 using Restorator.Desktop.ViewModels.Abstract;
 using Restorator.Domain.Models;
 using Restorator.Domain.Services;
+using System.ComponentModel.DataAnnotations;
 using Wpf.Ui;
 using Wpf.Ui.Extensions;
 
@@ -43,10 +43,10 @@ namespace Restorator.Desktop.ViewModels
         [RelayCommand]
         public async Task SignUp()
         {
-            ValidateAllProperties();
+            ValidateAllProperties(); // допустим я хочу проверить этот участок кода 
 
-            if (HasErrors)
-            {
+            if (HasErrors) // когда исполнение кода дойдет до сюда, сработает остановка
+            { // на переменные и свойства можно наводить мышь, чтобы смотреть их содержимое
                 var error = GetErrors().First();
 
                 _snackbarService.Show("Так не пойдет", error.ErrorMessage, Wpf.Ui.Controls.ControlAppearance.Danger);

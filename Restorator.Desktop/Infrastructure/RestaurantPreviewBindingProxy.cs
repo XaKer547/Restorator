@@ -1,5 +1,5 @@
-﻿using System.Windows;
-using Restorator.Domain.Models;
+﻿using Restorator.Domain.Models;
+using System.Windows;
 
 namespace Restorator.Desktop.Infrastructure
 {

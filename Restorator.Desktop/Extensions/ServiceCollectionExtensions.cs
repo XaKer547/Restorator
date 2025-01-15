@@ -1,5 +1,4 @@
-﻿using System.Reflection;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Restorator.Application.Services;
 using Restorator.DataAccess.Data;
@@ -12,6 +11,7 @@ using Restorator.Desktop.ViewModels.Abstract;
 using Restorator.Desktop.Views.Pages;
 using Restorator.Desktop.Views.Windows;
 using Restorator.Domain.Services;
+using System.Reflection;
 using Wpf.Ui;
 using Wpf.Ui.Abstractions;
 using Wpf.Ui.DependencyInjection;

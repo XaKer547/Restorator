@@ -1,5 +1,4 @@
-﻿using System.Collections.Immutable;
-using FluentResults;
+﻿using FluentResults;
 using LinqKit;
 using Microsoft.EntityFrameworkCore;
 using Restorator.DataAccess.Data;
@@ -8,6 +7,7 @@ using Restorator.DataAccess.Data.Entities.Enums;
 using Restorator.Domain.Models;
 using Restorator.Domain.Models.Enums;
 using Restorator.Domain.Services;
+using System.Collections.Immutable;
 
 namespace Restorator.Application.Services
 {
