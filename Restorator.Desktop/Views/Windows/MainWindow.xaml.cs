@@ -24,7 +24,7 @@ namespace Restorator.Desktop.Views.Windows
 
             navigationService.Navigate<MenuViewModel>();
 
-           // navigationService.Navigate<RestaurantTemplateGeneratorViewModel>();
+           navigationService.Navigate<RestaurantTemplateGeneratorViewModel>();
         }
     }
 }
