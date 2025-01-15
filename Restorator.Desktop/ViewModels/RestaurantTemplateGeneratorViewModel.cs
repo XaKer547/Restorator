@@ -13,7 +13,7 @@ namespace Restorator.Desktop.ViewModels
     public partial class RestaurantTemplateGeneratorViewModel : ViewModelBase
     {
         private const string SchemeLocation =
-            "C:\\Users\\user\\source\\repos\\XaKer547\\Restorator\\Restorator.Seeder\\Resources\\RestaurantsPlan";
+            "F:\\Restorator\\Restorator.Seeder\\Resources\\RestaurantsPlan";
 
         //тут свой путь к сидеру пиши
 

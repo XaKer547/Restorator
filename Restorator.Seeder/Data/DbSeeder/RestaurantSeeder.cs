@@ -87,7 +87,7 @@ namespace Restorator.Seeder.Data.DbSeeder
                     Name = "Телави",
                     Description =
                         "Ресторан «Телави» предлагает своим гостям блюда грузинской кухни, а также широкий выбор напитков, включая авторские чаи и лимонады.",
-                    TemplateId = 5,
+                    TemplateId = 6,
                     Image = EmbeddedResourceHelper.GetRestaurantImage("Телави"),
                     MenuImage = EmbeddedResourceHelper.GetRestaurantMenu("Телави"),
                     BeginWorkTime = new TimeOnly(12, 0),

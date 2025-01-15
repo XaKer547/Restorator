@@ -378,6 +378,69 @@ namespace Restorator.Seeder.Data.DbSeeder
                         },
                     },
                 }, // 100+ мест (1)
+                new RestaurantTemplate
+                {
+                Image = EmbeddedResourceHelper.GetRestaurantPlan("100 мест(2)"),
+                Tables = new List<Table>()
+                    {
+                        new Table()
+                        {
+                            TableTemplateId = 7,
+                            X = 103.73F,
+                            Y = 39.79F,
+                        },
+                        new Table()
+                        {
+                            TableTemplateId = 6,
+                            X = 163.98F,
+                            Y = 336F,
+                        },
+                        new Table()
+                        {
+                            TableTemplateId = 6,
+                            X = 163.98F,
+                            Y = 601.26F,
+                        },
+                        new Table()
+                        {
+                            TableTemplateId = 6,
+                            X = 163.98F,
+                            Y = 857.68F,
+                        },
+                        new Table()
+                        {
+                            TableTemplateId = 6,
+                            X = 933.87F,
+                            Y = 1030.11F,
+                        },
+                        new Table()
+                        {
+                            TableTemplateId = 6,
+                            X = 930.53F,
+                            Y = 773.68F,
+                        },
+                        new Table()
+                        {
+                            TableTemplateId = 6,
+                            X = 930.53F,
+                            Y = 508.42F,
+                        },
+                        new Table()
+                        {
+                            TableTemplateId = 2,
+                            X = 86.99F,
+                            Y = 1158.32F,
+                        },
+                        new Table()
+                        {
+                            TableTemplateId = 2,
+                            X = 866.93F,
+                            Y = 1246.74F,
+                        },
+                    }
+            }, // 100 мест (2)
+
+
             };
 
             _context.RestaurantTemplates.AddRange(templates);
