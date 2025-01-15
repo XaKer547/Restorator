@@ -13,7 +13,7 @@
       d:DesignHeight="450" d:DesignWidth="800" >
     <Grid Margin="20,40">
         <Grid.RowDefinitions>
-            <RowDefinition Height="100"/>
+            <RowDefinition Height="auto"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
         <StackPanel>
@@ -26,8 +26,8 @@
                 </i:Interaction.Triggers>
             </ui:AutoSuggestBox>
 
-            <DockPanel>
-                <RadioButton Content="Все" Command="{Binding ResetSelectedTagCommand}" IsChecked="{Binding TagEmpty, Mode=TwoWay, TargetNullValue=True}"
+            <DockPanel Margin="0,20">
+                <RadioButton Content="Все" Command="{Binding ResetSelectedTagCommand}" IsChecked="True"
                            Style="{StaticResource {x:Type ToggleButton}}"  GroupName="RestaurantTags"/>
 
                 <ItemsControl ItemsSource="{Binding RestaurantsTag}">
@@ -42,7 +42,7 @@
                             <RadioButton Content="{Binding Name}" CommandParameter="{Binding}"
                                        Command="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type pages:RestaurantSearchPage}}, Path=DataContext.ChangeSearchTagCommand}"
                                        Style="{StaticResource {x:Type ToggleButton}}"
-                                       GroupName="RestaurantTags" Margin="10,0,0,0" />
+                                       GroupName="RestaurantTags" Margin="10,0,0,10" />
                         </DataTemplate>
                     </ItemsControl.ItemTemplate>
                 </ItemsControl>
@@ -59,7 +59,7 @@
                     </ItemsControl.ItemsPanel>
                     <ItemsControl.ItemTemplate>
                         <DataTemplate>
-                            <ui:Button MinWidth="250"
+                            <ui:Button MinWidth="250" Margin="0,10"
                                        Command="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type pages:RestaurantSearchPage}}, Path=DataContext.OpenRestaurantInfoCommand}"
                                        CommandParameter="{Binding }">
                                 <ui:Button.Template>

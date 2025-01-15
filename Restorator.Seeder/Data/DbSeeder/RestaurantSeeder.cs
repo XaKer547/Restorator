@@ -121,7 +121,7 @@ namespace Restorator.Seeder.Data.DbSeeder
                     BeginWorkTime = new TimeOnly(12, 0),
                     EndWorkTime = new TimeOnly(0, 0),
                     Approved = true,
-                    Tags = [.. _context.RestaurantTags.Where(t => t.Id == 6)],
+                    Tags = [.. _context.RestaurantTags.Where(t => t.Id == 6 || t.Id == 2)], //итальянская и японская
                     OwnerId = 3,
                  },
                  new Restaurant()
@@ -130,8 +130,8 @@ namespace Restorator.Seeder.Data.DbSeeder
                     Description =
                         "Ресторан «Kinza» предлагает своим гостям изысканные блюда, такие как хачапури, хинкали, салаты, паста и пицца, а также фирменные напитки, такие как чай с брусникой и специями.",
                     TemplateId = 5,
-                    Image = EmbeddedResourceHelper.GetRestaurantImage("Kinza"), 
-                    MenuImage = EmbeddedResourceHelper.GetRestaurantMenu("Kinza"), 
+                    Image = EmbeddedResourceHelper.GetRestaurantImage("Kinza"),
+                    MenuImage = EmbeddedResourceHelper.GetRestaurantMenu("Kinza"),
                     BeginWorkTime = new TimeOnly(12, 0),
                     EndWorkTime = new TimeOnly(0, 0),
                     Approved = true,

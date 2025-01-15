@@ -1,9 +1,9 @@
-﻿using CommunityToolkit.Mvvm.ComponentModel;
+﻿using System.Collections.ObjectModel;
+using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Restorator.Desktop.ViewModels.Abstract;
 using Restorator.Domain.Models;
 using Restorator.Domain.Services;
-using System.Collections.ObjectModel;
 using Wpf.Ui.Controls;
 
 namespace Restorator.Desktop.ViewModels
@@ -76,7 +76,7 @@ namespace Restorator.Desktop.ViewModels
         }
 
         [ObservableProperty]
-        private bool tagEmpty = true;
+        private bool canResetTag = false;
 
         [RelayCommand]
         public async Task ChangeSearchTag(RestaurantTagDTO restaurantTag)
@@ -85,13 +85,13 @@ namespace Restorator.Desktop.ViewModels
             {
                 SelectedTag = null;
 
-                TagEmpty = true;
+                CanResetTag = false;
             }
             else
             {
-                TagEmpty = false;
-
                 SelectedTag = restaurantTag;
+
+                CanResetTag = true;
             }
 
             await ResetSearch();
@@ -115,6 +115,8 @@ namespace Restorator.Desktop.ViewModels
 
             SelectedTag = null;
 
+            CanResetTag = false;
+
             await ResetSearch();
         }
 
@@ -136,10 +138,8 @@ namespace Restorator.Desktop.ViewModels
             });
 
             _currentPage++;
-            
-            //пробуй)
 
-            CanLoadRestaurants = restaurants.HasNextPage; 
+            CanLoadRestaurants = restaurants.HasNextPage;
 
             foreach (var restaurant in restaurants)
                 RestaurantsPreview.Add(restaurant);
