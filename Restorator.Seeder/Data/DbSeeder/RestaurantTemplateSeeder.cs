@@ -665,6 +665,269 @@ namespace Restorator.Seeder.Data.DbSeeder
                             },
                         }
                 }, // 100+ мест (2)
+                new RestaurantTemplate
+                {
+                    Image = EmbeddedResourceHelper.GetRestaurantPlan("100+ мест(3)"),
+                    Tables = new List<Table>()
+                        {
+                            new Table()
+                            {
+                                TableTemplateId = 2,
+                                X = 130.51F,
+                                Y = 170F,
+                            },
+                            new Table()
+                            {
+                                TableTemplateId = 2,
+                                X = 830.11F,
+                                Y = 163.58F,
+                            },
+                            new Table()
+                            {
+                                TableTemplateId = 9,
+                                X = 60.21F,
+                                Y = 729.47F,
+                            },
+                            new Table()
+                            {
+                                TableTemplateId = 9,
+                                X = 368.17F,
+                                Y = 725.05F,
+                            },
+                            new Table()
+                            {
+                                TableTemplateId = 9,
+                                X = 746.42F,
+                                Y = 725.05F,
+                            },
+                            new Table()
+                            {
+                                TableTemplateId = 9,
+                                X = 1056.61F,
+                                Y = 725.05F,
+                            },
+                            new Table()
+                            {
+                                TableTemplateId = 4,
+                                X = 1010.86F,
+                                Y = 1012.42F,
+                            },
+                            new Table()
+                            {
+                                TableTemplateId = 4,
+                                X = 1017.56F,
+                                Y = 1299.79F,
+                            },
+                        }
+                }, // 100+ мест (3)
+                new RestaurantTemplate
+                {
+                    Image = EmbeddedResourceHelper.GetRestaurantPlan("100+ мест(4)"),
+                    Tables = new List<Table>()
+                        {
+                            new Table()
+                            {
+                                TableTemplateId = 9,
+                                X = 58.76F,
+                                Y = 124.19F,
+                            },
+                            new Table()
+                            {
+                                TableTemplateId = 9,
+                                X = 58.76F,
+                                Y = 405.96F,
+                            },
+                            new Table()
+                            {
+                                TableTemplateId = 9,
+                                X = 522.99F,
+                                Y = 125.99F,
+                            },
+                            new Table()
+                            {
+                                TableTemplateId = 2,
+                                X = 809.17F,
+                                Y = 145.59F,
+                            },
+                            new Table()
+                            {
+                                TableTemplateId = 2,
+                                X = 821.88F,
+                                Y = 1118.1F,
+                            },
+                        }
+                }, // 100+ мест (4)
+                new RestaurantTemplate
+                {
+                    Image = EmbeddedResourceHelper.GetRestaurantPlan("100+ мест(5)"),
+                    Tables = new List<Table>()
+                        {
+                            new Table()
+                            {
+                                TableTemplateId = 6,
+                                X = 107.51F,
+                                Y = 16.8F,
+                            },
+                            new Table()
+                            {
+                                TableTemplateId = 6,
+                                X = 107.51F,
+                                Y = 296.77F,
+                            },
+                            new Table()
+                            {
+                                TableTemplateId = 7,
+                                X = 412.76F,
+                                Y = 47.6F,
+                            },
+                            new Table()
+                            {
+                                TableTemplateId = 7,
+                                X = 724.37F,
+                                Y = 47.6F,
+                            },
+                            new Table()
+                            {
+                                TableTemplateId = 6,
+                                X = 999.95F,
+                                Y = 16.8F,
+                            },
+                            new Table()
+                            {
+                                TableTemplateId = 4,
+                                X = 18.48F,
+                                Y = 1038.7F,
+                            },
+                            new Table()
+                            {
+                                TableTemplateId = 4,
+                                X = 16.36F,
+                                Y = 1307.48F,
+                            },
+                            new Table()
+                            {
+                                TableTemplateId = 2,
+                                X = 787.97F,
+                                Y = 540.35F,
+                            },
+                        }
+                }, // 100+ мест (5)
+                new RestaurantTemplate
+                {
+                    Image = EmbeddedResourceHelper.GetRestaurantPlan("20 мест(2)"),
+                    Tables = new List<Table>()
+                        {
+                            new Table()
+                            {
+                                TableTemplateId = 9,
+                                X = 40.129999999999995F,
+                                Y = 515.26F,
+                            },
+                            new Table()
+                            {
+                                TableTemplateId = 9,
+                                X = 36.78F,
+                                Y = 888.63F,
+                            },
+                            new Table()
+                            {
+                                TableTemplateId = 9,
+                                X = 476.28F,
+                                Y = 269.68F,
+                            },
+                            new Table()
+                            {
+                                TableTemplateId = 9,
+                                X = 1061.07F,
+                                Y = 313.89F,
+                            },
+                            new Table()
+                            {
+                                TableTemplateId = 9,
+                                X = 1061.07F,
+                                Y = 649.89F,
+                            },
+                            new Table()
+                            {
+                                TableTemplateId = 7,
+                                X = 103.73F,
+                                Y = 1330.74F,
+                            },
+                            new Table()
+                            {
+                                TableTemplateId = 9,
+                                X = 1064.42F,
+                                Y = 954.95F,
+                            },
+                            new Table()
+                            {
+                                TableTemplateId = 7,
+                                X = 1000.82F,
+                                Y = 1330.74F,
+                            },
+                        }
+                }, // 20 мест (2)
+                new RestaurantTemplate
+                {
+                    Image = EmbeddedResourceHelper.GetRestaurantPlan("20 мест(3)"),
+                    Tables = new List<Table>()
+                        {
+                            new Table()
+                            {
+                                TableTemplateId = 4,
+                                X = 20.97F,
+                                Y = 110.16F,
+                            },
+                            new Table()
+                            {
+                                TableTemplateId = 4,
+                                X = 517.04F,
+                                Y = 95.67F,
+                            },
+                            new Table()
+                            {
+                                TableTemplateId = 4,
+                                X = 1010.9F,
+                                Y = 104.36F,
+                            },
+                            new Table()
+                            {
+                                TableTemplateId = 9,
+                                X = 56.09F,
+                                Y = 379.77F,
+                            },
+                            new Table()
+                            {
+                                TableTemplateId = 9,
+                                X = 38.53F,
+                                Y = 1037.85F,
+                            },
+                            new Table()
+                            {
+                                TableTemplateId = 7,
+                                X = 293.15F,
+                                Y = 1377.03F,
+                            },
+                            new Table()
+                            {
+                                TableTemplateId = 7,
+                                X = 589.47F,
+                                Y = 1379.93F,
+                            },
+                            new Table()
+                            {
+                                TableTemplateId = 7,
+                                X = 877.01F,
+                                Y = 1379.93F,
+                            },
+                        }
+                }, // 20 мест (3)
+
+
+
+
+
+
 
 
 
