@@ -48,6 +48,7 @@
     <None Remove="Resources\RestaurantsImage\ТатарАш.png" />
     <None Remove="Resources\RestaurantsImage\Телави.png" />
     <None Remove="Resources\RestaurantsMenu\Dali.png" />
+    <None Remove="Resources\RestaurantsMenu\Kinza.png" />
     <None Remove="Resources\RestaurantsMenu\Suly.png" />
     <None Remove="Resources\RestaurantsMenu\Yoko Sushi Bar.png" />
     <None Remove="Resources\RestaurantsMenu\Алазани.png" />
@@ -69,6 +70,7 @@
     <EmbeddedResource Include="Resources\RestaurantsImage\Телави.png" />
     <EmbeddedResource Include="Resources\RestaurantsMenu\Dali.png" />
     <EmbeddedResource Include="Resources\RestaurantsMenu\GIACOMO.png" />
+    <EmbeddedResource Include="Resources\RestaurantsMenu\Kinza.png" />
     <EmbeddedResource Include="Resources\RestaurantsMenu\Suly.png" />
     <EmbeddedResource Include="Resources\RestaurantsMenu\Yoko Sushi Bar.png" />
     <EmbeddedResource Include="Resources\RestaurantsMenu\Алазани.png" />
