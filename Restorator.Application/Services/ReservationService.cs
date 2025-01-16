@@ -105,8 +105,8 @@ namespace Restorator.Application.Services
         {
             var reservations = _context.Reservations.AsNoTracking()
                 .Where(reservation => reservation.Restaurant.Id == getRestaurantPlan.RestaurantId && !reservation.Canceled
-                && getRestaurantPlan.ReservationStartDate >= reservation.ReservationStart && getRestaurantPlan.ReservationStartDate <= reservation.ReservationEnd
-                || getRestaurantPlan.ReservationEndDate >= reservation.ReservationStart && getRestaurantPlan.ReservationEndDate <= reservation.ReservationEnd)
+                && (getRestaurantPlan.ReservationStartDate >= reservation.ReservationStart && getRestaurantPlan.ReservationStartDate <= reservation.ReservationEnd
+                || getRestaurantPlan.ReservationEndDate >= reservation.ReservationStart && getRestaurantPlan.ReservationEndDate <= reservation.ReservationEnd))
                 .Select(r => new ReserveTableDTO
                 {
                     UserId = r.User.Id,
