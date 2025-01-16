@@ -275,7 +275,6 @@ namespace Restorator.Desktop.ViewModels
 
             Tables.Clear();
             _reservedTables.Clear();
-
             var plan = result.Value;
 
             var tables = plan.Tables.Select(t => new TableModel
@@ -416,8 +415,6 @@ namespace Restorator.Desktop.ViewModels
             _reservedTables.Clear();
 
             _snackbarService.Show("Ура!", "Будем ждать вас к назначенному времени!", ControlAppearance.Success);
-
-            _reservedTables.Clear();
         }
 
 
