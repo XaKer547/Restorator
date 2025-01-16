@@ -5,13 +5,13 @@
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
       xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+      xmlns:behaviors="clr-namespace:Restorator.Desktop.Behaviors"
       xmlns:viewmodels="clr-namespace:Restorator.Desktop.ViewModels"
       xmlns:pages="clr-namespace:Restorator.Desktop.Views.Pages"
       d:DataContext="{d:DesignInstance Type=viewmodels:RestaurantsVerificationViewModel}"
-      mc:Ignorable="d"
-      Height="450" Width="800">
-
-    <StackPanel Margin="0,25">
+      mc:Ignorable="d"  
+      d:DesignHeight="450" d:DesignWidth="800">
+    <StackPanel Margin="20,40">
         <DockPanel Margin="0,10">
             <RadioButton Content="Все"
                  GroupName="verificationFilter"
@@ -81,12 +81,17 @@
                     </ItemsControl.ItemTemplate>
                 </ItemsControl>
             </StackPanel>
+
+
+            <i:Interaction.Behaviors>
+                <behaviors:DynamicScrollViewerLazyLoadBehavior LoadDataCommand="{Binding LoadRestaurantsPreviewCommand}"/>
+            </i:Interaction.Behaviors>
         </ui:DynamicScrollViewer>
     </StackPanel>
 
     <i:Interaction.Triggers>
         <i:EventTrigger EventName="Loaded">
-            <i:InvokeCommandAction Command="{Binding LoadRestaurantPreviewsCommand}"/>
+            <i:InvokeCommandAction Command="{Binding InitializeRestaurantsPreviewCommand}"/>
         </i:EventTrigger>
     </i:Interaction.Triggers>
 </Page>

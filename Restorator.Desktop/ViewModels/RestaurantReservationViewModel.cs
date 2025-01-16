@@ -274,6 +274,7 @@ namespace Restorator.Desktop.ViewModels
             };
 
             Tables.Clear();
+            _reservedTables.Clear();
 
             var plan = result.Value;
 

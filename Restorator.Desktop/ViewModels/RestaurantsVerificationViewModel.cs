@@ -25,20 +25,42 @@ namespace Restorator.Desktop.ViewModels
         [ObservableProperty]
         private ObservableCollection<RestaurantPreviewDTO> previews = [];
 
+
+
+        private int _currentPage;
+        private bool CanLoadRestaurants { get; set; }
+
         [RelayCommand]
-        public async Task LoadRestaurantPreviews()
+        public async Task InitializeRestaurantsPreview()
         {
             Previews.Clear();
 
-            var previews = await _restaurantService.GetRestaurantPreviews(new GetRestaurantsPreviewDTO()
+            _currentPage = 1;
+
+            await LoadRestaurantsPreview();
+        }
+
+        [RelayCommand(CanExecute = nameof(CanLoadRestaurants))]
+        private async Task LoadRestaurantsPreview()
+        {
+            var previewsList = await _restaurantService.GetRestaurantPreviews(new GetRestaurantsPreviewDTO()
             {
                 Filter = new GetRestaurantsPreviewFilter()
                 {
                     RequireApproved = ShowVerified,
+                },
+                PaginationFilter = new PaginationFilter()
+                {
+                    PageSize = 20,
+                    CurrentPage = _currentPage
                 }
             });
 
-            foreach (var preview in previews)
+            CanLoadRestaurants = previewsList.HasNextPage;
+
+            _currentPage++;
+
+            foreach (var preview in previewsList)
             {
                 Previews.Add(preview);
             }
@@ -46,7 +68,7 @@ namespace Restorator.Desktop.ViewModels
 
         async partial void OnShowVerifiedChanged(bool? value)
         {
-            await LoadRestaurantPreviews();
+            await InitializeRestaurantsPreview();
         }
 
 
