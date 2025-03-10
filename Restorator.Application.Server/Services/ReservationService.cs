@@ -1,4 +1,5 @@
-﻿using FluentResults;
+﻿using System.Collections.Immutable;
+using FluentResults;
 using LinqKit;
 using Microsoft.EntityFrameworkCore;
 using Restorator.DataAccess.Data;
@@ -7,9 +8,8 @@ using Restorator.DataAccess.Data.Entities.Enums;
 using Restorator.Domain.Models;
 using Restorator.Domain.Models.Enums;
 using Restorator.Domain.Services;
-using System.Collections.Immutable;
 
-namespace Restorator.Application.Services
+namespace Restorator.Application.Server.Services
 {
     public class ReservationService : IReservationService
     {
@@ -19,7 +19,7 @@ namespace Restorator.Application.Services
             _context = context;
         }
 
-        public async Task<Result> CancelReservation(CancelReservationDTO cancelReservation)
+        public async Task<Result> CancelReservation(int userId, CancelReservationDTO cancelReservation)
         {
             var reseravation = _context.Reservations.Include(r => r.User)
                 .SingleOrDefault(r => r.Id == cancelReservation.ReservationId);
@@ -29,14 +29,14 @@ namespace Restorator.Application.Services
 
             var user = _context.Users.AsNoTracking()
                 .Include(u => u.Role)
-                .SingleOrDefault(u => u.Id == cancelReservation.UserId);
+                .SingleOrDefault(u => u.Id == userId);
 
             if (user is null)
                 return Result.Fail("Пользователь не найден");
 
             if (user.Role != Roles.Manager)
                 if (reseravation.User.Id != user.Id)
-                    return Result.Fail("");
+                    return Result.Fail("Недостаточно прав для отмены бронирования");
 
             reseravation.Canceled = true;
 
@@ -47,12 +47,12 @@ namespace Restorator.Application.Services
             return Result.Ok();
         }
 
-        public async Task<Result<ReservationInfoDTO>> GetReservation(GetReservationInfoDTO getReservationInfo)
+        public async Task<Result<ReservationInfoDTO>> GetReservation(int userId, GetReservationInfoDTO getReservationInfo)
         {
             var reservation = await _context.Reservations.Include(r => r.Restaurant)
                 .Include(r => r.User)
                 .AsNoTracking()
-                .SingleOrDefaultAsync(reservation => reservation.Restaurant.Id == getReservationInfo.RestaurantId && !reservation.Canceled && reservation.User.Id == getReservationInfo.UserId
+                .SingleOrDefaultAsync(reservation => reservation.Restaurant.Id == getReservationInfo.RestaurantId && !reservation.Canceled && reservation.User.Id == userId
                 && getReservationInfo.ReservationStartDate >= reservation.ReservationStart && getReservationInfo.ReservationStartDate <= reservation.ReservationEnd
                 || getReservationInfo.ReservationEndDate >= reservation.ReservationStart && getReservationInfo.ReservationEndDate <= reservation.ReservationEnd);
 
@@ -74,7 +74,7 @@ namespace Restorator.Application.Services
         }
         public async Task<Result<IReadOnlyCollection<ReservationInfoDTO>>> GetReservations(GetReservationsDTO getReservations)
         {
-            var predicate = PredicateBuilder.New<Reservation>(r => (r.ReservationEnd.Date == getReservations.SelectedDate.Date || r.ReservationStart.Date == getReservations.SelectedDate.Date));
+            var predicate = PredicateBuilder.New<Reservation>(r => r.ReservationEnd.Date == getReservations.SelectedDate.Date || r.ReservationStart.Date == getReservations.SelectedDate.Date);
 
             if (getReservations.UserId.HasValue)
                 predicate = predicate.And(r => r.User.Id == getReservations.UserId.Value);
@@ -101,7 +101,7 @@ namespace Restorator.Application.Services
                  }).ToListAsync();
         }
 
-        public async Task<Result<RestaurantPlanDTO>> GetRestaurantPlan(GetRestaurantPlanDTO getRestaurantPlan)
+        public async Task<Result<RestaurantPlanDTO>> GetRestaurantPlan(int userId, GetRestaurantPlanDTO getRestaurantPlan)
         {
             var reservations = _context.Reservations.AsNoTracking()
                 .Where(reservation => reservation.Restaurant.Id == getRestaurantPlan.RestaurantId && !reservation.Canceled
@@ -128,7 +128,7 @@ namespace Restorator.Application.Services
                         Rotation = t.Template.Rotation,
                         X = t.X,
                         Y = t.Y,
-                        State = CheckState(reservations, t.Id, getRestaurantPlan.UserId),
+                        State = CheckState(reservations, t.Id, userId),
                     }).ToArray()
                 }).SingleOrDefaultAsync(r => r.Id == getRestaurantPlan.RestaurantId);
 
@@ -150,7 +150,7 @@ namespace Restorator.Application.Services
             return TableStates.OccupiedByOther;
         }
 
-        public async Task<Result<bool>> ReservedTableBelongsToUser(int reservationId, int userId)
+        public async Task<Result<bool>> IsReservationOwner(int reservationId, int userId)
         {
             if (!_context.Users.Any(u => u.Id == userId))
                 return Result.Fail("Пользователя не существует");
@@ -163,9 +163,9 @@ namespace Restorator.Application.Services
             return Result.Ok(belongsToUser);
         }
 
-        public async Task<Result> ReserveTables(CreateRestaurantReservationDTO reserveTable)
+        public async Task<Result> CreateReservation(int userId, CreateRestaurantReservationDTO reserveTable)
         {
-            var user = await _context.Users.SingleOrDefaultAsync(u => u.Id == reserveTable.UserId);
+            var user = await _context.Users.SingleOrDefaultAsync(u => u.Id == userId);
 
             if (user is null)
                 return Result.Fail("Пользователя не существует");

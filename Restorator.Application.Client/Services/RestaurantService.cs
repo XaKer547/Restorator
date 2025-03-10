@@ -8,7 +8,7 @@ using Restorator.DataAccess.Data.Entities.Enums;
 using Restorator.Domain.Models;
 using Restorator.Domain.Services;
 
-namespace Restorator.Application.Services
+namespace Restorator.Application.Client.Services
 {
     public class RestaurantService : IRestaurantService
     {

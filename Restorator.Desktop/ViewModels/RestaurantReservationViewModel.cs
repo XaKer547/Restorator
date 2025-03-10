@@ -1,4 +1,6 @@
-﻿using CommunityToolkit.Mvvm.ComponentModel;
+﻿using System.Collections.Immutable;
+using System.Collections.ObjectModel;
+using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Restorator.Desktop.Dialogs;
 using Restorator.Desktop.Models;
@@ -6,8 +8,6 @@ using Restorator.Desktop.Session;
 using Restorator.Desktop.ViewModels.Abstract;
 using Restorator.Domain.Models;
 using Restorator.Domain.Services;
-using System.Collections.Immutable;
-using System.Collections.ObjectModel;
 using Wpf.Ui;
 using Wpf.Ui.Controls;
 using Wpf.Ui.Extensions;
@@ -104,7 +104,7 @@ namespace Restorator.Desktop.ViewModels
             EndWorkTime = endTimeBuffer;
 
             reservationStartTime = BeginWorkTime;
-            reservationEndTime = BeginWorkTime;
+            reservationEndTime = BeginWorkTime.AddHours(1);
 
             CheckReservationSearchAvaibility();
 
@@ -403,7 +403,7 @@ namespace Restorator.Desktop.ViewModels
                 ReservationEndDate = ReservationEndTime,
             };
 
-            var result = await _reservationService.ReserveTables(reservation);
+            var result = await _reservationService.CreateReservation(reservation);
 
             if (result.IsFailed)
             {

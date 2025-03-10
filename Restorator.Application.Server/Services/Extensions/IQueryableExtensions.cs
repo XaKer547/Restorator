@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Restorator.Domain.Models;
 
-namespace Restorator.Application.Services.Extensions
+namespace Restorator.Application.Server.Services.Extensions
 {
     public static class IQueryableExtensions
     {

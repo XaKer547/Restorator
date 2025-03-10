@@ -1,7 +1,7 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using System.Reflection;
 using Microsoft.Extensions.DependencyInjection;
-using Restorator.Application.Services;
-using Restorator.DataAccess.Data;
+using Restorator.Application.Client.Services;
+using Restorator.DataAccess.SqlServer;
 using Restorator.Desktop.Controls;
 using Restorator.Desktop.Infrastructure;
 using Restorator.Desktop.Services;
@@ -11,7 +11,6 @@ using Restorator.Desktop.ViewModels.Abstract;
 using Restorator.Desktop.Views.Pages;
 using Restorator.Desktop.Views.Windows;
 using Restorator.Domain.Services;
-using System.Reflection;
 using Wpf.Ui;
 using Wpf.Ui.Abstractions;
 using Wpf.Ui.DependencyInjection;
@@ -38,18 +37,11 @@ namespace Restorator.Desktop.Extensions
 
             services.AddSingleton<ISessionManager, SessionManager>();
 
-            services.AddScoped<IAuthenticationService, AuthenticationService>();
+            services.AddScoped<IAccountService, AccountService>();
             services.AddScoped<IRestaurantService, RestaurantService>();
             services.AddScoped<IReservationService, ReservationService>();
 
-            services.AddDbContext<RestoratorDbContext>(opt =>
-            {
-#if COLLEGEDEBUG 
-                opt.UseSqlServer("Server=b2-225-002\\SQLEXPRESS;Database=Restorator;TrustServerCertificate=true;Trusted_connection=true");
-#elif HOMEDEBUG || DEBUG
-                opt.UseSqlServer("Server=DESKTOP-35L2VVB;Database=Restorator;TrustServerCertificate=true;Trusted_connection=true");
-#endif
-            });
+            services.AddRestoratorDbContext();
 
             return services;
         }

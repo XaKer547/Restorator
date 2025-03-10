@@ -2,7 +2,6 @@
 {
     public class GetReservationInfoDTO
     {
-        public int UserId { get; set; }
         public int RestaurantId { get; set; }
         public int TableId { get; set; }
         public DateTime ReservationStartDate { get; set; }

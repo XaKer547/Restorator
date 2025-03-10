@@ -6,17 +6,29 @@ using Restorator.DataAccess.Helpers;
 using Restorator.Domain.Models;
 using Restorator.Domain.Services;
 
-namespace Restorator.Application.Services
+namespace Restorator.Application.Server.Services
 {
-    public class AuthenticationService : IAuthenticationService
+    public class AccountService : IAccountService
     {
         private readonly RestoratorDbContext _context;
-        public AuthenticationService(RestoratorDbContext context)
+        private readonly IJwtService _jwtService;
+        public AccountService(RestoratorDbContext context, IJwtService jwtService)
         {
             _context = context;
+            _jwtService = jwtService;
         }
 
-        public async Task<Result<SessionInfo>> SignInAsync(SignInDTO signIn)
+        public async Task<Result<SessionInfo>> GetSessionInfoAsync(int userId)
+        {
+            var user = await _context.Users.Include(u => u.Role)
+                .SingleOrDefaultAsync(u => u.Id == userId);
+
+            if (user is null)
+                return Result.Fail("Пользователя не существует");
+
+            return new SessionInfo(user.Username, user.Role.Name);
+        }
+        public async Task<Result<AuthorizationResult>> SignInAsync(SignInDTO signIn)
         {
             var user = await _context.Users.Include(u => u.Role)
                 .SingleOrDefaultAsync(u => u.Password == AccountPasswordHelper.HashUserPassword(signIn.Password) && u.Login == signIn.Login);
@@ -24,9 +36,11 @@ namespace Restorator.Application.Services
             if (user is null)
                 return Result.Fail("Пользователь с такими данными не найден");
 
-            var sessionInfo = new SessionInfo(user.Id, user.Username, user.Role.Name);
+            var sessionInfo = new SessionInfo(user.Username, user.Role.Name);
 
-            return Result.Ok(sessionInfo);
+            var result = new AuthorizationResult(sessionInfo, _jwtService.CreateToken(user.Id, user.Role.Name));
+
+            return Result.Ok(result);
         }
         public async Task<Result> SignUpAsync(SignUpDTO signUp)
         {

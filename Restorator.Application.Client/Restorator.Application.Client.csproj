@@ -1,0 +1,15 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <Configurations>Debug;Release;CollegeDebug;HomeDebug;COLLEGE_DEBUG;HOME_DEBUG</Configurations>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Restorator.DataAccess\Restorator.DataAccess.csproj" />
+    <ProjectReference Include="..\Restorator.Domain\Restorator.Domain.csproj" />
+  </ItemGroup>
+
+</Project>

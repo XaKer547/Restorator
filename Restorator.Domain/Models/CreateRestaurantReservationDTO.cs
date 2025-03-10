@@ -2,7 +2,6 @@
 {
     public class CreateRestaurantReservationDTO
     {
-        public int UserId { get; set; }
         public int RestaurantId { get; set; }
         public IReadOnlyCollection<int> ReservedTables { get; set; }
         public DateTime ReservationStartDate { get; set; }

@@ -1,14 +1,10 @@
-using Microsoft.EntityFrameworkCore;
-using Restorator.DataAccess.Data;
+using Restorator.DataAccess.SqlServer;
 using Restorator.Seeder.Data.DbSeeder;
 using Restorator.Seeder.HostedServices;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddDbContext<RestoratorDbContext>(opt =>
-{
-    opt.UseSqlServer(builder.Configuration.GetConnectionString("Home"));
-});
+builder.Services.AddRestoratorDbContext();
 
 builder.Services.AddScoped<IDbSeeder, RestoratorDbSeeder>();
 

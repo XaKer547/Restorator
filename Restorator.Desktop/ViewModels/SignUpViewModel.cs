@@ -13,10 +13,10 @@ namespace Restorator.Desktop.ViewModels
 {
     public partial class SignUpViewModel : AuthenticationViewModelBase
     {
-        private readonly IAuthenticationService _authenticationService;
+        private readonly IAccountService _authenticationService;
         private readonly ISessionManager _sessionManager;
         private readonly ISnackbarService _snackbarService;
-        public SignUpViewModel(IAuthenticationService authenticationService,
+        public SignUpViewModel(IAccountService authenticationService,
                                ISessionManager sessionManager,
                                ISnackbarService snackbarService)
         {

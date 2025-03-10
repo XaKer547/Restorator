@@ -117,6 +117,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Restorator.DataAccess.Common\Restorator.DataAccess.SqlServer.csproj" />
     <ProjectReference Include="..\Restorator.DataAccess\Restorator.DataAccess.csproj" />
   </ItemGroup>
 
