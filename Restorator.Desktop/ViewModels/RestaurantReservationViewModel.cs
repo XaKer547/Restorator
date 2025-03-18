@@ -1,6 +1,4 @@
-﻿using System.Collections.Immutable;
-using System.Collections.ObjectModel;
-using CommunityToolkit.Mvvm.ComponentModel;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Restorator.Desktop.Dialogs;
 using Restorator.Desktop.Models;
@@ -8,6 +6,8 @@ using Restorator.Desktop.Session;
 using Restorator.Desktop.ViewModels.Abstract;
 using Restorator.Domain.Models;
 using Restorator.Domain.Services;
+using System.Collections.Immutable;
+using System.Collections.ObjectModel;
 using Wpf.Ui;
 using Wpf.Ui.Controls;
 using Wpf.Ui.Extensions;
@@ -66,18 +66,15 @@ namespace Restorator.Desktop.ViewModels
             _reservationService = reservationService;
             _navigationService = navigationService;
             _snackbarService = snackbarService;
-
-            _userId = sessionManager.GetSessionInfo()!.UserId;
         }
 
         private int _restaurantId;
 
-        private readonly int _userId;
         public async Task LoadRestaurantPlan(int restaurantId)
         {
             _restaurantId = restaurantId;
 
-            var result = await _reservationService.GetRestaurantPlan(BuildRestaurantPlanQuery());
+            var result = await _reservationService.GetRestaurantReservationPlan(BuildRestaurantPlanQuery());
 
             if (result.IsFailed)
             {
@@ -86,17 +83,17 @@ namespace Restorator.Desktop.ViewModels
                 _snackbarService.Show("Ой", "Что-то пошло не так", ControlAppearance.Danger);
 
                 return;
-            };
+            }
 
-            var plan = result.Value;
+            var value = result.Value;
 
-            Plan = plan.Scheme;
+            Plan = value.Scheme;
 
-            _beginWorkTimeBuffer = SelectedDate.Add(plan.BeginWorkTime.ToTimeSpan());
+            _beginWorkTimeBuffer = SelectedDate.Add(value.BeginWorkTime.ToTimeSpan());
 
             UpdateBeginWorkTime();
 
-            var endTimeBuffer = SelectedDate.Add(plan.EndWorkTime.ToTimeSpan());
+            var endTimeBuffer = SelectedDate.Add(value.EndWorkTime.ToTimeSpan());
 
             if (EndWorkTime <= BeginWorkTime)
                 endTimeBuffer = endTimeBuffer.AddDays(1);
@@ -108,7 +105,7 @@ namespace Restorator.Desktop.ViewModels
 
             CheckReservationSearchAvaibility();
 
-            var tables = plan.Tables.Select(t => new TableModel
+            var tables = value.Tables.Select(t => new TableModel
             {
                 Id = t.Id,
                 X = t.X,
@@ -130,13 +127,13 @@ namespace Restorator.Desktop.ViewModels
 
             var daysPast = SelectedDate.Day - ReservationStartTime.Day;
 
-            UpdateWorkTime();
+            await UpdateWorkTime();
 
             ReservationEndTime = ReservationEndTime.AddDays(daysPast);
             ReservationStartTime = ReservationStartTime.AddDays(daysPast);
         }
 
-        private async void UpdateWorkTime()
+        private async Task UpdateWorkTime()
         {
             _waitingRefresh = true;
 
@@ -245,7 +242,7 @@ namespace Restorator.Desktop.ViewModels
 
                 var time = TimeOnly.FromDateTime(DateTime.Now);
 
-                BeginWorkTime = new DateTime(date, new TimeOnly(time.Hour, time.Minute));
+                BeginWorkTime = new DateTime(date, new TimeOnly(time.Hour, time.Minute), DateTimeKind.Unspecified);
             }
             else
                 BeginWorkTime = _beginWorkTimeBuffer;
@@ -262,7 +259,7 @@ namespace Restorator.Desktop.ViewModels
         [RelayCommand(CanExecute = nameof(CanSearchReserve), AllowConcurrentExecutions = false)]
         public async Task RefreshReservationPlan()
         {
-            var result = await _reservationService.GetRestaurantPlan(BuildRestaurantPlanQuery());
+            var result = await _reservationService.GetRestaurantReservationPlan(BuildRestaurantPlanQuery());
 
             if (result.IsFailed)
             {
@@ -271,13 +268,12 @@ namespace Restorator.Desktop.ViewModels
                 _snackbarService.Show("Ой", "Что-то пошло не так", ControlAppearance.Danger);
 
                 return;
-            };
+            }
 
             Tables.Clear();
             _reservedTables.Clear();
-            var plan = result.Value;
 
-            var tables = plan.Tables.Select(t => new TableModel
+            var tables = result.Value.Tables.Select(t => new TableModel
             {
                 Id = t.Id,
                 X = t.X,
@@ -301,7 +297,6 @@ namespace Restorator.Desktop.ViewModels
                 ReservationStartDate = ReservationStartTime,
                 ReservationEndDate = ReservationEndTime,
                 RestaurantId = _restaurantId,
-                UserId = _userId,
             };
         }
 
@@ -334,9 +329,8 @@ namespace Restorator.Desktop.ViewModels
                     if (confirm != ContentDialogResult.Primary)
                         return;
 
-                    var result = await _reservationService.GetReservation(new GetReservationInfoDTO
+                    var result = await _reservationService.GetReservationInfo(new GetReservationInfoDTO //TODO
                     {
-                        UserId = _userId,
                         RestaurantId = _restaurantId,
                         ReservationStartDate = ReservationStartTime,
                         ReservationEndDate = ReservationEndTime,
@@ -347,29 +341,23 @@ namespace Restorator.Desktop.ViewModels
                         _snackbarService.Show("Ой", "Что-то пошло не так", ControlAppearance.Danger);
 
                         return;
-                    };
+                    }
 
                     var info = result.Value;
 
-                    var cancelResult = await _reservationService.CancelReservation(new CancelReservationDTO
-                    {
-                        ReservationId = info.Id,
-                        UserId = _userId
-                    });
+                    var cancelResult = await _reservationService.CancelReservation(info.Id);
 
                     if (cancelResult.IsFailed)
                     {
                         _snackbarService.Show("Ой", "Что-то пошло не так", ControlAppearance.Danger);
 
                         return;
-                    };
+                    }
                 }
                 else
                     _reservedTables.Remove(table.Id);
 
                 table.State = Domain.Models.Enums.TableStates.Avaible;
-
-                return;
             }
         }
 
@@ -394,23 +382,20 @@ namespace Restorator.Desktop.ViewModels
             if (confirmation != ContentDialogResult.Primary)
                 return;
 
-            var reservation = new CreateRestaurantReservationDTO
+            var result = await _reservationService.CreateReservation(new CreateRestaurantReservationDTO
             {
-                UserId = _userId,
                 RestaurantId = _restaurantId,
                 ReservedTables = _reservedTables,
                 ReservationStartDate = ReservationStartTime,
                 ReservationEndDate = ReservationEndTime,
-            };
-
-            var result = await _reservationService.CreateReservation(reservation);
+            }); 
 
             if (result.IsFailed)
             {
                 _snackbarService.Show("Ой", "Что-то пошло не так", ControlAppearance.Danger);
 
                 return;
-            };
+            }
 
             _reservedTables.Clear();
 

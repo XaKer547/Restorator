@@ -23,11 +23,7 @@ namespace Restorator.Desktop.ViewModels
             _restaurantService = restaurantService;
             _navigationService = navigationService;
             _snackbarService = snackbarService;
-
-            _userId = sessionManager.GetSessionInfo().UserId;
         }
-
-        private readonly int _userId;
 
         [ObservableProperty]
         private string restaurantName;
@@ -85,9 +81,7 @@ namespace Restorator.Desktop.ViewModels
             Verified = info.Approved;
 
             foreach (var tag in info.Tags)
-            {
                 Tags.Add(tag);
-            }
         }
 
 
@@ -97,7 +91,6 @@ namespace Restorator.Desktop.ViewModels
             {
                 Approval = Verified,
                 RestaurantId = _restaurantId,
-                UserId = _userId
             });
         }
 

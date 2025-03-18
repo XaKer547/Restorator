@@ -8,7 +8,10 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Restorator.DataAccess\Restorator.DataAccess.csproj" />
+    <PackageReference Include="LinqKit" Version="1.3.8" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\Restorator.Domain\Restorator.Domain.csproj" />
   </ItemGroup>
 

@@ -74,12 +74,13 @@ namespace Restorator.Desktop.ViewModels
             if (result.IsFailed)
             {
                 if (result.Errors.Count != 0)
-                    _snackbarService.Show("Упс", result.Errors.First().Message, Wpf.Ui.Controls.ControlAppearance.Danger);
+                    _snackbarService.Show("Упс", result.Errors[0].Message, Wpf.Ui.Controls.ControlAppearance.Danger);
                 else
                     _snackbarService.Show("Упс", "У нас не получилось тебя зарегистрировать, попробуй чуть позже", Wpf.Ui.Controls.ControlAppearance.Danger);
 
                 return;
             }
+            //get token
 
             var session = await _authenticationService.SignInAsync(new SignInDTO()
             {
@@ -87,7 +88,10 @@ namespace Restorator.Desktop.ViewModels
                 Password = Password
             });
 
-            _sessionManager.SetSession(session.Value);
+            //get session info?
+            //var result = session
+
+            //_sessionManager.SetSession(session.Value);
 
             Authenticated = true;
 

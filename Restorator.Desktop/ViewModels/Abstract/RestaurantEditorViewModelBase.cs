@@ -24,7 +24,6 @@ namespace Restorator.Desktop.ViewModels
         {
             _restaurantService = restaurantService;
             _navigationService = navigationService;
-            _userId = sessionManager.GetSessionInfo().UserId;
 
             _contentDialogService = contentDialogService;
         }
@@ -64,13 +63,9 @@ namespace Restorator.Desktop.ViewModels
         [RelayCommand]
         public async Task LoadRestaurantTags()
         {
-            var tags = await _restaurantService.GetRestaurantTags();
-
-            foreach (var tag in tags)
-            {
+            foreach (var tag in await _restaurantService.GetRestaurantsTags())
                 if (!Tags.Any(t => t.Id == tag.Id))
                     Tags.Add(tag);
-            }
         }
 
         [RelayCommand]
@@ -81,10 +76,8 @@ namespace Restorator.Desktop.ViewModels
                 Filter = "Изображения|*.jpg;*.jpeg;*.png;"
             };
 
-
             if (dialog.ShowDialog() != true)
                 return;
-
 
             Image = File.ReadAllBytes(dialog.FileName);
         }
@@ -97,18 +90,13 @@ namespace Restorator.Desktop.ViewModels
                 Filter = "Изображения|*.jpg;*.jpeg;*.png;"
             };
 
-
             if (dialog.ShowDialog() != true)
                 return;
-
 
             Menu = File.ReadAllBytes(dialog.FileName);
         }
 
         [RelayCommand]
-        public async Task CloseRestaurantEditor()
-        {
-            await _navigationService.NavigateBackAsync();
-        }
+        public async Task CloseRestaurantEditor() => await _navigationService.NavigateBackAsync();
     }
 }

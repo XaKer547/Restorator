@@ -146,7 +146,7 @@ namespace Restorator.Desktop.ViewModels
             var fileNameWithoutExtension = SelectedTemplate.Filename.Split('.')[0];
 
             script.AppendLine(
-                $"\tImage = EmbeddedResourceHelper.GetRestaurantPlan(\"{fileNameWithoutExtension}\"),"
+                $"\tImage = EmbeddedResourceHelper.GetRestaurantReservationPlan(\"{fileNameWithoutExtension}\"),"
             );
 
             script.AppendLine("\tTables = new List<Table>()\n\t\t{");

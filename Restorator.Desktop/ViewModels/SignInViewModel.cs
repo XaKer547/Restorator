@@ -63,7 +63,7 @@ namespace Restorator.Desktop.ViewModels
                 return;
             }
 
-            _sessionManager.SetSession(result.Value!);
+            //_sessionManager.SetSession(result.Value!);
 
             Authenticated = true;
 

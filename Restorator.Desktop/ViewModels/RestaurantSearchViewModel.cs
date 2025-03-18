@@ -66,7 +66,7 @@ namespace Restorator.Desktop.ViewModels
 
             RestaurantsName = await _restaurantService.GetRestaurantNames();
 
-            RestaurantsTag = await _restaurantService.GetRestaurantTags();
+            RestaurantsTag = await _restaurantService.GetRestaurantsTags();
 
             await SearchRestaurants();
 

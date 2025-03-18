@@ -1,6 +1,5 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Restorator.API.Extensions;
 using Restorator.Domain.Models;
 using Restorator.Domain.Services;
 
@@ -16,7 +15,7 @@ namespace Restorator.API.Controllers
             _accountService = accountService;
         }
 
-        [HttpPost]
+        [HttpPost("signIn")]
         public async Task<IActionResult> SignIn(SignInDTO model)
         {
             var result = await _accountService.SignInAsync(model);
@@ -27,7 +26,7 @@ namespace Restorator.API.Controllers
             return Ok(result.Value);
         }
 
-        [HttpPost("new")]
+        [HttpPost("signUp")]
         public async Task<IActionResult> SignUp(SignUpDTO model)
         {
             var result = await _accountService.SignUpAsync(model);
@@ -42,10 +41,7 @@ namespace Restorator.API.Controllers
         [HttpGet("info")]
         public async Task<IActionResult> GetSessionInfo()
         {
-            if (!User.TryGetUserId(out var userId))
-                return BadRequest();
-
-            var result = await _accountService.GetSessionInfoAsync(userId);
+            var result = await _accountService.GetSessionInfoAsync();
 
             if (result.IsFailed)
                 return BadRequest();

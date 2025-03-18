@@ -9,6 +9,7 @@
 
   <ItemGroup>
     <PackageReference Include="FluentResults" Version="3.16.0" />
+    <PackageReference Include="Refit" Version="8.0.0" />
   </ItemGroup>
 
 </Project>

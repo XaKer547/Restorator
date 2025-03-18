@@ -1,16 +1,18 @@
-using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using Restorator.API.Infrastructure;
 using Restorator.Application.Server.Services;
 using Restorator.DataAccess.SqlServer;
 using Restorator.Domain.Services;
+using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+builder.Services.Configure<RouteOptions>(options => options.LowercaseUrls = true);
 
 builder.Services.AddAuthentication(x =>
 {
@@ -32,6 +34,8 @@ builder.Services.AddScoped<IJwtService, JwtService>();
 builder.Services.AddScoped<IAccountService, AccountService>();
 builder.Services.AddScoped<IReservationService, ReservationService>();
 builder.Services.AddScoped<IRestaurantService, RestaurantService>();
+builder.Services.AddScoped<IUserManager, UserManager>();
+builder.Services.AddHttpContextAccessor();
 
 builder.Services.AddAuthorization();
 
@@ -49,4 +53,4 @@ app.UseAuthorization();
 
 app.MapControllers();
 
-app.Run();
+await app.RunAsync();

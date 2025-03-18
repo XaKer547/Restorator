@@ -27,10 +27,7 @@ namespace Restorator.Desktop.ViewModels
             _snackbarService = snackbarService;
             _contentDialogService = contentDialogService;
             _navigationService = navigationService;
-
-            _userId = sessionManager.GetSessionInfo().UserId;
         }
-        private readonly int _userId;
         private int _restaurantId;
 
         [ObservableProperty]
@@ -96,11 +93,7 @@ namespace Restorator.Desktop.ViewModels
             if (confirm != Wpf.Ui.Controls.ContentDialogResult.Primary)
                 return;
 
-            var result = await _reservationService.CancelReservation(new CancelReservationDTO()
-            {
-                ReservationId = reservationInfo.Id,
-                UserId = _userId,
-            });
+            var result = await _reservationService.CancelReservation(reservationInfo.Id);
 
             if (result.IsFailed)
             {
@@ -113,9 +106,6 @@ namespace Restorator.Desktop.ViewModels
         }
 
         [RelayCommand]
-        public async Task CloseReservationsManagement()
-        {
-            await _navigationService.NavigateBackAsync();
-        }
+        public async Task CloseReservationsManagement() => await _navigationService.NavigateBackAsync();
     }
 }

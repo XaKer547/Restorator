@@ -1,6 +1,6 @@
-﻿using System.Reflection;
-using Microsoft.Extensions.DependencyInjection;
-using Restorator.Application.Client.Services;
+﻿using Microsoft.Extensions.DependencyInjection;
+using Refit;
+using Restorator.Application.Server.Services;
 using Restorator.DataAccess.SqlServer;
 using Restorator.Desktop.Controls;
 using Restorator.Desktop.Infrastructure;
@@ -11,10 +11,10 @@ using Restorator.Desktop.ViewModels.Abstract;
 using Restorator.Desktop.Views.Pages;
 using Restorator.Desktop.Views.Windows;
 using Restorator.Domain.Services;
+using System.Reflection;
 using Wpf.Ui;
 using Wpf.Ui.Abstractions;
 using Wpf.Ui.DependencyInjection;
-
 
 namespace Restorator.Desktop.Extensions
 {
@@ -23,7 +23,8 @@ namespace Restorator.Desktop.Extensions
         public static IServiceCollection Configure(this IServiceCollection services)
         {
             return services.ConfigureServices()
-                .ConfigureViews();
+                           .ConfigureApiClients()
+                           .ConfigureViews();
         }
 
         public static IServiceCollection ConfigureServices(this IServiceCollection services)
@@ -46,6 +47,21 @@ namespace Restorator.Desktop.Extensions
             return services;
         }
 
+        public static IServiceCollection ConfigureApiClients(this IServiceCollection services)
+        {
+            var settings = new RefitSettings()
+            {
+                AuthorizationHeaderValueGetter = (message, cancellationToken) => Task.FromResult(Properties.Settings.Default.Token)
+            };
+
+            var apiBase = new Uri("https://10.173.99.217:7090");
+
+            services.AddRefitClient<IAccountService>(settings)
+                    .ConfigureHttpClient(c => c.BaseAddress = new Uri(apiBase, "account"));
+
+            return services;
+        }
+
         public static IServiceCollection ConfigureViews(this IServiceCollection services)
         {
             services.AddSingleton<MainWindow>();
@@ -54,22 +70,21 @@ namespace Restorator.Desktop.Extensions
 
             services.AddSingleton<RestaurantSearchViewModel>();
 
-            var manager = new DataTemplateManager()
-                .RegisterDataTemplate<AuthenticationViewModel, AuthenticationPage>()
-                .RegisterDataTemplate<SignInViewModel, SignInControl>()
-                .RegisterDataTemplate<SignUpViewModel, SignUpControl>()
-                .RegisterDataTemplate<MenuViewModel, MenuPage>()
-                .RegisterDataTemplate<RestaurantInfoViewModel, RestaurantInfoPage>()
-                .RegisterDataTemplate<RestaurantReservationViewModel, RestraurantReservationPage>()
-                .RegisterDataTemplate<UserReservationsViewModel, UserReservationsPage>()
-                .RegisterDataTemplate<RestaurantSearchViewModel, RestaurantSearchPage>()
-                .RegisterDataTemplate<EditRestaurantViewModel, RestaurantEditorPage>()
-                .RegisterDataTemplate<CreateRestaurantViewModel, RestaurantMakerPage>()
-                .RegisterDataTemplate<RestaurantReservationsManagementViewModel, ReservsationsManagementPage>()
-                .RegisterDataTemplate<RestaurantsVerificationViewModel, RestaurantsVerificationPage>()
-                .RegisterDataTemplate<RestaurantVerificationViewModel, RestaurantVerificationPage>()
-                .RegisterDataTemplate<RestaurantTemplateGeneratorViewModel, RestaurantTemplateGeneratorPage>()
-                .RegisterDataTemplate<RestaurantManagementViewModel, RestaurantManagementPage>();
+            var manager = new DataTemplateManager().RegisterDataTemplate<AuthenticationViewModel, AuthenticationPage>()
+                                                   .RegisterDataTemplate<SignInViewModel, SignInControl>()
+                                                   .RegisterDataTemplate<SignUpViewModel, SignUpControl>()
+                                                   .RegisterDataTemplate<MenuViewModel, MenuPage>()
+                                                   .RegisterDataTemplate<RestaurantInfoViewModel, RestaurantInfoPage>()
+                                                   .RegisterDataTemplate<RestaurantReservationViewModel, RestraurantReservationPage>()
+                                                   .RegisterDataTemplate<UserReservationsViewModel, UserReservationsPage>()
+                                                   .RegisterDataTemplate<RestaurantSearchViewModel, RestaurantSearchPage>()
+                                                   .RegisterDataTemplate<EditRestaurantViewModel, RestaurantEditorPage>()
+                                                   .RegisterDataTemplate<CreateRestaurantViewModel, RestaurantMakerPage>()
+                                                   .RegisterDataTemplate<RestaurantReservationsManagementViewModel, ReservsationsManagementPage>()
+                                                   .RegisterDataTemplate<RestaurantsVerificationViewModel, RestaurantsVerificationPage>()
+                                                   .RegisterDataTemplate<RestaurantVerificationViewModel, RestaurantVerificationPage>()
+                                                   .RegisterDataTemplate<RestaurantTemplateGeneratorViewModel, RestaurantTemplateGeneratorPage>()
+                                                   .RegisterDataTemplate<RestaurantManagementViewModel, RestaurantManagementPage>();
 
             manager.SetControlsCulture();
 
@@ -91,24 +106,15 @@ namespace Restorator.Desktop.Extensions
         {
             foreach (Assembly assembly in assemblies)
             {
-                IEnumerable<Type> types = assembly
-                    .GetTypes()
-                    .Where(x =>
-                        x.IsClass
-                        && (x.Namespace?.StartsWith(namespaceName, StringComparison.InvariantCultureIgnoreCase) ?? false)
-                    );
+                IEnumerable<Type> types = assembly.GetTypes()
+                                                  .Where(x => x.IsClass && (x.Namespace?.StartsWith(namespaceName, StringComparison.InvariantCultureIgnoreCase) ?? false));
 
-                foreach (Type? type in types)
+                foreach (var type in types.Where(type => services.All(x => x.ServiceType != type)))
                 {
-                    if (services.All(x => x.ServiceType != type))
-                    {
-                        if (type == typeof(ViewModelBase))
-                        {
-                            continue;
-                        }
+                    if (type == typeof(ViewModelBase))
+                        continue;
 
-                        _ = services.AddTransient(type);
-                    }
+                    _ = services.AddTransient(type);
                 }
             }
 

@@ -19,8 +19,6 @@ namespace Restorator.Desktop.ViewModels
         {
             _restaurantService = restaurantService;
             _navigationService = navigationService;
-
-            _userId = sessionManager.GetSessionInfo().UserId;
         }
 
         [ObservableProperty]
@@ -29,8 +27,6 @@ namespace Restorator.Desktop.ViewModels
         [ObservableProperty]
         private bool searching;
 
-        private readonly int _userId;
-
         [RelayCommand]
         public async Task LoadOwnedRestaurantsPreview()
         {
@@ -38,7 +34,7 @@ namespace Restorator.Desktop.ViewModels
 
             RestaurantsPreview.Clear();
 
-            var previews = await _restaurantService.GetOwnedRestaurantPreviews(new GetOwnedRestaurantsPreviewDTO() { UserId = _userId });
+            var previews = await _restaurantService.GetOwnedRestaurantPreviews();
 
             foreach (var preview in previews)
                 RestaurantsPreview.Add(preview);

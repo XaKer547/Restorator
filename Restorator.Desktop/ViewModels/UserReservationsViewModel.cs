@@ -27,10 +27,8 @@ namespace Restorator.Desktop.ViewModels
             _snackbarService = snackbarService;
             _contentDialogService = contentDialogService;
 
-            _userId = sessionManager.GetSessionInfo().UserId;
             _navigationService = navigationService;
         }
-        private readonly int _userId;
 
         [ObservableProperty]
         private ObservableCollection<ReservationInfoDTO> reservations = [];
@@ -54,7 +52,6 @@ namespace Restorator.Desktop.ViewModels
             var result = await _reservationService.GetReservations(new GetReservationsDTO()
             {
                 SelectedDate = SelectedDate,
-                UserId = _userId,
             });
 
             if (result.IsFailed)
@@ -71,10 +68,7 @@ namespace Restorator.Desktop.ViewModels
         }
 
         [RelayCommand]
-        public void OpenSearch()
-        {
-            _navigationService.Navigate(typeof(RestaurantSearchPage));
-        }
+        public void OpenSearch() => _navigationService.Navigate(typeof(RestaurantSearchPage));
 
         [RelayCommand]
         public async Task CancelReservation(ReservationInfoDTO reservationInfo)
@@ -91,11 +85,7 @@ namespace Restorator.Desktop.ViewModels
             if (confirm != Wpf.Ui.Controls.ContentDialogResult.Primary)
                 return;
 
-            var result = await _reservationService.CancelReservation(new CancelReservationDTO()
-            {
-                ReservationId = reservationInfo.Id,
-                UserId = _userId,
-            });
+            var result = await _reservationService.CancelReservation(reservationInfo.Id);
 
             if (result.IsFailed)
             {

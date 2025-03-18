@@ -12,16 +12,23 @@ namespace Restorator.Application.Server.Services
     {
         private readonly RestoratorDbContext _context;
         private readonly IJwtService _jwtService;
-        public AccountService(RestoratorDbContext context, IJwtService jwtService)
+        private readonly IUserManager _userManager;
+        public AccountService(RestoratorDbContext context,
+                              IJwtService jwtService,
+                              IUserManager userManager)
         {
             _context = context;
             _jwtService = jwtService;
+            _userManager = userManager;
         }
 
-        public async Task<Result<SessionInfo>> GetSessionInfoAsync(int userId)
+        public async Task<Result<SessionInfo>> GetSessionInfoAsync()
         {
+            if (!_userManager.TryGetUserId(out var userId))
+                return Result.Fail("Не удалось получить id пользователя");
+
             var user = await _context.Users.Include(u => u.Role)
-                .SingleOrDefaultAsync(u => u.Id == userId);
+                                           .SingleOrDefaultAsync(u => u.Id == userId);
 
             if (user is null)
                 return Result.Fail("Пользователя не существует");
@@ -31,7 +38,8 @@ namespace Restorator.Application.Server.Services
         public async Task<Result<AuthorizationResult>> SignInAsync(SignInDTO signIn)
         {
             var user = await _context.Users.Include(u => u.Role)
-                .SingleOrDefaultAsync(u => u.Password == AccountPasswordHelper.HashUserPassword(signIn.Password) && u.Login == signIn.Login);
+                                           .SingleOrDefaultAsync(u => u.Password == AccountPasswordHelper.HashUserPassword(signIn.Password)
+                                           && u.Login == signIn.Login);
 
             if (user is null)
                 return Result.Fail("Пользователь с такими данными не найден");
@@ -44,14 +52,14 @@ namespace Restorator.Application.Server.Services
         }
         public async Task<Result> SignUpAsync(SignUpDTO signUp)
         {
-            if (_context.Users.Any(u => u.Login == signUp.Login))
+            if (await _context.Users.AnyAsync(u => u.Login == signUp.Login))
                 return Result.Fail("Такой логин занят");
 
             var user = new User()
             {
                 Login = signUp.Login,
                 Username = signUp.Username,
-                Role = _context.Roles.Single(r => r.Id == signUp.RoleId),
+                Role = await _context.Roles.SingleAsync(r => r.Id == signUp.RoleId),
                 Password = AccountPasswordHelper.HashUserPassword(signUp.Password),
             };
 

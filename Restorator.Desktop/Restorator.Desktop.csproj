@@ -37,21 +37,23 @@
 
   <ItemGroup>
     <PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.0" />
-    <PackageReference Include="iNKORE.UI.WPF" Version="1.2.7.1" />
-    <PackageReference Include="iNKORE.UI.WPF.Modern" Version="0.9.30" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="9.0.0">
+    <PackageReference Include="iNKORE.UI.WPF" Version="1.2.8" />
+    <PackageReference Include="iNKORE.UI.WPF.Modern" Version="0.10.0" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="9.0.3">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="9.0.0" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="9.0.3" />
+    <PackageReference Include="Refit.HttpClientFactory" Version="8.0.0" />
     <PackageReference Include="Sdl.MultiSelectComboBox" Version="1.0.103" />
-    <PackageReference Include="System.Windows.Extensions" Version="9.0.0" />
-    <PackageReference Include="WPF-UI" Version="3.0.5" />
-    <PackageReference Include="WPF-UI.DependencyInjection" Version="4.0.0-rc.3" />
+    <PackageReference Include="System.Windows.Extensions" Version="9.0.3" />
+    <PackageReference Include="WPF-UI" Version="3.1.1" />
+    <PackageReference Include="WPF-UI.Abstractions" Version="4.0.2" />
+    <PackageReference Include="WPF-UI.DependencyInjection" Version="4.0.2" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Restorator.Application.Client\Restorator.Application.Client.csproj" />
+    <ProjectReference Include="..\Restorator.Application.Server\Restorator.Application.Server.csproj" />
     <ProjectReference Include="..\Restorator.DataAccess.Common\Restorator.DataAccess.SqlServer.csproj" />
     <ProjectReference Include="..\Restorator.Domain\Restorator.Domain.csproj" />
   </ItemGroup>
@@ -63,6 +65,21 @@
 
   <ItemGroup>
     <ApplicationDefinition Include="Views\App.xaml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="Properties\Settings.Designer.cs">
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+    </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
   </ItemGroup>
 
 </Project>

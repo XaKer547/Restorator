@@ -10,7 +10,6 @@
 
         public byte[]? Image { get; set; }
         public byte[]? Menu { get; set; }
-        public int UserId { get; set; }
         public IEnumerable<int> Tags { get; set; }
     }
 }

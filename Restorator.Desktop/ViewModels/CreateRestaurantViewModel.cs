@@ -62,9 +62,7 @@ namespace Restorator.Desktop.ViewModels
         {
             Templates.Clear();
 
-            var templates = await _restaurantService.GetRestaurantTemplates();
-
-            foreach (var template in templates)
+            foreach (var template in await _restaurantService.GetRestaurantTemplates())
                 Templates.Add(template);
         }
 

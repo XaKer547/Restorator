@@ -13,7 +13,7 @@ namespace Restorator.Application.Client.Services
             _client = client;
         }
 
-        public async Task<Result<SessionInfo>> GetSessionInfoAsync(int userId)
+        public Task<Result<SessionInfo>> GetSessionInfoAsync()
         {
             throw new NotImplementedException();
         }

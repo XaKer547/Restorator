@@ -5,11 +5,11 @@ namespace Restorator.Domain.Services
 {
     public interface IReservationService
     {
-        Task<Result<bool>> IsReservationOwner(int reservationId, int userId);
-        Task<Result<RestaurantPlanDTO>> GetRestaurantPlan(int userId, GetRestaurantPlanDTO getRestaurantPlan);
-        Task<Result> CreateReservation(int userId, CreateRestaurantReservationDTO reserveTable);
-        Task<Result> CancelReservation(int userId, CancelReservationDTO cancelReservation);
-        Task<Result<ReservationInfoDTO>> GetReservation(int userId, GetReservationInfoDTO getReservationInfo);
-        Task<Result<IReadOnlyCollection<ReservationInfoDTO>>> GetReservations(GetReservationsDTO getReservations);
+        Task<Result<bool>> IsReservationOwner(int reservationId);
+        Task<Result<RestaurantPlanDTO>> GetRestaurantReservationPlan(GetRestaurantPlanDTO model);
+        Task<Result<int>> CreateReservation(CreateRestaurantReservationDTO model);
+        Task<Result> CancelReservation(int reservationId);
+        Task<Result<ReservationInfoDTO>> GetReservationInfo(GetReservationInfoDTO model);
+        Task<Result<IReadOnlyCollection<ReservationInfoDTO>>> GetReservations(GetReservationsDTO model);
     }
 }
