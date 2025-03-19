@@ -8,6 +8,7 @@ using Restorator.Domain.Models;
 using Restorator.Domain.Models.Enums;
 using Restorator.Domain.Services;
 using System.Collections.Immutable;
+using Roles = Restorator.DataAccess.Data.Entities.Enums.Roles;
 
 namespace Restorator.Application.Server.Services
 {

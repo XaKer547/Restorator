@@ -6,16 +6,16 @@ namespace Restorator.Domain.Services
 {
     public interface IAccountService
     {
-        [Post("")]
+        [Post("/signin")]
         Task<Result<AuthorizationResult>> SignInAsync(SignInDTO signIn);
 
 
-        [Get("info")]
+        [Get("/info")]
         [Headers("Authorization: Bearer")]
         Task<Result<SessionInfo>> GetSessionInfoAsync();
 
 
-        [Post("new")]
+        [Post("/signup")]
         Task<Result> SignUpAsync(SignUpDTO signUp);
     }
 }

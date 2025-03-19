@@ -4,9 +4,8 @@ namespace Restorator.Domain.Services
 {
     public interface ISessionManager
     {
-        void SetSession(SessionInfo sessionInfo);
-        SessionInfo? GetSessionInfo();
+        bool TryGetSession(out SessionInfo sessionInfo);
+        void SetSession(SessionInfo sessionInfo, string token);
         void RemoveSession();
-        bool HaveSession();
     }
 }
