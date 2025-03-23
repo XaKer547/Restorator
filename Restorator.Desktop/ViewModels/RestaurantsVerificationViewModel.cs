@@ -3,6 +3,7 @@ using CommunityToolkit.Mvvm.Input;
 using Restorator.Desktop.Services;
 using Restorator.Desktop.ViewModels.Abstract;
 using Restorator.Domain.Models;
+using Restorator.Domain.Models.Restaurant;
 using Restorator.Domain.Services;
 using System.Collections.ObjectModel;
 

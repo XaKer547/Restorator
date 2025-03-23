@@ -1,61 +1,52 @@
-﻿using Restorator.Domain.Models;
+﻿using Restorator.Desktop.Properties;
+using Restorator.Domain.Models.Authorization;
 using Restorator.Domain.Services;
-using System.IO;
-using System.IO.IsolatedStorage;
-using System.Text.Json;
 
 namespace Restorator.Desktop.Session
 {
     public class SessionManager : ISessionManager
     {
-        private readonly IsolatedStorageFile _userStore = IsolatedStorageFile.GetUserStoreForAssembly();
-        public SessionInfo? GetSessionInfo()
+        private readonly Settings _settings = Settings.Default;
+        public bool TryGetSession(out SessionInfo sessionInfo)
         {
-            using var stream = _userStore.OpenFile("session.json", FileMode.Open);
+            sessionInfo = null;
 
-            return JsonSerializer.Deserialize<SessionInfo>(stream);
-        }
-        public bool HaveSession()
-        {
-            if (!_userStore.FileExists("session.json"))
-            {
-                using var stream = _userStore.CreateFile("session.json");
-
-                using var writer = new StreamWriter(stream);
-
-                writer.Write("{\n}");
-
-                return false;
-            }
-
-            var info = GetSessionInfo();
-
-            if (info is null)
+            if (!HaveSession())
                 return false;
 
-            return info.Role is not null;
+            sessionInfo = new(_settings.Username, _settings.Role);
+
+            return true;
         }
         public void RemoveSession()
         {
-            using var stream = _userStore.OpenFile("session.json", FileMode.Open);
+            _settings.Reset();
 
-            using var writer = new StreamWriter(stream);
-
-            writer.BaseStream.SetLength(0);
-
-            writer.Write("{\n}");
+            _settings.Save();
         }
-        public void SetSession(SessionInfo sessionInfo)
+        public void SetSession(SessionInfo sessionInfo, string token)
         {
-            using var stream = _userStore.OpenFile("session.json", FileMode.OpenOrCreate);
+            _settings.Token = token;
 
-            var json = JsonSerializer.Serialize(sessionInfo);
+            _settings.Role = sessionInfo.Role;
 
-            using var writer = new StreamWriter(stream);
+            _settings.Username = sessionInfo.Username;
 
-            writer.BaseStream.SetLength(0);
+            _settings.Save();
+        }
+        private bool HaveSession() => _settings.Token != string.Empty;
+        public bool TryGetToken(out string token)
+        {
+            if (HaveSession())
+            {
+                token = _settings.Token;
 
-            writer.Write(json);
+                return true;
+            }
+
+            token = null;
+
+            return false;
         }
     }
 }

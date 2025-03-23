@@ -1,5 +1,6 @@
 ﻿using FluentResults;
 using Restorator.Domain.Models;
+using Restorator.Domain.Models.Restaurant;
 
 namespace Restorator.Domain.Services
 {

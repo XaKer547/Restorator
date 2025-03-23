@@ -1,4 +1,4 @@
-﻿using Restorator.Domain.Models;
+﻿using Restorator.Domain.Models.Restaurant;
 using System.Windows;
 
 namespace Restorator.Desktop.Infrastructure

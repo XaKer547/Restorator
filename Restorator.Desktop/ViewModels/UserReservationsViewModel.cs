@@ -3,7 +3,7 @@ using CommunityToolkit.Mvvm.Input;
 using Restorator.Desktop.Session;
 using Restorator.Desktop.ViewModels.Abstract;
 using Restorator.Desktop.Views.Pages;
-using Restorator.Domain.Models;
+using Restorator.Domain.Models.Reservations;
 using Restorator.Domain.Services;
 using System.Collections.ObjectModel;
 using Wpf.Ui;

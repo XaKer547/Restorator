@@ -6,6 +6,8 @@ using Restorator.DataAccess.Data.Entities;
 using Restorator.DataAccess.Data.Entities.Enums;
 using Restorator.Domain.Models;
 using Restorator.Domain.Models.Enums;
+using Restorator.Domain.Models.Reservations;
+using Restorator.Domain.Models.Restaurant;
 using Restorator.Domain.Services;
 using System.Collections.Immutable;
 using Roles = Restorator.DataAccess.Data.Entities.Enums.Roles;
@@ -52,22 +54,19 @@ namespace Restorator.Application.Server.Services
 
             return Result.Ok();
         }
-        public async Task<Result<ReservationInfoDTO>> GetReservationInfo(GetReservationInfoDTO model)
+        public async Task<Result<ReservationInfoDTO>> GetReservationInfo(int reservationId)
         {
-            if (!_userManager.TryGetUserId(out var userId))
-                return Result.Fail("Не удалось получить id пользователя"); //CHECK
-
             var reservation = await _context.Reservations.AsNoTracking()
-                                                .Select(r => new ReservationInfoDTO
-                                                {
-                                                    Id = r.Id,
-                                                    UserId = r.User.Id,
-                                                    Username = r.User.Username,
-                                                    RestaurantId = r.Restaurant.Id,
-                                                    RestaurantName = r.Restaurant.Name,
-                                                    ReservationStart = r.ReservationStart,
-                                                    ReservationEnd = r.ReservationEnd
-                                                }).SingleOrDefaultAsync(r => r.Id == model.ReservationId);
+                                                         .Select(r => new ReservationInfoDTO
+                                                         {
+                                                             Id = r.Id,
+                                                             UserId = r.User.Id,
+                                                             Username = r.User.Username,
+                                                             RestaurantId = r.Restaurant.Id,
+                                                             RestaurantName = r.Restaurant.Name,
+                                                             ReservationStart = r.ReservationStart,
+                                                             ReservationEnd = r.ReservationEnd
+                                                         }).SingleOrDefaultAsync(r => r.Id == reservationId);
 
             if (reservation is null)
                 return Result.Fail("Бронирование не найдено");

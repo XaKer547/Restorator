@@ -1,34 +1,58 @@
 ﻿using FluentResults;
-using Restorator.Domain.Models;
+using Restorator.Application.Client.Extensions;
+using Restorator.Application.Client.Helpers;
+using Restorator.Domain.Models.Reservations;
+using Restorator.Domain.Models.Restaurant;
 using Restorator.Domain.Services;
+using System.Net.Http.Json;
 
 namespace Restorator.Application.Client.Services
 {
     public class ReservationService : IReservationService
     {
-        public Task<Result> CancelReservation(int reservationId)
+        private readonly HttpClient _client;
+        public ReservationService(HttpClient client)
         {
-            throw new NotImplementedException();
+            _client = client;
         }
 
-        public Task<Result<int>> CreateReservation(CreateRestaurantReservationDTO model)
+        public async Task<Result> CancelReservation(int reservationId)
         {
-            throw new NotImplementedException();
+            var request = new HttpRequestMessage(HttpMethod.Head, $"{reservationId}/cancel");
+
+            var response = await _client.SendAsync(request);
+
+            return await response.AsResult();
         }
 
-        public Task<Result<ReservationInfoDTO>> GetReservationInfo(GetReservationInfoDTO model)
+        public async Task<Result<int>> CreateReservation(CreateRestaurantReservationDTO model)
         {
-            throw new NotImplementedException();
+            var response = await _client.PostAsJsonAsync(string.Empty, model);
+
+            return await response.AsResult<int>();
         }
 
-        public Task<Result<IReadOnlyCollection<ReservationInfoDTO>>> GetReservations(GetReservationsDTO model)
+        public async Task<Result<ReservationInfoDTO>> GetReservationInfo(int reservationId)
         {
-            throw new NotImplementedException();
+            var plan = await _client.GetFromJsonAsync<ReservationInfoDTO>($"{reservationId}");
+
+            return plan.ToResultWithNullCheck();
         }
 
-        public Task<Result<RestaurantPlanDTO>> GetRestaurantReservationPlan(GetRestaurantPlanDTO model)
+        public async Task<Result<IReadOnlyCollection<ReservationInfoDTO>>> GetReservations(GetReservationsDTO model)
         {
-            throw new NotImplementedException();
+            var queryString = model.ToQueryString();
+
+            var reservations = await _client.GetFromJsonAsync<IReadOnlyCollection<ReservationInfoDTO>>($"filter?{queryString}");
+
+            return reservations.ToResultWithNullCheck();
+        }
+
+        public async Task<Result<RestaurantPlanDTO>> GetRestaurantReservationPlan(GetRestaurantPlanDTO model)
+        {
+            var plan = await _client.GetFromJsonAsync<RestaurantPlanDTO>($"{model.RestaurantId}/plan?ReservationStartDate={model.ReservationStartDate}&ReservationEndDate={model.ReservationEndDate}"); 
+
+            return plan.ToResultWithNullCheck();
         }
 
         public Task<Result<bool>> IsReservationOwner(int reservationId)

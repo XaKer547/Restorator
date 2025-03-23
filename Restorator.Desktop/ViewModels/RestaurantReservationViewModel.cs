@@ -2,9 +2,9 @@
 using CommunityToolkit.Mvvm.Input;
 using Restorator.Desktop.Dialogs;
 using Restorator.Desktop.Models;
-using Restorator.Desktop.Session;
 using Restorator.Desktop.ViewModels.Abstract;
 using Restorator.Domain.Models;
+using Restorator.Domain.Models.Restaurant;
 using Restorator.Domain.Services;
 using System.Collections.Immutable;
 using System.Collections.ObjectModel;
@@ -59,8 +59,7 @@ namespace Restorator.Desktop.ViewModels
         public RestaurantReservationViewModel(IContentDialogService contentDialogService,
                                     IReservationService reservationService,
                                     Services.INavigationService navigationService,
-                                    ISnackbarService snackbarService,
-                                    ISessionManager sessionManager)
+                                    ISnackbarService snackbarService)
         {
             _contentDialogService = contentDialogService;
             _reservationService = reservationService;
@@ -290,8 +289,6 @@ namespace Restorator.Desktop.ViewModels
 
         private GetRestaurantPlanDTO BuildRestaurantPlanQuery()
         {
-            DateTime reservationEndDate = SelectedDate;
-
             return new GetRestaurantPlanDTO()
             {
                 ReservationStartDate = ReservationStartTime,
@@ -331,9 +328,9 @@ namespace Restorator.Desktop.ViewModels
 
                     var result = await _reservationService.GetReservationInfo(new GetReservationInfoDTO //TODO
                     {
-                        RestaurantId = _restaurantId,
-                        ReservationStartDate = ReservationStartTime,
-                        ReservationEndDate = ReservationEndTime,
+                        //RestaurantId = _restaurantId,
+                        //ReservationStartDate = ReservationStartTime,
+                        //ReservationEndDate = ReservationEndTime,
                     });
 
                     if (result.IsFailed)
@@ -388,7 +385,7 @@ namespace Restorator.Desktop.ViewModels
                 ReservedTables = _reservedTables,
                 ReservationStartDate = ReservationStartTime,
                 ReservationEndDate = ReservationEndTime,
-            }); 
+            });
 
             if (result.IsFailed)
             {
@@ -404,9 +401,6 @@ namespace Restorator.Desktop.ViewModels
 
 
         [RelayCommand]
-        public async Task CloseRestaurantReservation()
-        {
-            await _navigationService.NavigateBackAsync();
-        }
+        public async Task CloseRestaurantReservation() => await _navigationService.NavigateBackAsync();
     }
 }

@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Restorator.Domain.Models;
+using Restorator.Domain.Models.Authorization;
 using Restorator.Domain.Services;
 
 namespace Restorator.API.Controllers
@@ -10,9 +10,20 @@ namespace Restorator.API.Controllers
     public class AccountController : ControllerBase
     {
         private readonly IAccountService _accountService;
-        public AccountController(IAccountService accountService)
+        private readonly IMailService _mailService;
+        public AccountController(IAccountService accountService, IMailService mailService)
         {
             _accountService = accountService;
+            _mailService = mailService;
+        }
+
+
+        [HttpGet("test")]
+        public async Task<IActionResult> Test()
+        {
+            await _mailService.PrepareMesage();
+
+            return Ok();
         }
 
         [HttpPost("signIn")]

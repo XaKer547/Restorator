@@ -1,7 +1,10 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Restorator.Domain.Models;
+using Restorator.Domain.Models.Restaurant;
 using Restorator.Domain.Services;
+using System.ComponentModel.DataAnnotations;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Restorator.API.Controllers
 {
@@ -72,9 +75,13 @@ namespace Restorator.API.Controllers
         }
 
         [HttpGet("search")]
-        public async Task<IActionResult> GetRestaurantPreviews([FromQuery] GetRestaurantsPreviewDTO model)
+        public async Task<IActionResult> GetRestaurantPreviews([FromQuery] PaginationFilter paginationFilter, [FromQuery] GetRestaurantsPreviewFilter filter)
         {
-            var restaurants = await _restaurantService.GetRestaurantPreviews(model);
+            var restaurants = await _restaurantService.GetRestaurantPreviews(new GetRestaurantsPreviewDTO()
+            {
+                Filter = filter,
+                PaginationFilter = paginationFilter
+            });
 
             return Ok(restaurants);
         }

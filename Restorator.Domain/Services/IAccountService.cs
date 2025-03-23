@@ -1,21 +1,13 @@
 ﻿using FluentResults;
 using Refit;
-using Restorator.Domain.Models;
+using Restorator.Domain.Models.Authorization;
 
 namespace Restorator.Domain.Services
 {
     public interface IAccountService
     {
-        [Post("/signin")]
-        Task<Result<AuthorizationResult>> SignInAsync(SignInDTO signIn);
-
-
-        [Get("/info")]
-        [Headers("Authorization: Bearer")]
+        Task<Result<AuthorizationResult>> SignInAsync(SignInDTO model);
         Task<Result<SessionInfo>> GetSessionInfoAsync();
-
-
-        [Post("/signup")]
-        Task<Result> SignUpAsync(SignUpDTO signUp);
+        Task<Result> SignUpAsync(SignUpDTO model);
     }
 }

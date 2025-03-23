@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
+using Restorator.API.Configuration;
 using Restorator.API.Infrastructure;
 using Restorator.Application.Server.Services;
 using Restorator.DataAccess.SqlServer;
@@ -13,6 +14,9 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 builder.Services.Configure<RouteOptions>(options => options.LowercaseUrls = true);
+
+builder.Services.AddSingleton(builder.Configuration.GetRequiredSection("SmtpConfiguration")
+                                                   .Get<SmtpConfiguration>()!);
 
 builder.Services.AddAuthentication(x =>
 {
@@ -35,6 +39,10 @@ builder.Services.AddScoped<IAccountService, AccountService>();
 builder.Services.AddScoped<IReservationService, ReservationService>();
 builder.Services.AddScoped<IRestaurantService, RestaurantService>();
 builder.Services.AddScoped<IUserManager, UserManager>();
+
+builder.Services.AddScoped<MailService>();
+builder.Services.AddScoped<MailTemplateBuilder>();
+
 builder.Services.AddHttpContextAccessor();
 
 builder.Services.AddAuthorization();

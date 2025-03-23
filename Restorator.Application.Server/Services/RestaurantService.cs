@@ -4,9 +4,8 @@ using Microsoft.EntityFrameworkCore;
 using Restorator.Application.Server.Extensions;
 using Restorator.DataAccess.Data;
 using Restorator.DataAccess.Data.Entities;
-using Restorator.DataAccess.Data.Entities.Enums;
 using Restorator.Domain.Models;
-using Restorator.Domain.Models.Enums;
+using Restorator.Domain.Models.Restaurant;
 using Restorator.Domain.Services;
 using Roles = Restorator.DataAccess.Data.Entities.Enums.Roles;
 
@@ -68,27 +67,27 @@ namespace Restorator.Application.Server.Services
         {
             var predicate = PredicateBuilder.New<Restaurant>(true);
 
-            var searchFilter = model.Filter;
+            var filter = model.Filter;
 
-            if (searchFilter is not null)
+            if (filter != null)
             {
-                if (searchFilter.RequireApproved.HasValue)
-                    predicate = predicate.And(r => r.Approved == searchFilter.RequireApproved);
+                if (filter.RequireApproved.HasValue)
+                    predicate = predicate.And(r => r.Approved == filter.RequireApproved);
 
-                if (searchFilter.Tag is not null)
-                    predicate = predicate.And(r => r.Tags.Any(t => t.Id == searchFilter.Tag.Id));
+                if (filter.TagId.HasValue)
+                    predicate = predicate.And(r => r.Tags.Any(t => t.Id == filter.TagId));
             }
 
             var paginationFilter = model.PaginationFilter;
 
             return await _context.Restaurants.AsNoTracking()
-                .Where(predicate)
-                .Select(r => new RestaurantPreviewDTO
-                {
-                    Id = r.Id,
-                    Name = r.Name,
-                    Image = r.Image,
-                }).AsPageAsync(paginationFilter.CurrentPage, paginationFilter.PageSize);
+                                             .Where(predicate)
+                                             .Select(r => new RestaurantPreviewDTO
+                                             {
+                                                 Id = r.Id,
+                                                 Name = r.Name,
+                                                 Image = r.Image,
+                                             }).AsPageAsync(paginationFilter.CurrentPage, paginationFilter.PageSize);
         }
         public async Task<Result<int>> CreateRestaurant(CreateRestaurantDTO model)
         {
@@ -236,7 +235,6 @@ namespace Restorator.Application.Server.Services
             }).ToListAsync();
         }
 
-
         private async Task<Result<Restaurant>> GetRestaurantByPrivileges(int restaurantId, int userId, params Roles[] roles)
         {
             var user = await _context.Users.Include(x => x.Role)
@@ -246,7 +244,7 @@ namespace Restorator.Application.Server.Services
                 return Result.Fail("Не удалось получить id пользователя");
 
             if (!roles.Contains(user.Role))
-                return Result.Fail("Не достаточно прав для выполнения операции");
+                return Result.Fail("Недостаточно прав для выполнения операции");
 
             var restaurant = await _context.Restaurants.SingleOrDefaultAsync(r => r.Id == restaurantId);
 
@@ -254,7 +252,7 @@ namespace Restorator.Application.Server.Services
                 return Result.Fail("Ресторан не найден");
 
             if (restaurant.Owner.Id != user.Id)
-                return Result.Fail("Не достаточно прав для выполнения операции");
+                return Result.Fail("Недостаточно прав для выполнения операции");
 
             return restaurant;
         }

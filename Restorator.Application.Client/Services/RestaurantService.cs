@@ -1,71 +1,96 @@
 ﻿using FluentResults;
+using Restorator.Application.Client.Extensions;
+using Restorator.Application.Client.Helpers;
 using Restorator.Domain.Models;
+using Restorator.Domain.Models.Restaurant;
 using Restorator.Domain.Services;
+using System.Net.Http.Json;
 
 namespace Restorator.Application.Client.Services
 {
     public class RestaurantService : IRestaurantService
     {
-        private readonly IAccountService _accountService;
-        public RestaurantService(IAccountService accountService)
+        private readonly HttpClient _client;
+        public RestaurantService(HttpClient client)
         {
-            _accountService = accountService;
+            _client = client;
         }
 
-        public Task<Result> ChangeRestaurantApproval(ChangeRestaurantApprovalDTO model)
+        public async Task<Result> ChangeRestaurantApproval(ChangeRestaurantApprovalDTO model)
         {
-            throw new NotImplementedException();
+            var response = await _client.PatchAsJsonAsync($"{model.RestaurantId}/approve", model.Approval);
+
+            return await response.AsResult();
         }
 
-        public Task<Result<int>> CreateRestaurant(CreateRestaurantDTO model)
+        public async Task<Result<int>> CreateRestaurant(CreateRestaurantDTO model)
         {
-            throw new NotImplementedException();
+            var response = await _client.PostAsJsonAsync(string.Empty, model);
+
+            return await response.AsResult<int>();
         }
 
-        public Task<Result> DeleteRestaurant(int restaurantId)
+        public async Task<Result> DeleteRestaurant(int restaurantId)
         {
-            throw new NotImplementedException();
+            var response = await _client.DeleteAsync($"{restaurantId}");
+
+            return await response.AsResult();
         }
 
-        public Task<IReadOnlyCollection<RestaurantPreviewDTO>> GetOwnedRestaurantPreviews()
+        public async Task<IReadOnlyCollection<RestaurantPreviewDTO>> GetOwnedRestaurantPreviews()
         {
-            throw new NotImplementedException();
+            var restaurants = await _client.GetFromJsonAsync<IReadOnlyCollection<RestaurantPreviewDTO>>("owned");
+
+            return restaurants ?? [];
         }
 
-        public Task<Result<RestaurantInfoDTO>> GetRestaurantInfo(int restaurantId)
+        public async Task<Result<RestaurantInfoDTO>> GetRestaurantInfo(int restaurantId)
         {
-            throw new NotImplementedException();
+            var info = await _client.GetFromJsonAsync<RestaurantInfoDTO>($"{restaurantId}");
+
+            return info.ToResultWithNullCheck();
         }
 
         public async Task<IReadOnlyCollection<RestaurantSearchItemDTO>> GetRestaurantNames()
         {
-            var a = await _accountService.SignInAsync(new SignInDTO()
-            {
-                Login = "Manager",
-                Password = "Manager"
-            });
+            var names = await _client.GetFromJsonAsync<IReadOnlyCollection<RestaurantSearchItemDTO>>("names");
 
-            return [];
+            return names ?? [];
         }
 
-        public Task<PaginatedList<RestaurantPreviewDTO>> GetRestaurantPreviews(GetRestaurantsPreviewDTO model)
+        public async Task<PaginatedList<RestaurantPreviewDTO>> GetRestaurantPreviews(GetRestaurantsPreviewDTO model)
         {
-            throw new NotImplementedException();
+            var paginationQuery = model.PaginationFilter.ToQueryString();
+
+            string filterQuery = string.Empty;
+
+            if (model.Filter is not null)
+                filterQuery = model.Filter.ToQueryString();
+
+            var previews = await _client.GetFromJsonAsync<PaginatedList<RestaurantPreviewDTO>>($"search?{paginationQuery}&{filterQuery}");
+
+            return previews ?? PaginatedList<RestaurantPreviewDTO>.Empty();
         }
 
-        public Task<IReadOnlyCollection<RestaurantTagDTO>> GetRestaurantsTags()
+        public async Task<IReadOnlyCollection<RestaurantTagDTO>> GetRestaurantsTags()
         {
-            throw new NotImplementedException();
+            var tags = await _client.GetFromJsonAsync<IReadOnlyCollection<RestaurantTagDTO>>("tags");
+
+            return tags ?? [];
         }
 
-        public Task<IReadOnlyCollection<RestaurantTemplateDTO>> GetRestaurantTemplates()
+        public async Task<IReadOnlyCollection<RestaurantTemplateDTO>> GetRestaurantTemplates()
         {
-            throw new NotImplementedException();
+            var templates = await _client.GetFromJsonAsync<IReadOnlyCollection<RestaurantTemplateDTO>>("templates");
+
+            return templates ?? [];
         }
 
-        public Task<Result> UpdateRestaurant(UpdateRestraurantDTO model)
+        public async Task<Result> UpdateRestaurant(UpdateRestraurantDTO model)
         {
-            throw new NotImplementedException();
+            var response = await _client.PutAsJsonAsync(string.Empty, model);
+
+            return await response.AsResult();
         }
     }
 }

@@ -1,26 +1,31 @@
-﻿using System.Net.Http.Json;
-using FluentResults;
-using Restorator.Domain.Models;
+﻿using FluentResults;
+using Restorator.Application.Client.Extensions;
+using Restorator.Domain.Models.Authorization;
 using Restorator.Domain.Services;
+using System.Net.Http.Json;
 
 namespace Restorator.Application.Client.Services
 {
     public class AccountService : IAccountService
     {
         private readonly HttpClient _client;
-        public AccountService(HttpClient client)
+        private readonly ISessionManager _sessionManager;
+
+        public AccountService(HttpClient client, ISessionManager sessionManager)
         {
             _client = client;
+            _sessionManager = sessionManager;
         }
 
-        public Task<Result<SessionInfo>> GetSessionInfoAsync()
+        public async Task<Result<SessionInfo>> GetSessionInfoAsync()//Why?
         {
-            throw new NotImplementedException();
-        }
+            var sessionInfo = await _client.GetFromJsonAsync<SessionInfo>("info");
 
-        public async Task<Result<AuthorizationResult>> SignInAsync(SignInDTO signIn)
+            return sessionInfo.ToResultWithNullCheck();
+        }
+        public async Task<Result<AuthorizationResult>> SignInAsync(SignInDTO model)
         {
-            var response = await _client.PostAsJsonAsync(string.Empty, signIn);
+            var response = await _client.PostAsJsonAsync("signin", model);
 
             if (!response.IsSuccessStatusCode)
             {
@@ -29,18 +34,20 @@ namespace Restorator.Application.Client.Services
                 return Result.Fail(error);
             }
 
-            //accept header
-            //return some top data or get it from get on load?
             var result = await response.Content.ReadFromJsonAsync<AuthorizationResult>();
 
-            _client.DefaultRequestHeaders.Add("Authorization", "Bearer " + result!.Token);
+            if (result is null)
+                return Result.Fail("");
 
-            return Result.Ok();
+            _sessionManager.SetSession(result.SessionInfo, result.Token);
+
+            return result;
         }
-
-        public Task<Result> SignUpAsync(SignUpDTO signUp)
+        public async Task<Result> SignUpAsync(SignUpDTO model)
         {
-            throw new NotImplementedException();
+            var response = await _client.PostAsJsonAsync("signup", model);
+
+            return await response.AsResult();
         }
     }
 }

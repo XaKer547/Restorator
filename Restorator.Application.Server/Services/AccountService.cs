@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Restorator.DataAccess.Data;
 using Restorator.DataAccess.Data.Entities;
 using Restorator.DataAccess.Helpers;
-using Restorator.Domain.Models;
+using Restorator.Domain.Models.Authorization;
 using Restorator.Domain.Services;
 
 namespace Restorator.Application.Server.Services

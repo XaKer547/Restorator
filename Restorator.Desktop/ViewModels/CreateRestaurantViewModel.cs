@@ -1,7 +1,6 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using Restorator.Desktop.Session;
-using Restorator.Domain.Models;
+using Restorator.Domain.Models.Restaurant;
 using Restorator.Domain.Services;
 using System.Collections.ObjectModel;
 using Wpf.Ui;
@@ -38,14 +37,14 @@ namespace Restorator.Desktop.ViewModels
             {
                 var error = GetErrors().First();
 
-                _snackbarService.Show("Так не пойдет", error.ErrorMessage, Wpf.Ui.Controls.ControlAppearance.Danger);
+                _snackbarService.Show("Так не пойдет", error.ErrorMessage!, Wpf.Ui.Controls.ControlAppearance.Danger);
 
                 return;
             }
 
-            var result = await _restaurantService.CreateRestaurant(new CreateRestaurantDTO
+            /* var result =*/
+            await _restaurantService.CreateRestaurant(new CreateRestaurantDTO
             {
-                UserId = _userId,
                 Name = RestaurantName,
                 BeginWorkTime = TimeOnly.FromDateTime(BeginWorkTime),
                 EndWorkTime = TimeOnly.FromDateTime(EndWorkTime),
@@ -70,7 +69,6 @@ namespace Restorator.Desktop.ViewModels
         public async Task OpenExtendedRestaurantTemplate(RestaurantTemplateDTO restaurantTemplate)
         {
             //dialog
-
         }
     }
 }

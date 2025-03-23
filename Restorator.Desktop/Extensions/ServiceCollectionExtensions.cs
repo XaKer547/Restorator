@@ -1,7 +1,5 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
-using Refit;
-using Restorator.Application.Server.Services;
-using Restorator.DataAccess.SqlServer;
+using Restorator.Application.Client.Services;
 using Restorator.Desktop.Controls;
 using Restorator.Desktop.Infrastructure;
 using Restorator.Desktop.Services;
@@ -11,6 +9,7 @@ using Restorator.Desktop.ViewModels.Abstract;
 using Restorator.Desktop.Views.Pages;
 using Restorator.Desktop.Views.Windows;
 using Restorator.Domain.Services;
+using System.Net.Http;
 using System.Reflection;
 using Wpf.Ui;
 using Wpf.Ui.Abstractions;
@@ -35,33 +34,28 @@ namespace Restorator.Desktop.Extensions
             services.AddSingleton<Services.INavigationService, Services.NavigationService>();
             services.AddSingleton<Wpf.Ui.INavigationService, Wpf.Ui.NavigationService>();
             services.AddSingleton<IPageService, PageService>();
-
             services.AddSingleton<ISessionManager, SessionManager>();
 
-            services.AddScoped<IAccountService, AccountService>();
-            services.AddScoped<IRestaurantService, RestaurantService>();
-            services.AddScoped<IReservationService, ReservationService>();
-
-            services.AddRestoratorDbContext();
-
             return services;
         }
-
         public static IServiceCollection ConfigureApiClients(this IServiceCollection services)
         {
-            var settings = new RefitSettings()
+            Action<IServiceProvider, HttpClient, string?> configureClient = (provider, client, endpoint) =>
             {
-                AuthorizationHeaderValueGetter = (message, cancellationToken) => Task.FromResult(Properties.Settings.Default.Token)
+                client.BaseAddress = new Uri($"https://localhost:7090/api/{endpoint}");
+
+                var manager = provider.GetRequiredService<ISessionManager>();
+
+                if (manager.TryGetToken(out var token))
+                    client.DefaultRequestHeaders.Add("Authorization", $"Bearer {token}");
             };
 
-            var apiBase = new Uri("https://10.173.99.217:7090");
-
-            services.AddRefitClient<IAccountService>(settings)
-                    .ConfigureHttpClient(c => c.BaseAddress = new Uri(apiBase, "account"));
+            services.AddHttpClient<IAccountService, AccountService>((provider, client) => configureClient.Invoke(provider, client, "account/"));
+            services.AddHttpClient<IRestaurantService, RestaurantService>((provider, client) => configureClient.Invoke(provider, client, "restaurant/"));
+            services.AddHttpClient<IReservationService, ReservationService>((provider, client) => configureClient.Invoke(provider, client, "reservation/"));
 
             return services;
         }
-
         public static IServiceCollection ConfigureViews(this IServiceCollection services)
         {
             services.AddSingleton<MainWindow>();
@@ -101,7 +95,6 @@ namespace Restorator.Desktop.Extensions
 
             return services;
         }
-
         public static IServiceCollection AddTransientFromNamespace(this IServiceCollection services, string namespaceName, params Assembly[] assemblies)
         {
             foreach (Assembly assembly in assemblies)

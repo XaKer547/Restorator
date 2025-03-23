@@ -76,12 +76,14 @@ namespace Restorator.Desktop.ViewModels
         [RelayCommand]
         public async Task OpenRestaurantReservation()
         {
-            if (!_sessionManager.HaveSession())
+            if (!_sessionManager.TryGetSession(out var sessionInfo))
             {
                 await _navigationService.NavigateWithHierarchyAsync<AuthenticationViewModel>();
 
                 return;
             }
+            
+            //check role? nah
 
             await _navigationService.NavigateWithHierarchyAsync<RestaurantReservationViewModel>(viewModel => viewModel.LoadRestaurantPlan(_restaurantId));
         }

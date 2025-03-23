@@ -1,10 +1,10 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using Restorator.DataAccess.Data.Entities.Enums;
 using Restorator.Desktop.Dialogs;
-using Restorator.Desktop.Session;
 using Restorator.Desktop.ViewModels.Abstract;
 using Restorator.Desktop.Views.Pages;
+using Restorator.Domain.Models.Enums;
+using Restorator.Domain.Services;
 using System.Collections.ObjectModel;
 using Wpf.Ui;
 using Wpf.Ui.Controls;
@@ -30,17 +30,15 @@ namespace Restorator.Desktop.ViewModels
             _sessionManager = sessionManager;
 
 
-            if (!_sessionManager.HaveSession())
+            if (!_sessionManager.TryGetSession(out var sessionInfo))
             {
                 Username = "Гость";
                 _role = null;
             }
             else
             {
-                var session = _sessionManager.GetSessionInfo();
-
-                _role = Enum.Parse<Roles>(session.Role);
-                Username = session.Username;
+                _role = Enum.Parse<Roles>(sessionInfo.Role);
+                Username = sessionInfo.Username;
             }
 
 
@@ -69,9 +67,9 @@ namespace Restorator.Desktop.ViewModels
             if (navigationView.MenuItems.Count == 0)
                 InitializeNavigationItems();
 
-            var item = (NavigationViewItem)MenuItems.First();
+            var item = (NavigationViewItem)MenuItems[0];
 
-            _menuNavigationService.Navigate(item.TargetPageType);
+            _menuNavigationService.Navigate(item.TargetPageType!);
         }
 
         private void InitializeNavigationItems()
@@ -115,10 +113,7 @@ namespace Restorator.Desktop.ViewModels
         }
 
         [RelayCommand]
-        public async Task Login()
-        {
-            await _navigationService.NavigateWithHierarchyAsync<AuthenticationViewModel>();
-        }
+        public async Task Login() => await _navigationService.NavigateWithHierarchyAsync<AuthenticationViewModel>();
 
         [RelayCommand]
         public async Task Logout()
@@ -138,9 +133,9 @@ namespace Restorator.Desktop.ViewModels
 
             InitializeNavigationItems();
 
-            var item = (NavigationViewItem)MenuItems.First();
+            var item = (NavigationViewItem)MenuItems[0];
 
-            _menuNavigationService.Navigate(item.TargetPageType);
+            _menuNavigationService.Navigate(item.TargetPageType!);
         }
     }
 }
