@@ -1,5 +1,5 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
-using Restorator.Application.Client.Services;
+using Restorator.Application.Server.Services;
 using Restorator.Desktop.Controls;
 using Restorator.Desktop.Infrastructure;
 using Restorator.Desktop.Services;
@@ -14,6 +14,7 @@ using System.Reflection;
 using Wpf.Ui;
 using Wpf.Ui.Abstractions;
 using Wpf.Ui.DependencyInjection;
+using Restorator.DataAccess.SqlServer;
 
 namespace Restorator.Desktop.Extensions
 {
@@ -50,9 +51,17 @@ namespace Restorator.Desktop.Extensions
                     client.DefaultRequestHeaders.Add("Authorization", $"Bearer {token}");
             };
 
-            services.AddHttpClient<IAccountService, AccountService>((provider, client) => configureClient.Invoke(provider, client, "account/"));
-            services.AddHttpClient<IRestaurantService, RestaurantService>((provider, client) => configureClient.Invoke(provider, client, "restaurant/"));
-            services.AddHttpClient<IReservationService, ReservationService>((provider, client) => configureClient.Invoke(provider, client, "reservation/"));
+            services.AddRestoratorDbContext();
+            services.AddScoped<IJwtService, JwtService>();
+            services.AddScoped<IAccountService, AccountService>();
+            services.AddScoped<IReservationService, ReservationService>();
+            services.AddScoped<IRestaurantService, RestaurantService>();
+            services.AddScoped<IUserManager, UserManager>();
+
+
+            //services.AddHttpClient<IAccountService, AccountService>((provider, client) => configureClient.Invoke(provider, client, "account/"));
+            //services.AddHttpClient<IRestaurantService, RestaurantService>((provider, client) => configureClient.Invoke(provider, client, "restaurant/"));
+            //services.AddHttpClient<IReservationService, ReservationService>((provider, client) => configureClient.Invoke(provider, client, "reservation/"));
 
             return services;
         }

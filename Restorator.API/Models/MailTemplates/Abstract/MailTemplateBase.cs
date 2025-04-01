@@ -1,4 +1,4 @@
-﻿namespace Restorator.API.Models.Mail.Abstract
+﻿namespace Restorator.API.Models.MailTemplates.Abstract
 {
     public abstract class MailTemplateBase
     {

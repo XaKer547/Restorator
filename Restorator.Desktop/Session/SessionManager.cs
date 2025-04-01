@@ -34,7 +34,7 @@ namespace Restorator.Desktop.Session
 
             _settings.Save();
         }
-        private bool HaveSession() => _settings.Token != string.Empty;
+        public bool HaveSession() => _settings.Token != string.Empty;
         public bool TryGetToken(out string token)
         {
             if (HaveSession())

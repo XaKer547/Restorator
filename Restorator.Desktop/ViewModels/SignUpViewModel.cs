@@ -3,6 +3,7 @@ using CommunityToolkit.Mvvm.Input;
 using Restorator.Desktop.Session;
 using Restorator.Desktop.ViewModels.Abstract;
 using Restorator.Domain.Models;
+using Restorator.Domain.Models.Authorization;
 using Restorator.Domain.Models.Enums;
 using Restorator.Domain.Services;
 using System.ComponentModel.DataAnnotations;

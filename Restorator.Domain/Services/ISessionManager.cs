@@ -7,6 +7,7 @@ namespace Restorator.Domain.Services
         bool TryGetSession(out SessionInfo sessionInfo);
         bool TryGetToken(out string token);
         void SetSession(SessionInfo sessionInfo, string token);
+        bool HaveSession();
         void RemoveSession();
     }
 }

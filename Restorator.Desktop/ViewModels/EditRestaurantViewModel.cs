@@ -2,6 +2,7 @@
 using Restorator.Desktop.Dialogs;
 using Restorator.Desktop.Session;
 using Restorator.Domain.Models;
+using Restorator.Domain.Models.Restaurant;
 using Restorator.Domain.Services;
 using Wpf.Ui;
 using Wpf.Ui.Extensions;

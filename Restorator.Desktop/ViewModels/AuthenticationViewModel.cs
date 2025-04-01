@@ -17,11 +17,16 @@ namespace Restorator.Desktop.ViewModels
             _signInViewModel = signInViewModel;
             _signUpViewModel = signUpViewModel;
 
+            DefaultReturnAction = NavigateToUserMenuCommand;
+
             NavigateToSignInPage();
         }
 
         [ObservableProperty]
         private AuthenticationViewModelBase currentViewModel;
+
+        [ObservableProperty]
+        private IRelayCommand _defaultReturnAction;
 
         [RelayCommand]
         public void NavigateToSignUpPage()
@@ -39,6 +44,19 @@ namespace Restorator.Desktop.ViewModels
         public async Task NavigateToUserMenu()
         {
             await _navigationService.NavigateAsync<MenuViewModel>();
+        }
+
+        [RelayCommand]
+        public async Task NavigateBack()
+        {
+            await _navigationService.NavigateBackAsync();
+        }
+
+        public Task SetStackNavigation()
+        {
+            DefaultReturnAction = NavigateBackCommand;
+
+            return Task.CompletedTask;
         }
     }
 }

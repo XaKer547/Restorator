@@ -4,6 +4,7 @@ using Restorator.Desktop.Dialogs;
 using Restorator.Desktop.Models;
 using Restorator.Desktop.ViewModels.Abstract;
 using Restorator.Domain.Models;
+using Restorator.Domain.Models.Reservations;
 using Restorator.Domain.Models.Restaurant;
 using Restorator.Domain.Services;
 using System.Collections.Immutable;
@@ -326,12 +327,14 @@ namespace Restorator.Desktop.ViewModels
                     if (confirm != ContentDialogResult.Primary)
                         return;
 
-                    var result = await _reservationService.GetReservationInfo(new GetReservationInfoDTO //TODO
-                    {
+                    var result = await _reservationService.GetReservationInfo(1);
+                   
+                    //new GetReservationInfoDTO //TODO
+                    //{
                         //RestaurantId = _restaurantId,
                         //ReservationStartDate = ReservationStartTime,
                         //ReservationEndDate = ReservationEndTime,
-                    });
+                    //});
 
                     if (result.IsFailed)
                     {

@@ -2,7 +2,7 @@
 using MailKit.Security;
 using MimeKit;
 using Restorator.API.Configuration;
-using Restorator.API.Models.Mail.Abstract;
+using Restorator.API.Models.MailTemplates.Abstract;
 
 namespace Restorator.API.Infrastructure
 {

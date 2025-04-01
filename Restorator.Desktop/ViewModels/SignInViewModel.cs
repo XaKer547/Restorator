@@ -1,8 +1,7 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using Restorator.Desktop.Session;
 using Restorator.Desktop.ViewModels.Abstract;
-using Restorator.Domain.Models;
+using Restorator.Domain.Models.Authorization;
 using Restorator.Domain.Services;
 using System.ComponentModel.DataAnnotations;
 using Wpf.Ui;
@@ -15,8 +14,6 @@ namespace Restorator.Desktop.ViewModels
         private readonly IAccountService _authenticationService;
         private readonly ISessionManager _sessionManager;
         private readonly ISnackbarService _snackbarService;
-
-
         public SignInViewModel(IAccountService authenticationService,
                                ISessionManager sessionManager,
                                ISnackbarService snackbarService)
@@ -63,7 +60,7 @@ namespace Restorator.Desktop.ViewModels
                 return;
             }
 
-            //_sessionManager.SetSession(result.Value!);
+            _sessionManager.SetSession(result.Value.SessionInfo, result.Value.Token);
 
             Authenticated = true;
 

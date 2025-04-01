@@ -1,7 +1,6 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Restorator.Desktop.Dialogs;
-using Restorator.Desktop.Session;
 using Restorator.Desktop.ViewModels.Abstract;
 using Restorator.Domain.Services;
 using Wpf.Ui;
@@ -76,14 +75,8 @@ namespace Restorator.Desktop.ViewModels
         [RelayCommand]
         public async Task OpenRestaurantReservation()
         {
-            if (!_sessionManager.TryGetSession(out var sessionInfo))
-            {
+            if (!_sessionManager.HaveSession())
                 await _navigationService.NavigateWithHierarchyAsync<AuthenticationViewModel>();
-
-                return;
-            }
-            
-            //check role? nah
 
             await _navigationService.NavigateWithHierarchyAsync<RestaurantReservationViewModel>(viewModel => viewModel.LoadRestaurantPlan(_restaurantId));
         }
@@ -91,7 +84,7 @@ namespace Restorator.Desktop.ViewModels
         [RelayCommand]
         public async Task ExpandRestaurantMenu()
         {
-            await _contentDialogService.ShowAsync(new ExpandedRestaurantMenuDialog(Menu), new CancellationToken());
+            await _contentDialogService.ShowAsync(new ExpandedRestaurantMenuDialog(Menu), CancellationToken.None);
         }
 
         [RelayCommand]
