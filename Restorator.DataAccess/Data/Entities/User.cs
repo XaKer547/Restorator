@@ -8,7 +8,7 @@
         public string Login { get; set; }
         public string Password { get; set; }
         public bool Verified { get; set; } = false;
-        public int? OTP { get; set; }
+        public string? OTP { get; set; }
         public virtual Role Role { get; set; }
 
         public ICollection<Reservation> Reservations { get; set; } = new HashSet<Reservation>();

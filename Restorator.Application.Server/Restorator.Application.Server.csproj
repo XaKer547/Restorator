@@ -13,6 +13,7 @@
   <ItemGroup>
     <ProjectReference Include="..\Restorator.DataAccess\Restorator.DataAccess.csproj" />
     <ProjectReference Include="..\Restorator.Domain\Restorator.Domain.csproj" />
+    <ProjectReference Include="..\Restorator.Mail\Restorator.Mail.csproj" />
   </ItemGroup>
 
 </Project>

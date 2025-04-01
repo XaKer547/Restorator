@@ -1,12 +1,13 @@
 ﻿using MailKit.Net.Smtp;
 using MailKit.Security;
 using MimeKit;
-using Restorator.API.Configuration;
-using Restorator.API.Models.MailTemplates.Abstract;
+using Restorator.Mail.Configuration;
+using Restorator.Mail.Models.Templates.Abstract;
+using Restorator.Mail.Services;
 
 namespace Restorator.API.Infrastructure
 {
-    public class MailService
+    public class MailService : IMailService
     {
         private readonly SmtpConfiguration _configuration;
         private readonly MailTemplateBuilder _mailTemplateBuilder;
@@ -17,7 +18,7 @@ namespace Restorator.API.Infrastructure
             _mailTemplateBuilder = mailTemplateBuilder;
         }
 
-        public async Task SendMailAsync(string email, MailTemplateBase mailTemplate)
+        public async Task SendMailAsync(MailTemplateBase mailTemplate)
         {
             using var message = new MimeMessage()
             {
@@ -30,11 +31,11 @@ namespace Restorator.API.Infrastructure
 
             message.From.Add(new MailboxAddress("Ресторатор", _configuration.Username));
 
-            message.To.Add(new MailboxAddress("Вы", email));
+            message.To.Add(new MailboxAddress("Вы", mailTemplate.Email));
 
             using var smtp = new SmtpClient()
             {
-                CheckCertificateRevocation = false
+                CheckCertificateRevocation = false //because of localhost
             };
 
             await smtp.ConnectAsync(_configuration.SmtpServer, _configuration.Port, SecureSocketOptions.Auto);

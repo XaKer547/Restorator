@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Restorator.Domain.Models.Account;
 using Restorator.Domain.Models.Authorization;
 using Restorator.Domain.Services;
 
@@ -10,20 +11,31 @@ namespace Restorator.API.Controllers
     public class AccountController : ControllerBase
     {
         private readonly IAccountService _accountService;
-        private readonly IMailService _mailService;
-        public AccountController(IAccountService accountService, IMailService mailService)
+        public AccountController(IAccountService accountService)
         {
             _accountService = accountService;
-            _mailService = mailService;
         }
 
-
-        [HttpGet("test")]
-        public async Task<IActionResult> Test()
+        [HttpGet("reset")]
+        public async Task<IActionResult> RequestPasswordReset([FromBody] string email)
         {
-            await _mailService.PrepareMesage();
+            var result = await _accountService.RequestPasswordReset(email);
+
+            if (result.IsFailed)
+                return BadRequest();
 
             return Ok();
+        }
+
+        [HttpPost("recover")]
+        public async Task<IActionResult> RecoverAccount(RecoverAccountDTO model)
+        {
+            var result = await _accountService.SignInAsync(model);
+
+            if (result.IsFailed)
+                return BadRequest();
+
+            return Ok(result.Value);
         }
 
         [HttpPost("signIn")]
@@ -58,6 +70,19 @@ namespace Restorator.API.Controllers
                 return BadRequest();
 
             return Ok(result.Value);
+        }
+
+        [Authorize]
+        [HttpPatch]
+        public async Task<IActionResult> UpdatePassword([FromBody] string password)
+        {
+            var result = await _accountService.UpdatePassword(password);
+
+            if (result.IsFailed)
+                return BadRequest();
+
+            return Ok();
+
         }
     }
 }
