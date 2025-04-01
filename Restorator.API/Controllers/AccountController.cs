@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Restorator.Domain.Models.Account;
 using Restorator.Domain.Models.Authorization;
 using Restorator.Domain.Services;
+using AuthorizationResult = Restorator.Domain.Models.Authorization.AuthorizationResult;
 
 namespace Restorator.API.Controllers
 {
@@ -17,6 +18,8 @@ namespace Restorator.API.Controllers
         }
 
         [HttpGet("reset")]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(400)]
         public async Task<IActionResult> RequestPasswordReset([FromBody] string email)
         {
             var result = await _accountService.RequestPasswordReset(email);
@@ -28,6 +31,8 @@ namespace Restorator.API.Controllers
         }
 
         [HttpPost("recover")]
+        [ProducesResponseType<AuthorizationResult>(200)]
+        [ProducesResponseType(400)]
         public async Task<IActionResult> RecoverAccount(RecoverAccountDTO model)
         {
             var result = await _accountService.SignInAsync(model);
@@ -39,6 +44,8 @@ namespace Restorator.API.Controllers
         }
 
         [HttpPost("signIn")]
+        [ProducesResponseType<AuthorizationResult>(200)]
+        [ProducesResponseType(400)]
         public async Task<IActionResult> SignIn(SignInDTO model)
         {
             var result = await _accountService.SignInAsync(model);
@@ -50,6 +57,8 @@ namespace Restorator.API.Controllers
         }
 
         [HttpPost("signUp")]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(400)]
         public async Task<IActionResult> SignUp(SignUpDTO model)
         {
             var result = await _accountService.SignUpAsync(model);
@@ -62,6 +71,9 @@ namespace Restorator.API.Controllers
 
         [Authorize]
         [HttpGet("info")]
+        [ProducesResponseType<SessionInfo>(200)]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(401)]
         public async Task<IActionResult> GetSessionInfo()
         {
             var result = await _accountService.GetSessionInfoAsync();
@@ -74,6 +86,9 @@ namespace Restorator.API.Controllers
 
         [Authorize]
         [HttpPatch]
+        [ProducesResponseType<SessionInfo>(200)]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(401)]
         public async Task<IActionResult> UpdatePassword([FromBody] string password)
         {
             var result = await _accountService.UpdatePassword(password);
@@ -82,7 +97,6 @@ namespace Restorator.API.Controllers
                 return BadRequest();
 
             return Ok();
-
         }
     }
 }

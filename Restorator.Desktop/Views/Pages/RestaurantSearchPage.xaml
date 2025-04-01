@@ -17,7 +17,7 @@
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
         <StackPanel>
-            <ui:AutoSuggestBox OriginalItemsSource="{Binding RestaurantsName}" 
+            <ui:AutoSuggestBox OriginalItemsSource="{Binding RestaurantsNames}" Text="{Binding SearchText, Mode=TwoWay}"
                            PlaceholderText="Введите название ресторана" DisplayMemberPath="Name">
                 <i:Interaction.Triggers>
                     <i:EventTrigger EventName="SuggestionChosen">

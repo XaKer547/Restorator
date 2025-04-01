@@ -21,7 +21,7 @@ namespace Restorator.Desktop.ViewModels
         }
 
         [ObservableProperty]
-        private IReadOnlyCollection<RestaurantSearchItemDTO> _restaurantsName;
+        private IReadOnlyCollection<RestaurantSearchItemDTO> _restaurantsNames = [];
 
         [ObservableProperty]
         private IReadOnlyCollection<RestaurantTagDTO> _restaurantsTag;
@@ -34,6 +34,36 @@ namespace Restorator.Desktop.ViewModels
 
         [ObservableProperty]
         private bool searching;
+
+        [ObservableProperty]
+        private string searchText;
+
+
+        private CancellationTokenSource? _searchTokenSource = null;
+        async partial void OnSearchTextChanging(string value)
+        {
+            if (value.Length < 1)
+                return;
+
+            if (value == string.Empty || string.IsNullOrWhiteSpace(value))
+                RestaurantsNames = [];
+
+            if (_searchTokenSource != null)
+                await _searchTokenSource.CancelAsync();
+
+            try
+            {
+                using (_searchTokenSource = _searchTokenSource ?? new CancellationTokenSource())
+                    await Task.Delay(10, _searchTokenSource.Token).ContinueWith(async tr =>
+                    {
+                        if (!tr.IsCanceled)
+                        {
+                            RestaurantsNames = await _restaurantService.SearchRestaurants(value);
+                        }
+                    });
+            }
+            finally { _searchTokenSource = null; }
+        }
 
         [RelayCommand(AllowConcurrentExecutions = false)]
         public async Task OpenRestaurantInfo(RestaurantPreviewDTO restaurantPreview)
@@ -65,7 +95,7 @@ namespace Restorator.Desktop.ViewModels
 
             _currentPage = 1;
 
-            RestaurantsName = await _restaurantService.GetRestaurantNames();
+            //RestaurantsName = await _restaurantService.GetRestaurantNames(); TODO
 
             RestaurantsTag = await _restaurantService.GetRestaurantsTags();
 

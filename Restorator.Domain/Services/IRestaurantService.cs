@@ -8,7 +8,7 @@ namespace Restorator.Domain.Services
     {
         Task<Result<int>> CreateRestaurant(CreateRestaurantDTO model);
         Task<Result<RestaurantInfoDTO>> GetRestaurantInfo(int restaurantId);
-        Task<IReadOnlyCollection<RestaurantSearchItemDTO>> GetRestaurantNames();
+        Task<IReadOnlyCollection<RestaurantSearchItemDTO>> SearchRestaurants(string? name, CancellationToken cancellationToken = default);
         Task<IReadOnlyCollection<RestaurantTagDTO>> GetRestaurantsTags();
         Task<IReadOnlyCollection<RestaurantPreviewDTO>> GetOwnedRestaurantPreviews();
         Task<PaginatedList<RestaurantPreviewDTO>> GetRestaurantPreviews(GetRestaurantsPreviewDTO model);

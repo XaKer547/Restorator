@@ -46,14 +46,14 @@ namespace Restorator.Application.Client.Services
 
         public async Task<Result<RestaurantInfoDTO>> GetRestaurantInfo(int restaurantId)
         {
-            var info = await _client.GetFromJsonAsync<RestaurantInfoDTO>($"{restaurantId}");
+            var info = await _client.GetFromJsonAsync<RestaurantInfoDTO>($"{restaurantId}/");
 
             return info.ToResultWithNullCheck();
         }
 
-        public async Task<IReadOnlyCollection<RestaurantSearchItemDTO>> GetRestaurantNames()
+        public async Task<IReadOnlyCollection<RestaurantSearchItemDTO>> SearchRestaurants(string? name, CancellationToken cancellationToken = default)
         {
-            var names = await _client.GetFromJsonAsync<IReadOnlyCollection<RestaurantSearchItemDTO>>("names");
+            var names = await _client.GetFromJsonAsync<IReadOnlyCollection<RestaurantSearchItemDTO>>($"search?name={name}", cancellationToken);
 
             return names ?? [];
         }
@@ -67,7 +67,7 @@ namespace Restorator.Application.Client.Services
             if (model.Filter is not null)
                 filterQuery = model.Filter.ToQueryString();
 
-            var previews = await _client.GetFromJsonAsync<PaginatedList<RestaurantPreviewDTO>>($"search?{paginationQuery}&{filterQuery}");
+            var previews = await _client.GetFromJsonAsync<PaginatedList<RestaurantPreviewDTO>>($"?{paginationQuery}&{filterQuery}");
 
             return previews ?? PaginatedList<RestaurantPreviewDTO>.Empty();
         }

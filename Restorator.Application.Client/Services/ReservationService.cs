@@ -50,7 +50,7 @@ namespace Restorator.Application.Client.Services
 
         public async Task<Result<RestaurantPlanDTO>> GetRestaurantReservationPlan(GetRestaurantPlanDTO model)
         {
-            var plan = await _client.GetFromJsonAsync<RestaurantPlanDTO>($"{model.RestaurantId}/plan?ReservationStartDate={model.ReservationStartDate}&ReservationEndDate={model.ReservationEndDate}"); 
+            var plan = await _client.GetFromJsonAsync<RestaurantPlanDTO>($"{model.RestaurantId}/plan?ReservationStartDate={model.ReservationStartDate}&ReservationEndDate={model.ReservationEndDate}");
 
             return plan.ToResultWithNullCheck();
         }

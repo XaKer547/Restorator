@@ -1,9 +1,9 @@
-﻿using System.Net.Http.Json;
-using FluentResults;
+﻿using FluentResults;
 using Restorator.Application.Client.Extensions;
 using Restorator.Domain.Models.Account;
 using Restorator.Domain.Models.Authorization;
 using Restorator.Domain.Services;
+using System.Net.Http.Json;
 
 namespace Restorator.Application.Client.Services
 {
@@ -49,6 +49,8 @@ namespace Restorator.Application.Client.Services
 
             if (result is null)
                 return Result.Fail("");
+
+            _client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", result.Token);
 
             _sessionManager.SetSession(result.SessionInfo, result.Token);
 

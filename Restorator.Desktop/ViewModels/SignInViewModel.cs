@@ -45,13 +45,11 @@ namespace Restorator.Desktop.ViewModels
                 return;
             }
 
-            var signInDto = new SignInDTO()
+            var result = await _authenticationService.SignInAsync(new SignInDTO()
             {
                 Login = Login,
                 Password = Password
-            };
-
-            var result = await _authenticationService.SignInAsync(signInDto);
+            });
 
             if (!result.IsSuccess)
             {
@@ -59,8 +57,6 @@ namespace Restorator.Desktop.ViewModels
 
                 return;
             }
-
-            _sessionManager.SetSession(result.Value.SessionInfo, result.Value.Token);
 
             Authenticated = true;
 

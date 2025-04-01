@@ -18,6 +18,9 @@ namespace Restorator.API.Controllers
 
 
         [HttpGet("{restaurantId:int}/plan"), Authorize(Roles = "User")]
+        [ProducesResponseType<RestaurantPlanDTO>(200)]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(401)]
         public async Task<IActionResult> GetRestaurantReservationPlan(int restaurantId, DateTime reservationStartDate, DateTime reservationEndDate)
         {
             var result = await _reservationService.GetRestaurantReservationPlan(new GetRestaurantPlanDTO() 
@@ -35,6 +38,9 @@ namespace Restorator.API.Controllers
 
 
         [HttpGet("filter"), Authorize(Roles = "User")]
+        [ProducesResponseType<IReadOnlyCollection<ReservationInfoDTO>>(200)]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(401)]
         public async Task<IActionResult> GetReservations([FromQuery] GetReservationsDTO model)
         {
             var result = await _reservationService.GetReservations(model);
@@ -47,12 +53,12 @@ namespace Restorator.API.Controllers
 
 
         [HttpGet("{reservationId:int}"), Authorize(Roles = "User")]
+        [ProducesResponseType<ReservationInfoDTO>(200)]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(401)]
         public async Task<IActionResult> GetReservation(int reservationId)
         {
-            var result = await _reservationService.GetReservationInfo(new GetReservationInfoDTO()
-            {
-                ReservationId = reservationId
-            });
+            var result = await _reservationService.GetReservationInfo(reservationId);
 
             if (result.IsFailed)
                 return BadRequest(result.Errors);
@@ -62,6 +68,9 @@ namespace Restorator.API.Controllers
 
 
         [HttpPost, Authorize(Roles = "User")]
+        [ProducesResponseType<int>(200)]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(401)]
         public async Task<IActionResult> ReserveTables(CreateRestaurantReservationDTO model)
         {
             var result = await _reservationService.CreateReservation(model);
@@ -74,6 +83,9 @@ namespace Restorator.API.Controllers
 
 
         [HttpHead("{reservationId:int}/cancel"), Authorize(Roles = "User,Manager")]
+        [ProducesResponseType<int>(200)]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(401)]
         public async Task<IActionResult> CancelReservation(int reservationId)
         {
             var result = await _reservationService.CancelReservation(reservationId);

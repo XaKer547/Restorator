@@ -148,14 +148,15 @@ namespace Restorator.Application.Server.Services
 
             return Result.Ok(info);
         }
-        public async Task<IReadOnlyCollection<RestaurantSearchItemDTO>> GetRestaurantNames()
+        public async Task<IReadOnlyCollection<RestaurantSearchItemDTO>> SearchRestaurants(string? name, CancellationToken cancellationToken = default)
         {
             return await _context.Restaurants.AsNoTracking()
                                              .Select(r => new RestaurantSearchItemDTO()
                                              {
                                                  Id = r.Id,
                                                  Name = r.Name,
-                                             }).ToArrayAsync();
+                                             }).Where(x => x.Name.Contains(name ?? string.Empty))
+                                             .ToArrayAsync(cancellationToken);
         }
         public async Task<IReadOnlyCollection<RestaurantTagDTO>> GetRestaurantsTags()
         {

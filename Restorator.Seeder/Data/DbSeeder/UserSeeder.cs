@@ -19,6 +19,7 @@ namespace Restorator.Seeder.Data.DbSeeder
                     Role = _context.Roles.FromEnum(Roles.User),
                     Username = "Шелкопряд Тутовый",
                     Login = "Silk",
+                    Verified = true,
                     Password = AccountPasswordHelper.HashUserPassword("MasterPassword")
                 },
                 new()
@@ -26,6 +27,7 @@ namespace Restorator.Seeder.Data.DbSeeder
                     Role = _context.Roles.FromEnum(Roles.Admin),
                     Username = "Cool adm",
                     Login = "admin",
+                    Verified = true,
                     Password = AccountPasswordHelper.HashUserPassword("admin")
                 },
                 new()
@@ -33,6 +35,7 @@ namespace Restorator.Seeder.Data.DbSeeder
                     Role = _context.Roles.FromEnum(Roles.Manager),
                     Username = "Манагер",
                     Login = "Manager",
+                    Verified = true,
                     Password = AccountPasswordHelper.HashUserPassword("Manager")
                 }
             };
