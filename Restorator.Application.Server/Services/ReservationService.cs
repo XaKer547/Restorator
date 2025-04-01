@@ -1,15 +1,15 @@
-﻿using FluentResults;
+﻿using System.Collections.Immutable;
+using FluentResults;
 using LinqKit;
 using Microsoft.EntityFrameworkCore;
 using Restorator.DataAccess.Data;
 using Restorator.DataAccess.Data.Entities;
-using Restorator.DataAccess.Data.Entities.Enums;
-using Restorator.Domain.Models;
 using Restorator.Domain.Models.Enums;
 using Restorator.Domain.Models.Reservations;
 using Restorator.Domain.Models.Restaurant;
 using Restorator.Domain.Services;
-using System.Collections.Immutable;
+using Restorator.Mail.Models.Templates;
+using Restorator.Mail.Services;
 using Roles = Restorator.DataAccess.Data.Entities.Enums.Roles;
 
 namespace Restorator.Application.Server.Services
@@ -18,11 +18,14 @@ namespace Restorator.Application.Server.Services
     {
         private readonly RestoratorDbContext _context;
         private readonly IUserManager _userManager;
+        private readonly IMailService _mailService;
         public ReservationService(RestoratorDbContext context,
-                                  IUserManager userManager)
+                                  IUserManager userManager,
+                                  IMailService mailService)
         {
             _context = context;
             _userManager = userManager;
+            _mailService = mailService;
         }
 
         public async Task<Result> CancelReservation(int reservationId)
@@ -43,7 +46,18 @@ namespace Restorator.Application.Server.Services
             if (user is null)
                 return Result.Fail("Пользователь не найден");
 
-            if (user.Role != Roles.Manager || reseravation.User.Id != user.Id)
+            if (user.Role == Roles.Manager)
+            {
+                var template = await _context.Reservations.AsNoTracking()
+                                                          .Where(r => r.Id == reservationId)
+                                                          .Select(r => new ReservationCanceledMailTemplate(r.User.Email,
+                                                                                                           r.User.Username,
+                                                                                                           r.ReservationStart,
+                                                                                                           r.Restaurant.Name)).SingleAsync();
+
+                await _mailService.SendMailAsync(template);
+            }
+            else if (reseravation.User.Id != user.Id)
                 return Result.Fail("Недостаточно прав для отмены бронирования");
 
             reseravation.Canceled = true;

@@ -1,4 +1,4 @@
-﻿namespace Restorator.API.Configuration
+﻿namespace Restorator.Mail.Configuration
 {
     public class SmtpConfiguration
     {

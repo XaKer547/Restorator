@@ -1,4 +1,4 @@
-﻿using Restorator.API.Models.Mail.Abstract;
+﻿using Restorator.Mail.Models.Templates.Abstract;
 
 namespace Restorator.API.Infrastructure
 {
@@ -23,11 +23,5 @@ namespace Restorator.API.Infrastructure
 
             return body;
         }
-
-        public MimeMEssa
-
-
-
-
     }
 }

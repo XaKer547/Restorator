@@ -1,8 +1,9 @@
-﻿using FluentResults;
+﻿using System.Net.Http.Json;
+using FluentResults;
 using Restorator.Application.Client.Extensions;
+using Restorator.Domain.Models.Account;
 using Restorator.Domain.Models.Authorization;
 using Restorator.Domain.Services;
-using System.Net.Http.Json;
 
 namespace Restorator.Application.Client.Services
 {
@@ -23,6 +24,16 @@ namespace Restorator.Application.Client.Services
 
             return sessionInfo.ToResultWithNullCheck();
         }
+
+        public async Task<Result> RequestPasswordReset(string email)
+        {
+            var request = new HttpRequestMessage(HttpMethod.Head, "reset");
+
+            var response = await _client.SendAsync(request);
+
+            return await response.AsResult();
+        }
+
         public async Task<Result<AuthorizationResult>> SignInAsync(SignInDTO model)
         {
             var response = await _client.PostAsJsonAsync("signin", model);
@@ -43,9 +54,38 @@ namespace Restorator.Application.Client.Services
 
             return result;
         }
+
+        public async Task<Result<AuthorizationResult>> SignInAsync(RecoverAccountDTO model)
+        {
+            var response = await _client.PostAsJsonAsync("recover", model);
+
+            if (!response.IsSuccessStatusCode)
+            {
+                var error = await response.Content.ReadAsStringAsync();
+
+                return Result.Fail(error);
+            }
+
+            var result = await response.Content.ReadFromJsonAsync<AuthorizationResult>();
+
+            if (result is null)
+                return Result.Fail("");
+
+            _sessionManager.SetSession(result.SessionInfo, result.Token);
+
+            return result;
+        }
+
         public async Task<Result> SignUpAsync(SignUpDTO model)
         {
             var response = await _client.PostAsJsonAsync("signup", model);
+
+            return await response.AsResult();
+        }
+
+        public async Task<Result> UpdatePassword(string password)
+        {
+            var response = await _client.PatchAsJsonAsync(string.Empty, password);
 
             return await response.AsResult();
         }
