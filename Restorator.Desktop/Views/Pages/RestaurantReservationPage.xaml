@@ -17,6 +17,7 @@
     <Page.Resources>
         <converters:DoubleToAngleConverter x:Key="doubleAngeConverter"/>
         <converters:DateTimeToHoursLimitConverter x:Key="dateTimeToHoursLimitConverter"/>
+        <sys:Int32 x:Key="hourSpace">1</sys:Int32>
     </Page.Resources>
 
     <DockPanel>
@@ -116,7 +117,7 @@
                         <ui:TextBlock Text="{Binding ReservationEndTime, StringFormat=m}" FontTypography="Caption" HorizontalAlignment="Center"/>
                         <controls:TimePicker SelectedDateTime="{Binding ReservationEndTime}">
                             <controls:TimePicker.SourceHours>
-                                <MultiBinding Converter="{StaticResource dateTimeToHoursLimitConverter}" UpdateSourceTrigger="PropertyChanged">
+                                <MultiBinding Converter="{StaticResource dateTimeToHoursLimitConverter}" ConverterParameter="{StaticResource hourSpace}" UpdateSourceTrigger="PropertyChanged">
                                     <Binding Path="ReservationStartTime" />
                                     <Binding Path="EndWorkTime" />
                                 </MultiBinding>

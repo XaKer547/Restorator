@@ -9,6 +9,9 @@ namespace Restorator.Desktop.Converters
         {
             if (values[0] is DateTime beginLimit && values[1] is DateTime endLimit)
             {
+                if (parameter is int hour)
+                    beginLimit = beginLimit.AddHours(hour);
+
                 var count = endLimit.AddHours(-beginLimit.Hour).Hour;
 
                 var requiredRange = Enumerable.Range(beginLimit.Hour, count);
@@ -31,7 +34,6 @@ namespace Restorator.Desktop.Converters
 
             return Enumerable.Range(0, 23);
         }
-
 
         public object[] ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture)
         {

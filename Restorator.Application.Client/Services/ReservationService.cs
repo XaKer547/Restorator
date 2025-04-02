@@ -43,7 +43,7 @@ namespace Restorator.Application.Client.Services
         {
             var queryString = model.ToQueryString();
 
-            var reservations = await _client.GetFromJsonAsync<IReadOnlyCollection<ReservationInfoDTO>>($"filter?{queryString}");
+            var reservations = await _client.GetFromJsonAsync<IReadOnlyCollection<ReservationInfoDTO>>($"?{queryString}");
 
             return reservations.ToResultWithNullCheck();
         }

@@ -6,16 +6,27 @@ using Restorator.Domain.Services;
 
 namespace Restorator.API.Controllers
 {
+    /// <summary>
+    /// Контроллер управления бронированием
+    /// </summary>
     [Authorize]
     [ApiController, Route("api/[Controller]")]
     public class ReservationController : ControllerBase
     {
         private readonly IReservationService _reservationService;
+
+        /// <inheritdoc/>
         public ReservationController(IReservationService reservationService)
         {
             _reservationService = reservationService;
         }
 
+        /// <summary>
+        /// Получить схему бронирования ресторана
+        /// </summary>
+        /// <param name="restaurantId">Идентификатор ресторана</param>
+        /// <param name="reservationStartDate">Начало бронирования</param>
+        /// <param name="reservationEndDate">Конец бронирования</param>
 
         [HttpGet("{restaurantId:int}/plan"), Authorize(Roles = "User")]
         [ProducesResponseType<RestaurantPlanDTO>(200)]
@@ -23,7 +34,7 @@ namespace Restorator.API.Controllers
         [ProducesResponseType(401)]
         public async Task<IActionResult> GetRestaurantReservationPlan(int restaurantId, DateTime reservationStartDate, DateTime reservationEndDate)
         {
-            var result = await _reservationService.GetRestaurantReservationPlan(new GetRestaurantPlanDTO() 
+            var result = await _reservationService.GetRestaurantReservationPlan(new GetRestaurantPlanDTO()
             {
                 RestaurantId = restaurantId,
                 ReservationStartDate = reservationStartDate,
@@ -37,7 +48,12 @@ namespace Restorator.API.Controllers
         }
 
 
-        [HttpGet("filter"), Authorize(Roles = "User")]
+        /// <summary>
+        /// Получить бронирования
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
+        [HttpGet, Authorize(Roles = "User")]
         [ProducesResponseType<IReadOnlyCollection<ReservationInfoDTO>>(200)]
         [ProducesResponseType(400)]
         [ProducesResponseType(401)]
@@ -52,6 +68,11 @@ namespace Restorator.API.Controllers
         }
 
 
+        /// <summary>
+        /// Получить сведения о бронировании
+        /// </summary>
+        /// <param name="reservationId">Идентификатор бронирования</param>
+        /// <returns></returns>
         [HttpGet("{reservationId:int}"), Authorize(Roles = "User")]
         [ProducesResponseType<ReservationInfoDTO>(200)]
         [ProducesResponseType(400)]
@@ -67,6 +88,10 @@ namespace Restorator.API.Controllers
         }
 
 
+        /// <summary>
+        /// Создать бронь
+        /// </summary>
+        /// <param name="model"></param>
         [HttpPost, Authorize(Roles = "User")]
         [ProducesResponseType<int>(200)]
         [ProducesResponseType(400)]
@@ -82,6 +107,10 @@ namespace Restorator.API.Controllers
         }
 
 
+        /// <summary>
+        /// Отменить бронь
+        /// </summary>
+        /// <param name="reservationId">Идентификатор бронирования</param>
         [HttpHead("{reservationId:int}/cancel"), Authorize(Roles = "User,Manager")]
         [ProducesResponseType<int>(200)]
         [ProducesResponseType(400)]

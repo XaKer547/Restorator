@@ -3,7 +3,6 @@ using CommunityToolkit.Mvvm.Input;
 using Restorator.Desktop.Dialogs;
 using Restorator.Desktop.Models;
 using Restorator.Desktop.ViewModels.Abstract;
-using Restorator.Domain.Models;
 using Restorator.Domain.Models.Reservations;
 using Restorator.Domain.Models.Restaurant;
 using Restorator.Domain.Services;
@@ -155,11 +154,11 @@ namespace Restorator.Desktop.ViewModels
 
         async partial void OnReservationStartTimeChanged(DateTime value)
         {
-            if (ReservationStartTime > ReservationEndTime)
+            if (ReservationStartTime >= ReservationEndTime)
             {
                 _waitingRefresh = true;
 
-                ReservationEndTime = ReservationStartTime;
+                ReservationEndTime = ReservationStartTime.AddHours(1);
 
                 _waitingRefresh = false;
 
@@ -328,12 +327,12 @@ namespace Restorator.Desktop.ViewModels
                         return;
 
                     var result = await _reservationService.GetReservationInfo(1);
-                   
+
                     //new GetReservationInfoDTO //TODO
                     //{
-                        //RestaurantId = _restaurantId,
-                        //ReservationStartDate = ReservationStartTime,
-                        //ReservationEndDate = ReservationEndTime,
+                    //RestaurantId = _restaurantId,
+                    //ReservationStartDate = ReservationStartTime,
+                    //ReservationEndDate = ReservationEndTime,
                     //});
 
                     if (result.IsFailed)
