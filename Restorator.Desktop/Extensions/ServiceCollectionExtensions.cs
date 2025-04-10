@@ -42,7 +42,7 @@ namespace Restorator.Desktop.Extensions
         {
             Action<IServiceProvider, HttpClient, string?> configureClient = (provider, client, endpoint) =>
             {
-                client.BaseAddress = new Uri($"https://localhost:7090/api/{endpoint}");
+                client.BaseAddress = new Uri($"https://10.173.99.217:7090/api/{endpoint}");
 
                 var manager = provider.GetRequiredService<ISessionManager>();
 
@@ -50,9 +50,24 @@ namespace Restorator.Desktop.Extensions
                     client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
             };
 
-            services.AddHttpClient<IAccountService, AccountService>((provider, client) => configureClient.Invoke(provider, client, "account/"));
-            services.AddHttpClient<IRestaurantService, RestaurantService>((provider, client) => configureClient.Invoke(provider, client, "restaurant/"));
-            services.AddHttpClient<IReservationService, ReservationService>((provider, client) => configureClient.Invoke(provider, client, "reservation/"));
+            Func<HttpClientHandler> configureHandler = () =>
+            {
+                var handler = new HttpClientHandler();
+#if DEBUG
+                handler.ServerCertificateCustomValidationCallback = (message, cert, chain, errors) => { return true; };
+#endif
+                return handler;
+            };
+
+
+            services.AddHttpClient<IAccountService, AccountService>((provider, client) => configureClient.Invoke(provider, client, "account/"))
+                    .ConfigurePrimaryHttpMessageHandler(configureHandler);
+
+            services.AddHttpClient<IRestaurantService, RestaurantService>((provider, client) => configureClient.Invoke(provider, client, "restaurant/"))
+                    .ConfigurePrimaryHttpMessageHandler(configureHandler);
+
+            services.AddHttpClient<IReservationService, ReservationService>((provider, client) => configureClient.Invoke(provider, client, "reservation/"))
+                    .ConfigurePrimaryHttpMessageHandler(configureHandler);
 
             return services;
         }
