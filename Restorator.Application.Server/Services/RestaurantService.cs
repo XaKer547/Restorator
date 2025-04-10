@@ -34,14 +34,15 @@ namespace Restorator.Application.Server.Services
                                                  Id = r.Id,
                                                  Name = r.Name,
                                                  Image = r.Image,
-                                             }).ToArrayAsync();
+                                             }).ToListAsync();
         }
         public async Task<Result> ChangeRestaurantApproval(ChangeRestaurantApprovalDTO model)
         {
             if (!_userManager.TryGetUserId(out var userId))
                 return Result.Fail("Не удалось получить id пользователя");
 
-            var user = await _context.Users.Include(u => u.Role)
+            var user = await _context.Users.AsNoTracking()
+                                           .Include(u => u.Role)
                                            .SingleOrDefaultAsync(u => u.Id == userId);
 
             if (user is null)
@@ -94,12 +95,14 @@ namespace Restorator.Application.Server.Services
             if (!_userManager.TryGetUserId(out var userId))
                 return Result.Fail("Не удалось получить id пользователя");
 
-            var user = await _context.Users.SingleOrDefaultAsync(u => u.Id == userId);
+            var user = await _context.Users.AsNoTracking()
+                                           .SingleOrDefaultAsync(u => u.Id == userId);
 
             if (user == null)
                 return Result.Fail("Пользователя не существует");
 
-            var tags = _context.RestaurantTags.Where(t => model.Tags.Contains(t.Id));
+            var tags = _context.RestaurantTags.AsNoTracking()
+                                              .Where(t => model.Tags.Contains(t.Id));
 
             var restaurant = new Restaurant()
             {
@@ -122,31 +125,29 @@ namespace Restorator.Application.Server.Services
         }
         public async Task<Result<RestaurantInfoDTO>> GetRestaurantInfo(int restaurantId)
         {
-            var restaurant = await _context.Restaurants.Include(r => r.Tags)
-                                                       .AsNoTracking()
+            var restaurant = await _context.Restaurants.AsNoTracking()
+                                                       .Select(restaurant => new RestaurantInfoDTO()
+                                                       {
+                                                           Id = restaurant.Id,
+                                                           Image = restaurant.Image,
+                                                           Menu = restaurant.MenuImage,
+                                                           Name = restaurant.Name,
+                                                           Approved = restaurant.Approved,
+                                                           Description = restaurant.Description,
+                                                           BeginWorkTime = restaurant.BeginWorkTime,
+                                                           EndWorkTime = restaurant.EndWorkTime,
+                                                           Tags = restaurant.Tags.Select(t => new RestaurantTagDTO()
+                                                           {
+                                                               Id = t.Id,
+                                                               Name = t.Name,
+                                                           })
+                                                       })
                                                        .SingleOrDefaultAsync(r => r.Id == restaurantId);
 
             if (restaurant is null)
                 return Result.Fail("Ресторан не найден");
 
-            var info = new RestaurantInfoDTO()
-            {
-                Id = restaurant.Id,
-                Image = restaurant.Image,
-                Menu = restaurant.MenuImage,
-                Name = restaurant.Name,
-                Approved = restaurant.Approved,
-                Description = restaurant.Description,
-                BeginWorkTime = restaurant.BeginWorkTime,
-                EndWorkTime = restaurant.EndWorkTime,
-                Tags = restaurant.Tags.Select(t => new RestaurantTagDTO()
-                {
-                    Id = t.Id,
-                    Name = t.Name,
-                })
-            };
-
-            return Result.Ok(info);
+            return Result.Ok(restaurant);
         }
         public async Task<IReadOnlyCollection<RestaurantSearchItemDTO>> SearchRestaurants(string? name, CancellationToken cancellationToken = default)
         {
@@ -156,7 +157,7 @@ namespace Restorator.Application.Server.Services
                                                  Id = r.Id,
                                                  Name = r.Name,
                                              }).Where(x => x.Name.Contains(name ?? string.Empty))
-                                             .ToArrayAsync(cancellationToken);
+                                             .ToListAsync(cancellationToken);
         }
         public async Task<IReadOnlyCollection<RestaurantTagDTO>> GetRestaurantsTags()
         {
@@ -165,7 +166,7 @@ namespace Restorator.Application.Server.Services
                                                 {
                                                     Id = r.Id,
                                                     Name = r.Name,
-                                                }).ToArrayAsync();
+                                                }).ToListAsync();
         }
         public async Task<Result> DeleteRestaurant(int restaurantId)
         {
@@ -188,9 +189,6 @@ namespace Restorator.Application.Server.Services
             if (!_userManager.TryGetUserId(out var userId))
                 return Result.Fail("Не удалось получить id пользователя");
 
-            //var restaurant = await _context.Restaurants.Include(r => r.Tags)
-            //                                           .SingleOrDefaultAsync(r => r.Id == updateRestraurant.RestaurantId);
-
             var result = await GetRestaurantByPrivileges(model.RestaurantId, userId, Roles.Admin, Roles.Manager);
 
             if (result.IsFailed)
@@ -208,7 +206,8 @@ namespace Restorator.Application.Server.Services
 
             restaurant.MenuImage = model.Menu;
 
-            var tags = await _context.RestaurantTags.Where(t => model.Tags.Contains(t.Id))
+            var tags = await _context.RestaurantTags.AsNoTracking()
+                                                    .Where(t => model.Tags.Contains(t.Id))
                                                     .ToListAsync();
 
             restaurant.Tags.Clear();
@@ -229,16 +228,18 @@ namespace Restorator.Application.Server.Services
         }
         public async Task<IReadOnlyCollection<RestaurantTemplateDTO>> GetRestaurantTemplates()
         {
-            return await _context.RestaurantTemplates.Select(t => new RestaurantTemplateDTO
-            {
-                Id = t.Id,
-                Image = t.Image,
-            }).ToListAsync();
+            return await _context.RestaurantTemplates.AsNoTracking()
+                                                     .Select(t => new RestaurantTemplateDTO
+                                                     {
+                                                         Id = t.Id,
+                                                         Image = t.Image,
+                                                     }).ToListAsync();
         }
 
         private async Task<Result<Restaurant>> GetRestaurantByPrivileges(int restaurantId, int userId, params Roles[] roles)
         {
-            var user = await _context.Users.Include(x => x.Role)
+            var user = await _context.Users.AsNoTracking()
+                                           .Include(x => x.Role)
                                            .SingleOrDefaultAsync(u => u.Id == userId);
 
             if (user is null)
@@ -256,6 +257,21 @@ namespace Restorator.Application.Server.Services
                 return Result.Fail("Недостаточно прав для выполнения операции");
 
             return restaurant;
+        }
+
+        public async Task<IReadOnlyCollection<RestaurantPreviewDTO>> GetLatestVisited() //latest = 30 days
+        {
+            if (!_userManager.TryGetUserId(out var userId))
+                return [];
+
+            return await _context.Reservations.AsNoTracking()
+                .Where(r => r.User.Id == userId && DateTime.Today.Month < r.ReservationEnd.Month + 1)
+                .Select(r => new RestaurantPreviewDTO
+                {
+                    Id = r.Restaurant.Id,
+                    Name = r.Restaurant.Name,
+                    Image = r.Restaurant.Image,
+                }).ToListAsync();
         }
     }
 }

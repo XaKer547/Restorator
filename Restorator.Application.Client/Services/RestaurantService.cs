@@ -1,10 +1,10 @@
-﻿using FluentResults;
+﻿using System.Net.Http.Json;
+using FluentResults;
 using Restorator.Application.Client.Extensions;
 using Restorator.Application.Client.Helpers;
 using Restorator.Domain.Models;
 using Restorator.Domain.Models.Restaurant;
 using Restorator.Domain.Services;
-using System.Net.Http.Json;
 
 namespace Restorator.Application.Client.Services
 {
@@ -91,6 +91,13 @@ namespace Restorator.Application.Client.Services
             var response = await _client.PutAsJsonAsync(string.Empty, model);
 
             return await response.AsResult();
+        }
+
+        public async Task<IReadOnlyCollection<RestaurantPreviewDTO>> GetLatestVisited()
+        {
+            var tags = await _client.GetFromJsonAsync<IReadOnlyCollection<RestaurantPreviewDTO>>("latest");
+
+            return tags ?? [];
         }
     }
 }

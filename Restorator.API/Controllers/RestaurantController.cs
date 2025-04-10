@@ -13,7 +13,7 @@ namespace Restorator.API.Controllers
     public class RestaurantController : ControllerBase
     {
         private readonly IRestaurantService _restaurantService;
-        
+
         /// <inheritdoc/>
         public RestaurantController(IRestaurantService restaurantService)
         {
@@ -32,6 +32,21 @@ namespace Restorator.API.Controllers
             var names = await _restaurantService.SearchRestaurants(name, cancellationToken);
 
             return Ok(names);
+        }
+
+
+        /// <summary>
+        /// Получить полсдение посещеные рестораны
+        /// </summary>
+        /// <returns></returns>
+        [ProducesResponseType<IReadOnlyCollection<RestaurantPreviewDTO>>(200)]
+        [ProducesResponseType(401)]
+        [HttpGet("latest"), Authorize(Roles = "User")]
+        public async Task<IActionResult> SearchRestaurants()
+        {
+            var restaurants = await _restaurantService.GetLatestVisited();
+
+            return Ok(restaurants);
         }
 
 

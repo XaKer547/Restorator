@@ -16,5 +16,6 @@ namespace Restorator.Domain.Services
         Task<Result> DeleteRestaurant(int restaurantId);
         Task<Result> UpdateRestaurant(UpdateRestraurantDTO model);
         Task<IReadOnlyCollection<RestaurantTemplateDTO>> GetRestaurantTemplates();
+        Task<IReadOnlyCollection<RestaurantPreviewDTO>> GetLatestVisited();
     }
 }
