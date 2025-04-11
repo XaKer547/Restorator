@@ -22,9 +22,9 @@ namespace Restorator.Desktop.Views.Windows
             contentDialogService.SetDialogHost(RootContentDialog);
             snackbarService.SetSnackbarPresenter(SnackbarPresenter);
 
-            navigationService.Navigate<MenuViewModel>();
+            //navigationService.Navigate<MenuViewModel>();
 
-            //navigationService.Navigate<RestaurantTemplateGeneratorViewModel>();
+            navigationService.Navigate<RestaurantTemplateGeneratorViewModel>();
         }
     }
 }

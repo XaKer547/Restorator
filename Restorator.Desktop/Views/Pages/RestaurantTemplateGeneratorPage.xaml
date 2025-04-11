@@ -103,11 +103,11 @@
         <StackPanel Margin="20,0">
             <ui:TextBlock FontTypography="Title" Text="Шаблон стола"/>
 
-            <DockPanel>
+            <WrapPanel>
                 <ui:Button Appearance="Info" Content="Квадрат" Command="{Binding SetSelectedTableSquareCommand}"/>
-                <ui:Button Appearance="Info" Content="Квадрат(мини)" Margin="10,0" Command="{Binding SetSelectedTableMiniSquareCommand}"/>
+                <ui:Button Appearance="Info" Content="Квадрат(мини)"  Command="{Binding SetSelectedTableMiniSquareCommand}"/>
                 <ui:Button Appearance="Info" Content="Прямоугольник" Command="{Binding SetSelectedTableRectanleCommand}"/>
-            </DockPanel>
+            </WrapPanel>
         </StackPanel>
     </DockPanel>
 

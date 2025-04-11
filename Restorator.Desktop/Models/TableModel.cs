@@ -24,5 +24,10 @@ namespace Restorator.Desktop.Models
 
         [ObservableProperty]
         private double width;
+
+        [ObservableProperty]
+        private int templateId;
+        private int TemplateModifierId => (int)(Rotation / 45);
+        public int GetTemplateId() => TemplateId + TemplateModifierId;
     }
 }

@@ -1,11 +1,11 @@
-﻿using CommunityToolkit.Mvvm.ComponentModel;
+﻿using System.Collections.ObjectModel;
+using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Restorator.Desktop.Dialogs;
 using Restorator.Desktop.ViewModels.Abstract;
 using Restorator.Desktop.Views.Pages;
 using Restorator.Domain.Models.Enums;
 using Restorator.Domain.Services;
-using System.Collections.ObjectModel;
 using Wpf.Ui;
 using Wpf.Ui.Controls;
 
@@ -88,6 +88,7 @@ namespace Restorator.Desktop.ViewModels
             if (_role == Roles.Admin)
             {
                 MenuItems.Add(new NavigationViewItem("Заявки", SymbolRegular.TaskListRtl20, typeof(RestaurantsVerificationPage)));
+                MenuItems.Add(new NavigationViewItem("Редактор схем", SymbolRegular.TaskListRtl20, typeof(RestaurantTemplateGeneratorPage)));
             }
 
             if (_role is null)

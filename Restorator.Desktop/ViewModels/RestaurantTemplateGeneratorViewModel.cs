@@ -1,19 +1,19 @@
-﻿using CommunityToolkit.Mvvm.ComponentModel;
-using CommunityToolkit.Mvvm.Input;
-using Restorator.Desktop.Models;
-using Restorator.Desktop.ViewModels.Abstract;
-using System.Collections.ObjectModel;
+﻿using System.Collections.ObjectModel;
 using System.Globalization;
 using System.IO;
 using System.Text;
 using System.Windows;
+using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
+using Restorator.Desktop.Models;
+using Restorator.Desktop.ViewModels.Abstract;
 
 namespace Restorator.Desktop.ViewModels
 {
     public partial class RestaurantTemplateGeneratorViewModel : ViewModelBase
     {
         private const string SchemeLocation =
-            "F:\\Restorator\\Restorator.Seeder\\Resources\\RestaurantsPlan";
+            "C:\\Users\\user\\source\\repos\\XaKer547\\Restorator\\Restorator.Seeder\\Resources\\RestaurantsPlan";
 
         //тут свой путь к сидеру пиши
 
@@ -22,6 +22,13 @@ namespace Restorator.Desktop.ViewModels
 
         [ObservableProperty]
         private ObservableCollection<TemplateModel> templates = [];
+
+        [ObservableProperty]
+        private ObservableCollection<TableModel> tableTemplates = [];
+
+        [ObservableProperty]
+        private TableModel selectedTableTempate;
+
 
         [ObservableProperty]
         private TableModel? selectedTable;
@@ -68,6 +75,7 @@ namespace Restorator.Desktop.ViewModels
                 X = 0,
                 Y = 0,
                 State = Domain.Models.Enums.TableStates.OccupiedByUser,
+                TemplateId = 1,
                 Rotation = 0,
                 Height = 183,
                 Width = 183,
@@ -155,21 +163,8 @@ namespace Restorator.Desktop.ViewModels
             {
                 script.AppendLine("\t\t\tnew Table()\n\t\t\t{");
 
-                int templateId;
 
-                if (table.Width == 183 && table.Height == 183) // надо бы сделать это по другому(
-                    templateId = 1;
-                else if (table.Width == 183 && table.Height == 110)
-                    templateId = 4;
-                else
-                    templateId = 7;
-
-                if (table.Rotation == 45)
-                    templateId++;
-                else if (table.Rotation == 90)
-                    templateId += 2;
-
-                script.AppendLine($"\t\t\t\tTableTemplateId = {templateId},");
+                script.AppendLine($"\t\t\t\tTableTemplateId = {table.TemplateId},");
 
                 //у меня margin стоит для того чтобы FlipView отработал
                 script.AppendLine(

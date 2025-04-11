@@ -1,10 +1,10 @@
-﻿using CommunityToolkit.Mvvm.ComponentModel;
+﻿using System.Collections.ObjectModel;
+using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Restorator.Desktop.ViewModels.Abstract;
 using Restorator.Domain.Models;
 using Restorator.Domain.Models.Restaurant;
 using Restorator.Domain.Services;
-using System.Collections.ObjectModel;
 using Wpf.Ui.Controls;
 
 namespace Restorator.Desktop.ViewModels
@@ -150,6 +150,33 @@ namespace Restorator.Desktop.ViewModels
 
             await ResetSearch();
         }
+
+        [ObservableProperty]
+        private bool isShowingLatest = false;
+
+
+        [RelayCommand(AllowConcurrentExecutions = false)]
+        public async Task ShowLatest()
+        {
+            if (IsShowingLatest)
+            {
+                IsShowingLatest = false;
+
+                await ResetSearch();
+
+                return;
+            }
+
+            IsShowingLatest = true;
+
+            RestaurantsPreview.Clear();
+
+            var restaurants = await _restaurantService.GetLatestVisited();
+
+            foreach (var restaurant in restaurants)
+                RestaurantsPreview.Add(restaurant);
+        }
+
 
         [RelayCommand(AllowConcurrentExecutions = false, CanExecute = nameof(CanLoadRestaurants))]
         public async Task SearchRestaurants()
