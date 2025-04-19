@@ -70,6 +70,9 @@ namespace Restorator.Desktop.Extensions
             services.AddHttpClient<IReservationService, ReservationService>((provider, client) => configureClient.Invoke(provider, client, "reservation/"))
                     .ConfigurePrimaryHttpMessageHandler(configureHandler);
 
+            services.AddHttpClient<IReservationService, ReservationService>((provider, client) => configureClient.Invoke(provider, client, "template/"))
+                    .ConfigurePrimaryHttpMessageHandler(configureHandler);
+
             return services;
         }
         public static IServiceCollection ConfigureViews(this IServiceCollection services)

@@ -29,5 +29,19 @@ namespace Restorator.Desktop.Models
         private int templateId;
         private int TemplateModifierId => (int)(Rotation / 45);
         public int GetTemplateId() => TemplateId + TemplateModifierId;
+
+        public TableModel Clone()
+        {
+            return new TableModel()
+            {
+                Height = Height,
+                Width = Width,
+                State = State,
+                X = 0,
+                Y = 0,
+                Rotation = 0,
+                TemplateId = TemplateId,
+            };
+        }
     }
 }

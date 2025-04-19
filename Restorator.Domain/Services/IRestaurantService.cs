@@ -1,6 +1,7 @@
 ﻿using FluentResults;
 using Restorator.Domain.Models;
 using Restorator.Domain.Models.Restaurant;
+using Restorator.Domain.Models.Templates;
 
 namespace Restorator.Domain.Services
 {

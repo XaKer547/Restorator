@@ -54,10 +54,5 @@ namespace Restorator.Application.Client.Services
 
             return plan.ToResultWithNullCheck();
         }
-
-        public Task<Result<bool>> IsReservationOwner(int reservationId)
-        {
-            throw new NotImplementedException();
-        }
     }
 }
