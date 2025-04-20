@@ -79,10 +79,10 @@ namespace Restorator.Application.Server.Services
                 if (filter.TagId.HasValue)
                     predicate = predicate.And(r => r.Tags.Any(t => t.Id == filter.TagId));
             }
-
             var paginationFilter = model.PaginationFilter;
 
             return await _context.Restaurants.AsNoTracking()
+                                             .OrderBy(r => r.Name)
                                              .Where(predicate)
                                              .Select(r => new RestaurantPreviewDTO
                                              {

@@ -14,10 +14,15 @@ namespace Restorator.Desktop.ViewModels
         private readonly IRestaurantService _restaurantService;
         private readonly Services.INavigationService _navigationService;
         public RestaurantSearchViewModel(IRestaurantService restaurantService,
-                                         Services.INavigationService navigationService)
+                                         Services.INavigationService navigationService,
+                                         IUserManager userManager)
         {
             _restaurantService = restaurantService;
             _navigationService = navigationService;
+
+            userManager.TryGetUserId(out var userId);
+
+            IsLoggedIn = userId != default;
         }
 
         [ObservableProperty]
@@ -38,6 +43,8 @@ namespace Restorator.Desktop.ViewModels
         [ObservableProperty]
         private string searchText;
 
+        [ObservableProperty]
+        private bool isLoggedIn;
 
         private CancellationTokenSource? _searchTokenSource = null;
         async partial void OnSearchTextChanging(string value)
@@ -91,19 +98,17 @@ namespace Restorator.Desktop.ViewModels
         {
             SelectedTag = null;
 
-            Searching = true;
-
             _currentPage = 1;
 
-            //RestaurantsName = await _restaurantService.GetRestaurantNames(); TODO
+            Searching = true;
 
             RestaurantsTag = await _restaurantService.GetRestaurantsTags();
 
             await SearchRestaurants();
 
-            Searching = false;
-
             Initialized = true;
+
+            Searching = false;
         }
 
         [ObservableProperty]
@@ -115,7 +120,7 @@ namespace Restorator.Desktop.ViewModels
             if (SelectedTag == restaurantTag)
             {
                 SelectedTag = null;
-
+                IsShowingLatest = false;
                 CanResetTag = false;
             }
             else
@@ -135,7 +140,11 @@ namespace Restorator.Desktop.ViewModels
 
             RestaurantsPreview.Clear();
 
+            Searching = true;
+
             await SearchRestaurants();
+
+            Searching = false;
         }
 
         [RelayCommand]
@@ -145,7 +154,7 @@ namespace Restorator.Desktop.ViewModels
                 return;
 
             SelectedTag = null;
-
+            IsShowingLatest = false;
             CanResetTag = false;
 
             await ResetSearch();
@@ -154,15 +163,16 @@ namespace Restorator.Desktop.ViewModels
         [ObservableProperty]
         private bool isShowingLatest = false;
 
+        [ObservableProperty]
+        private bool isEmptyLatest = false;
+
 
         [RelayCommand(AllowConcurrentExecutions = false)]
         public async Task ShowLatest()
         {
             if (IsShowingLatest)
             {
-                IsShowingLatest = false;
-
-                await ResetSearch();
+                await ResetSelectedTag();
 
                 return;
             }
@@ -171,16 +181,24 @@ namespace Restorator.Desktop.ViewModels
 
             RestaurantsPreview.Clear();
 
+            Searching = true;
+
             var restaurants = await _restaurantService.GetLatestVisited();
+
+            IsEmptyLatest = restaurants.Count == 0;
 
             foreach (var restaurant in restaurants)
                 RestaurantsPreview.Add(restaurant);
+
+            Searching = false;
         }
 
 
         [RelayCommand(AllowConcurrentExecutions = false, CanExecute = nameof(CanLoadRestaurants))]
         public async Task SearchRestaurants()
         {
+            Searching = true;
+
             var restaurants = await _restaurantService.GetRestaurantPreviews(new GetRestaurantsPreviewDTO()
             {
                 Filter = new GetRestaurantsPreviewFilter()
@@ -191,7 +209,7 @@ namespace Restorator.Desktop.ViewModels
                 PaginationFilter = new PaginationFilter()
                 {
                     CurrentPage = _currentPage,
-                    PageSize = 20
+                    PageSize = 10 //Power check?
                 }
             });
 
@@ -201,6 +219,8 @@ namespace Restorator.Desktop.ViewModels
 
             foreach (var restaurant in restaurants)
                 RestaurantsPreview.Add(restaurant);
+
+            Searching = false;
         }
     }
 }

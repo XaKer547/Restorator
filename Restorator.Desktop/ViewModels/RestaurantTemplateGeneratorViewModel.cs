@@ -12,6 +12,10 @@ namespace Restorator.Desktop.ViewModels
     public partial class RestaurantTemplateGeneratorViewModel : ViewModelBase
     {
         private readonly ITemplateService _templateService;
+        public RestaurantTemplateGeneratorViewModel(ITemplateService templateService)
+        {
+            _templateService = templateService;
+        }
 
         private const string SchemeLocation =
             "C:\\Users\\user\\source\\repos\\XaKer547\\Restorator\\Restorator.Seeder\\Resources\\RestaurantsPlan";

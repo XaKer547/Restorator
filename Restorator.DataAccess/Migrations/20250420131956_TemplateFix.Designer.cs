@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Restorator.DataAccess.Data;
 
@@ -11,9 +12,11 @@ using Restorator.DataAccess.Data;
 namespace Restorator.DataAccess.Migrations
 {
     [DbContext(typeof(RestoratorDbContext))]
-    partial class RestoratorDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250420131956_TemplateFix")]
+    partial class TemplateFix
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

@@ -23,7 +23,7 @@
                 <modern:FlipView ItemsSource="{Binding Templates}" SelectedItem="{Binding SelectedTemplate}" IsTabStop="True">
                     <modern:FlipView.ItemTemplate>
                         <DataTemplate>
-                            <Image Source="{Binding Content}"/>
+                            <Image Source="{Binding Scheme}"/>
                         </DataTemplate>
                     </modern:FlipView.ItemTemplate>
 

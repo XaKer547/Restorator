@@ -54,7 +54,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Restorator.Application.Client\Restorator.Application.Client.csproj" />
+    <ProjectReference Include="..\Restorator.Application.Server\Restorator.Application.Server.csproj" />
+    <ProjectReference Include="..\Restorator.DataAccess.Common\Restorator.DataAccess.SqlServer.csproj" />
+    <ProjectReference Include="..\Restorator.DataAccess\Restorator.DataAccess.csproj" />
     <ProjectReference Include="..\Restorator.Domain\Restorator.Domain.csproj" />
   </ItemGroup>
 
