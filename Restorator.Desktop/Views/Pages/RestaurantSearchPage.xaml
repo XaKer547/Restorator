@@ -64,7 +64,8 @@
                 <DockPanel>
                     <ui:TextBlock FontTypography="Subtitle" Text="Посмотреть интересные места можно"/>
 
-                    <ui:Button Appearance="Info" Command="{Binding ResetSelectedTagCommand}">
+                    <ui:Button Appearance="Info" Command="{Binding ResetSelectedTagCommand}"
+                               Margin="10,0">
                         <ui:TextBlock FontTypography="Subtitle" Text="Здесь"/>
                     </ui:Button>
                 </DockPanel>
