@@ -81,9 +81,39 @@ namespace Restorator.Application.Server.Services
             return template.Id;
         }
 
+        public async Task<Result> DeleteRestaurantTemplate(int restaurantTemplateId)
+        {
+            if (!_userManager.TryGetUserId(out var userId))
+                return Result.Fail("Не удалось получить id пользователя");
+
+            var template = await _context.RestaurantTemplates.SingleOrDefaultAsync(x => x.Id == restaurantTemplateId);
+
+            if (template is null)
+                return Result.Fail("Шаблон не найден");
+
+            var user = await _context.Users.AsNoTracking()
+                                           .Include(u => u.Role)
+                                           .SingleOrDefaultAsync(u => u.Id == userId);
+
+            if (user is null)
+                return Result.Fail("Пользователь не найден");
+
+            if (user.Role != Roles.Admin)
+                return Result.Fail("Недостаточно прав для отмены бронирования");
+
+            template.Deleted = true;
+
+            _context.RestaurantTemplates.Update(template);
+
+            await _context.SaveChangesAsync();
+
+            return Result.Ok();
+        }
+
         public async Task<IReadOnlyCollection<RestaurantTemplatePreview>> GetRestaurantsTemplatePreview()
         {
             return await _context.RestaurantTemplates.AsNoTracking()
+                .Where(x => !x.Deleted)
                 .Select(x => new RestaurantTemplatePreview()
                 {
                     Id = x.Id,
@@ -91,9 +121,9 @@ namespace Restorator.Application.Server.Services
                 }).ToListAsync();
         }
 
-        public async Task<RestaurantTemplateDTO> GetRestaurantTemplate(int restaurantTemplateId)
+        public async Task<Result<RestaurantTemplateDTO>> GetRestaurantTemplate(int restaurantTemplateId)
         {
-            return await _context.RestaurantTemplates.AsNoTracking()
+            var template = await _context.RestaurantTemplates.AsNoTracking()
                 .Select(x => new RestaurantTemplateDTO
                 {
                     Id = x.Id,
@@ -105,7 +135,12 @@ namespace Restorator.Application.Server.Services
                         X = x.X,
                         Y = x.Y,
                     })
-                }).SingleAsync(x => x.Id == restaurantTemplateId);
+                }).SingleOrDefaultAsync(x => x.Id == restaurantTemplateId && !x.Deleted);
+
+            if (template is null)
+                return Result.Fail("Шаблон не найден");
+
+            return template;
         }
 
         public async Task<IReadOnlyCollection<TableTemplateDTO>> GetTableTemplates()

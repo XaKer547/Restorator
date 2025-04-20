@@ -8,7 +8,8 @@ namespace Restorator.Domain.Services
         Task<Result<int>> CreateTableTemplate(CreateTableTempateDTO model);
         Task<Result<int>> CreateRestaurantTemplate(CreateRestaurantTemplateDTO model);
         Task<IReadOnlyCollection<RestaurantTemplatePreview>> GetRestaurantsTemplatePreview();
-        Task<RestaurantTemplateDTO> GetRestaurantTemplate(int restaurantTemplateId);
+        Task<Result<RestaurantTemplateDTO>> GetRestaurantTemplate(int restaurantTemplateId);
+        Task<Result> DeleteRestaurantTemplate(int restaurantTemplateId);
         Task<IReadOnlyCollection<TableTemplateDTO>> GetTableTemplates();
     }
 }
