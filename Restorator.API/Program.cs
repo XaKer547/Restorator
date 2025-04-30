@@ -1,3 +1,5 @@
+using System.Reflection;
+using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
@@ -7,8 +9,6 @@ using Restorator.DataAccess.SqlServer;
 using Restorator.Domain.Services;
 using Restorator.Mail.Configuration;
 using Restorator.Mail.Services;
-using System.Reflection;
-using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -79,8 +79,11 @@ builder.Services.AddScoped<IJwtService, JwtService>();
 builder.Services.AddScoped<IAccountService, AccountService>();
 builder.Services.AddScoped<IReservationService, ReservationService>();
 builder.Services.AddScoped<IRestaurantService, RestaurantService>();
+builder.Services.AddScoped<ITemplateService, TemplateService>();
+
 builder.Services.AddScoped<IUserManager, UserManager>();
 builder.Services.AddScoped<IMailService, MailService>();
+
 builder.Services.AddScoped<MailTemplateBuilder>();
 
 builder.Services.AddHttpContextAccessor();

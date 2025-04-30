@@ -4,6 +4,7 @@ using Restorator.Application.Client.Extensions;
 using Restorator.Application.Client.Helpers;
 using Restorator.Domain.Models;
 using Restorator.Domain.Models.Restaurant;
+using Restorator.Domain.Models.Templates;
 using Restorator.Domain.Services;
 
 namespace Restorator.Application.Client.Services

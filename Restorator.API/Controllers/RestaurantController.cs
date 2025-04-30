@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Restorator.Domain.Models;
 using Restorator.Domain.Models.Restaurant;
+using Restorator.Domain.Models.Templates;
 using Restorator.Domain.Services;
 
 namespace Restorator.API.Controllers

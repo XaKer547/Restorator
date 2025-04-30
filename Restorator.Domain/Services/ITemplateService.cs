@@ -1,16 +1,14 @@
 ﻿using FluentResults;
-using Restorator.Domain.Models.Restaurant;
 
 namespace Restorator.Domain.Services
 {
     public interface ITemplateService
     {
-        Task<IReadOnlyCollection<RestaurantTemplateDTO>> GetRestaurantTemplates();
-        //Task<IReadOnlyCollection<Table> GetTableTemplates(); TableTemplateDTO
-        //id
-        //type
-        //size
-        //no rotate
-        Task<Result> CreateRestaurantTemplate();
+        Task<Result<int>> CreateTableTemplate(CreateTableTempateDTO model);
+        Task<Result<int>> CreateRestaurantTemplate(CreateRestaurantTemplateDTO model);
+        Task<IReadOnlyCollection<RestaurantTemplatePreview>> GetRestaurantsTemplatePreview();
+        Task<Result<RestaurantTemplateDTO>> GetRestaurantTemplate(int restaurantTemplateId);
+        Task<Result> DeleteRestaurantTemplate(int restaurantTemplateId);
+        Task<IReadOnlyCollection<TableTemplateDTO>> GetTableTemplates();
     }
 }

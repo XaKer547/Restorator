@@ -1,12 +1,10 @@
-﻿using CommunityToolkit.Mvvm.ComponentModel;
+﻿using System.ComponentModel.DataAnnotations;
+using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using Restorator.Desktop.Session;
 using Restorator.Desktop.ViewModels.Abstract;
-using Restorator.Domain.Models;
 using Restorator.Domain.Models.Authorization;
 using Restorator.Domain.Models.Enums;
 using Restorator.Domain.Services;
-using System.ComponentModel.DataAnnotations;
 using Wpf.Ui;
 using Wpf.Ui.Extensions;
 
@@ -83,18 +81,19 @@ namespace Restorator.Desktop.ViewModels
             }
             //get token
 
-            var session = await _authenticationService.SignInAsync(new SignInDTO()
+            var signInResult = await _authenticationService.SignInAsync(new SignInDTO()
             {
                 Login = Login,
                 Password = Password
             });
 
+            var session = signInResult.Value;
+
             //get session info?
             //var result = session
 
-            //_sessionManager.SetSession(session.Value);
-
             Authenticated = true;
+            Role = Enum.Parse<Roles>(session.SessionInfo.Role);
 
             _snackbarService.Show("Добро пожаловать в семью", "Let's celebrate and eat some chick", Wpf.Ui.Controls.ControlAppearance.Success);
         }

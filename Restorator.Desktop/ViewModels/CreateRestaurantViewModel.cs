@@ -1,6 +1,7 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Restorator.Domain.Models.Restaurant;
+using Restorator.Domain.Models.Templates;
 using Restorator.Domain.Services;
 using System.Collections.ObjectModel;
 using Wpf.Ui;

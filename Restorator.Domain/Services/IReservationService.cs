@@ -6,7 +6,6 @@ namespace Restorator.Domain.Services
 {
     public interface IReservationService
     {
-        Task<Result<bool>> IsReservationOwner(int reservationId); //Delete?
         Task<Result<RestaurantPlanDTO>> GetRestaurantReservationPlan(GetRestaurantPlanDTO model);
         Task<Result<int>> CreateReservation(CreateRestaurantReservationDTO model);
         Task<Result> CancelReservation(int reservationId);

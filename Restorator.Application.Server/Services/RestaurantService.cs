@@ -6,6 +6,7 @@ using Restorator.DataAccess.Data;
 using Restorator.DataAccess.Data.Entities;
 using Restorator.Domain.Models;
 using Restorator.Domain.Models.Restaurant;
+using Restorator.Domain.Models.Templates;
 using Restorator.Domain.Services;
 using Roles = Restorator.DataAccess.Data.Entities.Enums.Roles;
 
@@ -78,10 +79,10 @@ namespace Restorator.Application.Server.Services
                 if (filter.TagId.HasValue)
                     predicate = predicate.And(r => r.Tags.Any(t => t.Id == filter.TagId));
             }
-
             var paginationFilter = model.PaginationFilter;
 
             return await _context.Restaurants.AsNoTracking()
+                                             .OrderBy(r => r.Name)
                                              .Where(predicate)
                                              .Select(r => new RestaurantPreviewDTO
                                              {
@@ -232,7 +233,7 @@ namespace Restorator.Application.Server.Services
                                                      .Select(t => new RestaurantTemplateDTO
                                                      {
                                                          Id = t.Id,
-                                                         Image = t.Image,
+                                                         Scheme = t.Image,
                                                      }).ToListAsync();
         }
 
