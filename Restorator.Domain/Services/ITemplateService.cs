@@ -1,4 +1,5 @@
 ﻿using FluentResults;
+using Restorator.Domain.Models.Templates;
 
 namespace Restorator.Domain.Services
 {

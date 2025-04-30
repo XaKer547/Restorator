@@ -34,7 +34,7 @@ namespace Restorator.Application.Server.Services
                                              {
                                                  Id = r.Id,
                                                  Name = r.Name,
-                                                 Image = r.Image,
+                                                 Image = r.Images.Select(i => i.Image).FirstOrDefault(),
                                              }).ToListAsync();
         }
         public async Task<Result> ChangeRestaurantApproval(ChangeRestaurantApprovalDTO model)
@@ -88,7 +88,7 @@ namespace Restorator.Application.Server.Services
                                              {
                                                  Id = r.Id,
                                                  Name = r.Name,
-                                                 Image = r.Image,
+                                                 Image = r.Images.Select(i => i.Image).FirstOrDefault(),
                                              }).AsPageAsync(paginationFilter.CurrentPage, paginationFilter.PageSize);
         }
         public async Task<Result<int>> CreateRestaurant(CreateRestaurantDTO model)
@@ -113,7 +113,10 @@ namespace Restorator.Application.Server.Services
                 BeginWorkTime = model.BeginWorkTime,
                 EndWorkTime = model.EndWorkTime,
                 TemplateId = model.TemplateId,
-                Image = model.Image,
+                Images = [.. model.Images.Select(i => new RestaurantImage()
+                {
+                    Image = i
+                })],
                 MenuImage = model.Menu,
                 Tags = [.. tags]
             };
@@ -130,7 +133,7 @@ namespace Restorator.Application.Server.Services
                                                        .Select(restaurant => new RestaurantInfoDTO()
                                                        {
                                                            Id = restaurant.Id,
-                                                           Image = restaurant.Image,
+                                                           Images = restaurant.Images.Select(i => i.Image),
                                                            Menu = restaurant.MenuImage,
                                                            Name = restaurant.Name,
                                                            Approved = restaurant.Approved,
@@ -203,7 +206,10 @@ namespace Restorator.Application.Server.Services
             restaurant.BeginWorkTime = model.BeginWorkTime;
             restaurant.EndWorkTime = model.EndWorkTime;
 
-            restaurant.Image = model.Image;
+            restaurant.Images = [.. model.Images.Select(i => new RestaurantImage()
+                {
+                    Image = i
+                })];
 
             restaurant.MenuImage = model.Menu;
 
@@ -271,7 +277,7 @@ namespace Restorator.Application.Server.Services
                 {
                     Id = r.Restaurant.Id,
                     Name = r.Restaurant.Name,
-                    Image = r.Restaurant.Image,
+                    Image = r.Restaurant.Images.Select(i => i.Image).FirstOrDefault(),
                 }).ToListAsync();
         }
     }

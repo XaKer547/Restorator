@@ -39,6 +39,8 @@
     <None Remove="Resources\50 мест%284%29.png" />
     <None Remove="Resources\50 мест%285%29.png" />
     <None Remove="Resources\RestaurantsImage\Dali.png" />
+    <None Remove="Resources\RestaurantsImage\GIACOMO%281%29.png" />
+    <None Remove="Resources\RestaurantsImage\GIACOMO%282%29.png" />
     <None Remove="Resources\RestaurantsImage\GIACOMO.png" />
     <None Remove="Resources\RestaurantsImage\Kinza.png" />
     <None Remove="Resources\RestaurantsImage\Suly.png" />
@@ -59,7 +61,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <EmbeddedResource Include="Resources\RestaurantsImage\GIACOMO.png" />
+    <EmbeddedResource Include="Resources\RestaurantsImage\GIACOMO(1).png" />
+    <EmbeddedResource Include="Resources\RestaurantsImage\GIACOMO(2).png" />
     <EmbeddedResource Include="Resources\RestaurantsImage\Kinza.png" />
     <EmbeddedResource Include="Resources\RestaurantsImage\Suly.png" />
     <EmbeddedResource Include="Resources\RestaurantsImage\Yoko Sushi Bar.png" />

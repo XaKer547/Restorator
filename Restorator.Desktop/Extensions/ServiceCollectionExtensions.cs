@@ -1,6 +1,4 @@
-﻿using System.Net.Http;
-using System.Reflection;
-using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.Extensions.DependencyInjection;
 using Restorator.Application.Client.Services;
 using Restorator.Desktop.Controls;
 using Restorator.Desktop.Infrastructure;
@@ -11,6 +9,8 @@ using Restorator.Desktop.ViewModels.Abstract;
 using Restorator.Desktop.Views.Pages;
 using Restorator.Desktop.Views.Windows;
 using Restorator.Domain.Services;
+using System.Net.Http;
+using System.Reflection;
 using Wpf.Ui;
 using Wpf.Ui.Abstractions;
 using Wpf.Ui.DependencyInjection;
@@ -35,6 +35,7 @@ namespace Restorator.Desktop.Extensions
             services.AddSingleton<Wpf.Ui.INavigationService, Wpf.Ui.NavigationService>();
             services.AddSingleton<IPageService, PageService>();
             services.AddSingleton<ISessionManager, SessionManager>();
+            services.AddSingleton<IUserManager, UserManager>();
 
             return services;
         }
@@ -42,7 +43,7 @@ namespace Restorator.Desktop.Extensions
         {
             Action<IServiceProvider, HttpClient, string?> configureClient = (provider, client, endpoint) =>
             {
-                client.BaseAddress = new Uri($"https://10.173.99.217:7090/api/{endpoint}");
+                client.BaseAddress = new Uri($"https://localhost:7090/api/{endpoint}");
 
                 var manager = provider.GetRequiredService<ISessionManager>();
 

@@ -9,7 +9,7 @@ namespace Restorator.DataAccess.Data.Entities
         [ForeignKey(nameof(Owner))]
         public int OwnerId { get; set; }
         public User Owner { get; set; }
-        public ICollection<byte[]> Images { get; set; } = new HashSet<byte[]>();
+        public ICollection<RestaurantImage> Images { get; set; } = new HashSet<RestaurantImage>();
         public byte[]? MenuImage { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }

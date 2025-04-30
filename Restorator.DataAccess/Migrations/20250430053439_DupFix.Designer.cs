@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Restorator.DataAccess.Data;
 
@@ -11,9 +12,11 @@ using Restorator.DataAccess.Data;
 namespace Restorator.DataAccess.Migrations
 {
     [DbContext(typeof(RestoratorDbContext))]
-    partial class RestoratorDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250430053439_DupFix")]
+    partial class DupFix
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -95,6 +98,10 @@ namespace Restorator.DataAccess.Migrations
                     b.Property<TimeOnly>("EndWorkTime")
                         .HasColumnType("time");
 
+                    b.PrimitiveCollection<string>("Images")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<byte[]>("MenuImage")
                         .HasColumnType("varbinary(max)");
 
@@ -115,28 +122,6 @@ namespace Restorator.DataAccess.Migrations
                     b.HasIndex("TemplateId");
 
                     b.ToTable("Restaurants");
-                });
-
-            modelBuilder.Entity("Restorator.DataAccess.Data.Entities.RestaurantImage", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<byte[]>("Image")
-                        .IsRequired()
-                        .HasColumnType("varbinary(max)");
-
-                    b.Property<int?>("RestaurantId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("RestaurantId");
-
-                    b.ToTable("RestaurantImage");
                 });
 
             modelBuilder.Entity("Restorator.DataAccess.Data.Entities.RestaurantTag", b =>
@@ -348,13 +333,6 @@ namespace Restorator.DataAccess.Migrations
                     b.Navigation("Template");
                 });
 
-            modelBuilder.Entity("Restorator.DataAccess.Data.Entities.RestaurantImage", b =>
-                {
-                    b.HasOne("Restorator.DataAccess.Data.Entities.Restaurant", null)
-                        .WithMany("Images")
-                        .HasForeignKey("RestaurantId");
-                });
-
             modelBuilder.Entity("Restorator.DataAccess.Data.Entities.Table", b =>
                 {
                     b.HasOne("Restorator.DataAccess.Data.Entities.RestaurantTemplate", null)
@@ -383,8 +361,6 @@ namespace Restorator.DataAccess.Migrations
 
             modelBuilder.Entity("Restorator.DataAccess.Data.Entities.Restaurant", b =>
                 {
-                    b.Navigation("Images");
-
                     b.Navigation("Reservations");
                 });
 

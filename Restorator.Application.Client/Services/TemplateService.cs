@@ -28,6 +28,11 @@ namespace Restorator.Application.Client.Services
             return await response.AsResult<int>();
         }
 
+        public Task<Result> DeleteRestaurantTemplate(int restaurantTemplateId)
+        {
+            throw new NotImplementedException();
+        }
+
         public async Task<IReadOnlyCollection<RestaurantTemplatePreview>> GetRestaurantsTemplatePreview()
         {
             var templatePreviews = await _client.GetFromJsonAsync<IReadOnlyCollection<RestaurantTemplatePreview>>("restaurant");
@@ -47,6 +52,11 @@ namespace Restorator.Application.Client.Services
             var templates = await _client.GetFromJsonAsync<IReadOnlyCollection<TableTemplateDTO>>("tables");
 
             return templates ?? [];
+        }
+
+        Task<Result<RestaurantTemplateDTO>> ITemplateService.GetRestaurantTemplate(int restaurantTemplateId)
+        {
+            throw new NotImplementedException();
         }
     }
 }

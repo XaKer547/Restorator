@@ -50,7 +50,7 @@ namespace Restorator.Desktop.ViewModels
                 BeginWorkTime = TimeOnly.FromDateTime(BeginWorkTime),
                 EndWorkTime = TimeOnly.FromDateTime(EndWorkTime),
                 Description = Description,
-                Image = Image,
+                Images = Images,
                 Menu = Menu,
                 Tags = RestaurantTags.Select(r => r.Id),
                 TemplateId = SelectedTemplate.Id

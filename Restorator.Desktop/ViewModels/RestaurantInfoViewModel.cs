@@ -3,6 +3,7 @@ using CommunityToolkit.Mvvm.Input;
 using Restorator.Desktop.Dialogs;
 using Restorator.Desktop.ViewModels.Abstract;
 using Restorator.Domain.Services;
+using System.Collections.ObjectModel;
 using Wpf.Ui;
 using Wpf.Ui.Extensions;
 
@@ -35,7 +36,10 @@ namespace Restorator.Desktop.ViewModels
         private string description;
 
         [ObservableProperty]
-        private byte[]? image;
+        private byte[]? selectedImage;
+
+        [ObservableProperty]
+        private ObservableCollection<byte[]> images = [];
 
         [ObservableProperty]
         private byte[]? menu;
@@ -65,7 +69,12 @@ namespace Restorator.Desktop.ViewModels
             var info = result.Value;
 
             Name = info.Name;
-            Image = info.Image;
+
+            foreach (var image in info.Images)
+                Images.Add(image);
+
+            SelectedImage = Images.FirstOrDefault();
+            
             Menu = info.Menu;
             Description = info.Description;
             BeginWorkTime = info.BeginWorkTime;

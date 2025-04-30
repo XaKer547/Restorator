@@ -17,10 +17,20 @@
                         <Border Width="300" Height="75" CornerRadius="10" Background="Black" >
                             <Border CornerRadius="10">
                                 <Border.Background>
-                                    <ImageBrush Stretch="UniformToFill" ImageSource="{Binding Image, TargetNullValue={StaticResource NoImage}}" Opacity="0.5"/>
+                                    <ImageBrush Stretch="UniformToFill" ImageSource="{Binding SelectedImage, TargetNullValue={StaticResource NoImage}}" Opacity="0.5"/>
                                 </Border.Background>
 
-                                <ui:TextBlock Text="{Binding RestaurantName}" FontTypography="Body" Foreground="White" VerticalAlignment="Bottom" Margin="2.5,0"/>
+                                <Grid Margin="2.5,0">
+                                    <ui:TextBlock Text="{Binding RestaurantName}" FontTypography="Body" Foreground="White" VerticalAlignment="Bottom"/>
+
+                                    <ListBox ItemsSource="{Binding Images}" SelectedItem="{Binding SelectedImage, Mode=TwoWay}" HorizontalAlignment="Right" VerticalAlignment="Bottom">
+                                        <ListBox.ItemTemplate>
+                                            <DataTemplate>
+                                                <Image Source="{Binding}" Width="150" Height="100" Margin="2.5"/>
+                                            </DataTemplate>
+                                        </ListBox.ItemTemplate>
+                                    </ListBox>
+                                </Grid>
                             </Border>
                         </Border>
                     </Viewbox>

@@ -124,6 +124,7 @@ namespace Restorator.Application.Server.Services
         public async Task<Result<RestaurantTemplateDTO>> GetRestaurantTemplate(int restaurantTemplateId)
         {
             var template = await _context.RestaurantTemplates.AsNoTracking()
+                .Where(x => !x.Deleted)
                 .Select(x => new RestaurantTemplateDTO
                 {
                     Id = x.Id,
@@ -135,7 +136,7 @@ namespace Restorator.Application.Server.Services
                         X = x.X,
                         Y = x.Y,
                     })
-                }).SingleOrDefaultAsync(x => x.Id == restaurantTemplateId && !x.Deleted);
+                }).SingleOrDefaultAsync(x => x.Id == restaurantTemplateId);
 
             if (template is null)
                 return Result.Fail("Шаблон не найден");

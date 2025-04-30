@@ -1,6 +1,5 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using Restorator.Desktop.Session;
 using Restorator.Desktop.ViewModels.Abstract;
 using Restorator.Domain.Models.Restaurant;
 using Restorator.Domain.Services;
@@ -35,7 +34,10 @@ namespace Restorator.Desktop.ViewModels
         private bool approved;
 
         [ObservableProperty]
-        private byte[]? image;
+        private byte[]? selectedImage;
+
+        [ObservableProperty]
+        private ObservableCollection<byte[]> images = [];
 
         [ObservableProperty]
         private byte[]? menu;
@@ -72,7 +74,12 @@ namespace Restorator.Desktop.ViewModels
 
             RestaurantName = info.Name;
             Description = info.Description;
-            Image = info.Image;
+
+            foreach (var image in Images)
+                Images.Add(image);
+
+            SelectedImage = Images.FirstOrDefault();
+
             Menu = info.Menu;
             Verified = info.Approved;
             Description = info.Description;
