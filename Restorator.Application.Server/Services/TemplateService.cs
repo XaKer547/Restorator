@@ -155,5 +155,61 @@ namespace Restorator.Application.Server.Services
                     Width = x.Width,
                 }).ToListAsync();
         }
+
+        public async Task<Result> UpdateRestaurantTemplate(UpdateRestaurantTemplateDTO model)
+        {
+            if (!_userManager.TryGetUserId(out var userId))
+                return Result.Fail("Не удалось получить id пользователя");
+
+            var user = await _context.Users.AsNoTracking()
+                                           .Include(u => u.Role)
+                                           .SingleOrDefaultAsync(u => u.Id == userId);
+
+            if (user is null)
+                return Result.Fail("Пользователь не найден");
+
+            if (user.Role != Roles.Admin)
+                return Result.Fail("У вас недостаточно прав, чтобы это сделать");
+
+
+            var template = await _context.RestaurantTemplates.Include(r => r.Tables)
+                                                             .SingleOrDefaultAsync(r => r.Id == model.Id);
+
+            if (template is null)
+                return Result.Fail("Не найден шаблон ресторана");
+
+            template.Image = model.Scheme;
+
+            var tables = template.Tables.ToList();
+
+            foreach (var tableModel in model.Tables) //DTO loop
+            {
+                var table = tables.SingleOrDefault(m => m.Id == tableModel.Id); // from db
+
+                if (table is null)
+                {
+                    tables.Add(new Table()
+                    {
+                        TableTemplateId = tableModel.TemplateId,
+                        X = tableModel.X,
+                        Y = tableModel.Y,
+                    });
+
+                    continue;
+                }
+
+                table.X = tableModel.X;
+                table.Y = tableModel.Y;
+                table.TableTemplateId = tableModel.TemplateId;
+            }
+
+            template.Tables = tables; //for god sake
+
+            _context.RestaurantTemplates.Update(template);
+
+            await _context.SaveChangesAsync();
+
+            return Result.Ok();
+        }
     }
 }

@@ -28,9 +28,11 @@ namespace Restorator.Application.Client.Services
             return await response.AsResult<int>();
         }
 
-        public Task<Result> DeleteRestaurantTemplate(int restaurantTemplateId)
+        public async Task<Result> DeleteRestaurantTemplate(int restaurantTemplateId)
         {
-            throw new NotImplementedException();
+            var response = await _client.DeleteAsync($"restaurant/{restaurantTemplateId}");
+
+            return await response.AsResult();
         }
 
         public async Task<IReadOnlyCollection<RestaurantTemplatePreview>> GetRestaurantsTemplatePreview()
@@ -40,13 +42,6 @@ namespace Restorator.Application.Client.Services
             return templatePreviews ?? [];
         }
 
-        public async Task<RestaurantTemplateDTO> GetRestaurantTemplate(int restaurantTemplateId)
-        {
-            var template = await _client.GetFromJsonAsync<RestaurantTemplateDTO>($"restaurant/{restaurantTemplateId}");
-
-            return template;
-        }
-
         public async Task<IReadOnlyCollection<TableTemplateDTO>> GetTableTemplates()
         {
             var templates = await _client.GetFromJsonAsync<IReadOnlyCollection<TableTemplateDTO>>("tables");
@@ -54,9 +49,18 @@ namespace Restorator.Application.Client.Services
             return templates ?? [];
         }
 
-        Task<Result<RestaurantTemplateDTO>> ITemplateService.GetRestaurantTemplate(int restaurantTemplateId)
+        public async Task<Result> UpdateRestaurantTemplate(UpdateRestaurantTemplateDTO model)
         {
-            throw new NotImplementedException();
+            var response = await _client.PutAsJsonAsync("restaurant", model);
+
+            return await response.AsResult();
+        }
+
+        public async Task<Result<RestaurantTemplateDTO>> GetRestaurantTemplate(int restaurantTemplateId)
+        {
+            var template = await _client.GetFromJsonAsync<RestaurantTemplateDTO>($"restaurant/{restaurantTemplateId}");
+
+            return template.ToResultWithNullCheck();
         }
     }
 }

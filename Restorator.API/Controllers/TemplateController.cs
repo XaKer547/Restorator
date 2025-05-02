@@ -28,7 +28,7 @@ namespace Restorator.API.Controllers
         }
 
         [HttpPost("restaurant")]
-        public async Task<IActionResult> CreateRestaurantTemplate(CreateTableTempateDTO model)
+        public async Task<IActionResult> CreateRestaurantTemplate(CreateRestaurantTemplateDTO model)
         {
             var result = await _templateService.CreateTableTemplate(model);
 
@@ -36,6 +36,28 @@ namespace Restorator.API.Controllers
                 return BadRequest(result.Errors);
 
             return Ok(result.Value);
+        }
+
+        [HttpPut("restaurant")]
+        public async Task<IActionResult> UpdateRestaurantTemplate(UpdateRestaurantTemplateDTO model)
+        {
+            var result = await _templateService.UpdateRestaurantTemplate(model);
+
+            if (result.IsFailed)
+                return BadRequest();
+
+            return Ok();
+        }
+
+        [HttpDelete("restaurant/{restaurantTemplateId:int}")]
+        public async Task<IActionResult> DeleteRestaurantTemplate(int restaurantTemplateId)
+        {
+            var result = await _templateService.DeleteRestaurantTemplate(restaurantTemplateId);
+
+            if (result.IsFailed)
+                return BadRequest();
+
+            return Ok();
         }
 
         [HttpGet("restaurant")]
