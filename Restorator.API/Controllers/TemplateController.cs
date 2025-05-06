@@ -30,7 +30,7 @@ namespace Restorator.API.Controllers
         [HttpPost("restaurant")]
         public async Task<IActionResult> CreateRestaurantTemplate(CreateRestaurantTemplateDTO model)
         {
-            var result = await _templateService.CreateTableTemplate(model);
+            var result = await _templateService.CreateRestaurantTemplate(model);
 
             if (result.IsFailed)
                 return BadRequest(result.Errors);

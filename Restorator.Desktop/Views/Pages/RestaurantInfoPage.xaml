@@ -22,61 +22,42 @@
                                 <Grid Margin="2.5,0">
                                     <ui:TextBlock Text="{Binding Name}" FontTypography="Body" Foreground="White" VerticalAlignment="Bottom"/>
 
-                                    <ItemsControl ItemsSource="{Binding Images}"
-                                             HorizontalAlignment="Right" VerticalAlignment="Bottom" Height="25">
-                                        <ItemsControl.ItemTemplate>
-                                            <DataTemplate>
-                                                <Border Width="50" Height="25" CornerRadius="10">
-                                                    <RadioButton Content="Все" Margin="0,0,0,10"
-                                                                 Style="{StaticResource {x:Type ToggleButton}}"  GroupName="RestaurantTags">
-                                                        <RadioButton.Background>
-                                                            <ImageBrush Stretch="UniformToFill" ImageSource="{Binding }" Opacity="1"/>
-                                                        </RadioButton.Background>
-                                                    </RadioButton>
-                                                </Border>
-                                            </DataTemplate>
-                                        </ItemsControl.ItemTemplate>
-                                    </ItemsControl>
-
-                                    <!--<ListBox ItemsSource="{Binding Images}" SelectedItem="{Binding SelectedImage, Mode=TwoWay}" 
+                                    <ListBox ItemsSource="{Binding Images}" SelectedItem="{Binding SelectedImage, Mode=TwoWay}" 
                                              IsSynchronizedWithCurrentItem="True"
-                                             HorizontalAlignment="Right" VerticalAlignment="Bottom" Height="25">
-                                        <ListBox.Style>
-                                            <Style TargetType="{x:Type ListBox}">
-                                                <Setter Property="ItemsPanel">
-                                                    <Setter.Value>
-                                                        <ItemsPanelTemplate>
-                                                            <ui:VirtualizingWrapPanel
-                                                                Orientation="Horizontal" Width="200"/>
-                                                        </ItemsPanelTemplate>
-                                                    </Setter.Value>
-                                                </Setter>
+                                             HorizontalAlignment="Right" VerticalAlignment="Bottom" Height="25"
+                                             Background="Transparent">
+                                        <ListBox.ItemsPanel>
+                                            <ItemsPanelTemplate>
+                                                <StackPanel Orientation="Horizontal"/>
+                                            </ItemsPanelTemplate>
+                                        </ListBox.ItemsPanel>
+                                        <ListBox.Resources>
+                                            <Style TargetType="ListBoxItem">
                                                 <Setter Property="Template">
                                                     <Setter.Value>
-                                                        <ControlTemplate TargetType="{x:Type ListBox}">
-                                                            <Border CornerRadius="5"
-                                                                    Background="{TemplateBinding ListBox.Background}">
-                                                                <ScrollViewer HorizontalScrollBarVisibility="Auto">
-                                                                    <ItemsPresenter/>
-                                                                </ScrollViewer>
+                                                        <ControlTemplate TargetType="ListBoxItem">
+                                                            <Border Name="mainBorder" Width="30" Height="20" CornerRadius="10" BorderBrush="Transparent" BorderThickness="0.25" Opacity="0.5">
+                                                                <Border Name="imageContainer" CornerRadius="10">
+                                                                    <Border.Background>
+                                                                        <ImageBrush Stretch="UniformToFill" ImageSource="{Binding }" />
+                                                                    </Border.Background>
+                                                                </Border>
                                                             </Border>
+                                                            <ControlTemplate.Triggers>
+                                                                <Trigger Property="IsMouseOver" Value="True">
+                                                                    <Setter TargetName="mainBorder" Property="Opacity" Value="1" />
+                                                                </Trigger>
+                                                                <Trigger Property="IsSelected" Value="True">
+                                                                    <Setter TargetName="mainBorder" Property="Opacity" Value="1" />
+                                                                    <Setter TargetName="mainBorder" Property="BorderBrush" Value="LightBlue"/>
+                                                                </Trigger>
+                                                            </ControlTemplate.Triggers>
                                                         </ControlTemplate>
                                                     </Setter.Value>
                                                 </Setter>
                                             </Style>
-                                        </ListBox.Style>
-                                        <ListBox.ItemTemplate>
-                                            <DataTemplate>
-                                                <Border Width="50" Height="25" CornerRadius="10">
-                                                    <Border CornerRadius="10">
-                                                        <Border.Background>
-                                                            <ImageBrush Stretch="UniformToFill" ImageSource="{Binding }" Opacity="0.5"/>
-                                                        </Border.Background>
-                                                    </Border>
-                                                </Border>
-                                            </DataTemplate>
-                                        </ListBox.ItemTemplate>
-                                    </ListBox>-->
+                                        </ListBox.Resources>
+                                    </ListBox>
                                 </Grid>
                             </Border>
                         </Border>
