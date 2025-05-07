@@ -1,10 +1,10 @@
-﻿using CommunityToolkit.Mvvm.ComponentModel;
+﻿using System.Collections.ObjectModel;
+using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Restorator.Desktop.ViewModels.Abstract;
 using Restorator.Domain.Models;
 using Restorator.Domain.Models.Restaurant;
 using Restorator.Domain.Services;
-using System.Collections.ObjectModel;
 using Wpf.Ui.Controls;
 
 namespace Restorator.Desktop.ViewModels
@@ -123,17 +123,14 @@ namespace Restorator.Desktop.ViewModels
         public async Task ChangeSearchTag(RestaurantTagDTO restaurantTag)
         {
             if (SelectedTag == restaurantTag)
-            {
-                SelectedTag = null;
-                IsShowingLatest = false;
-                CanResetTag = false;
-            }
-            else
-            {
-                SelectedTag = restaurantTag;
+                return;
 
-                CanResetTag = true;
-            }
+            //fuck it
+            //await ResetSelectedTag();
+
+            SelectedTag = restaurantTag;
+
+            CanResetTag = true;
 
             await ResetSearch();
         }
@@ -155,11 +152,11 @@ namespace Restorator.Desktop.ViewModels
         [RelayCommand]
         public async Task ResetSelectedTag()
         {
-            if (SelectedTag == null)
+            if (SelectedTag == null && showedLatest)
                 return;
 
             SelectedTag = null;
-            IsShowingLatest = false;
+            IsEmptyLatest = false;
             CanResetTag = false;
 
             await ResetSearch();
@@ -167,22 +164,25 @@ namespace Restorator.Desktop.ViewModels
 
         [ObservableProperty]
         private bool isShowingLatest = false;
+        
+        private bool showedLatest = false;
 
         [ObservableProperty]
         private bool isEmptyLatest = false;
 
+        partial void OnIsShowingLatestChanged(bool oldValue, bool newValue)
+        {
+            showedLatest = newValue;
+
+            if (!showedLatest)
+                IsEmptyLatest = false;
+        }
 
         [RelayCommand(AllowConcurrentExecutions = false)]
         public async Task ShowLatest()
         {
-            if (IsShowingLatest)
-            {
-                await ResetSelectedTag();
-
+            if (!showedLatest)
                 return;
-            }
-
-            IsShowingLatest = true;
 
             RestaurantsPreview.Clear();
 
