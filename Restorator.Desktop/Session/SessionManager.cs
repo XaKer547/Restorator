@@ -7,6 +7,8 @@ namespace Restorator.Desktop.Session
     public class SessionManager : ISessionManager
     {
         private readonly Settings _settings = Settings.Default;
+
+        public event UserLoggedInHandler? UserLoggedIn;
         public bool TryGetSession(out SessionInfo sessionInfo)
         {
             sessionInfo = null;
@@ -33,6 +35,8 @@ namespace Restorator.Desktop.Session
             _settings.Username = sessionInfo.Username;
 
             _settings.Save();
+
+            UserLoggedIn?.Invoke();
         }
         public bool HaveSession() => _settings.Token != string.Empty;
         public bool TryGetToken(out string token)
@@ -48,5 +52,6 @@ namespace Restorator.Desktop.Session
 
             return false;
         }
+
     }
 }

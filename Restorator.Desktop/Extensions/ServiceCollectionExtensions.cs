@@ -1,6 +1,8 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Restorator.Application.Client.Services;
 using Restorator.Desktop.Controls;
+using Restorator.Desktop.ExceptionHandlers;
+using Restorator.Desktop.ExceptionHandlers.Abstract;
 using Restorator.Desktop.Infrastructure;
 using Restorator.Desktop.Services;
 using Restorator.Desktop.Session;
@@ -22,10 +24,17 @@ namespace Restorator.Desktop.Extensions
         public static IServiceCollection Configure(this IServiceCollection services)
         {
             return services.ConfigureServices()
+                           .ConfigureHandlers()
                            .ConfigureApiClients()
                            .ConfigureViews();
         }
 
+        public static IServiceCollection ConfigureHandlers(this IServiceCollection services)
+        {
+            services.AddKeyedScoped<ExceptionHandlerBase, UnauthorizedExceptionHandler>(typeof(HttpRequestException));
+
+            return services;
+        }
         public static IServiceCollection ConfigureServices(this IServiceCollection services)
         {
             services.AddSingleton<ISnackbarService, SnackbarService>();
@@ -61,7 +70,6 @@ namespace Restorator.Desktop.Extensions
                 return handler;
             };
 
-
             services.AddHttpClient<IAccountService, AccountService>((provider, client) => configureClient.Invoke(provider, client, "account/"))
                     .ConfigurePrimaryHttpMessageHandler(configureHandler);
 
@@ -71,7 +79,7 @@ namespace Restorator.Desktop.Extensions
             services.AddHttpClient<IReservationService, ReservationService>((provider, client) => configureClient.Invoke(provider, client, "reservation/"))
                     .ConfigurePrimaryHttpMessageHandler(configureHandler);
 
-            services.AddHttpClient<IReservationService, ReservationService>((provider, client) => configureClient.Invoke(provider, client, "template/"))
+            services.AddHttpClient<ITemplateService, TemplateService>((provider, client) => configureClient.Invoke(provider, client, "template/"))
                     .ConfigurePrimaryHttpMessageHandler(configureHandler);
 
             return services;
