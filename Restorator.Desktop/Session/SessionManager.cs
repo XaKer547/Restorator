@@ -11,10 +11,11 @@ namespace Restorator.Desktop.Session
         public event UserLoggedInHandler? UserLoggedIn;
         public bool TryGetSession(out SessionInfo sessionInfo)
         {
-            sessionInfo = null;
-
             if (!HaveSession())
+            {
+                sessionInfo = null;
                 return false;
+            }
 
             sessionInfo = new(_settings.Username, _settings.Role);
 

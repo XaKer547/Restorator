@@ -125,9 +125,6 @@ namespace Restorator.Desktop.ViewModels
             if (SelectedTag == restaurantTag)
                 return;
 
-            //fuck it
-            //await ResetSelectedTag();
-
             SelectedTag = restaurantTag;
 
             CanResetTag = true;
@@ -164,7 +161,7 @@ namespace Restorator.Desktop.ViewModels
 
         [ObservableProperty]
         private bool isShowingLatest = false;
-        
+
         private bool showedLatest = false;
 
         [ObservableProperty]
