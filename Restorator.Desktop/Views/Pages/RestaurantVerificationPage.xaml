@@ -23,12 +23,41 @@
                                 <Grid Margin="2.5,0">
                                     <ui:TextBlock Text="{Binding RestaurantName}" FontTypography="Body" Foreground="White" VerticalAlignment="Bottom"/>
 
-                                    <ListBox ItemsSource="{Binding Images}" SelectedItem="{Binding SelectedImage, Mode=TwoWay}" HorizontalAlignment="Right" VerticalAlignment="Bottom">
-                                        <ListBox.ItemTemplate>
-                                            <DataTemplate>
-                                                <Image Source="{Binding}" Width="150" Height="100" Margin="2.5"/>
-                                            </DataTemplate>
-                                        </ListBox.ItemTemplate>
+                                    <ListBox ItemsSource="{Binding Images}" SelectedItem="{Binding SelectedImage, Mode=TwoWay}" 
+                       IsSynchronizedWithCurrentItem="True"
+                       HorizontalAlignment="Right" VerticalAlignment="Bottom" Height="25"
+                       Background="Transparent">
+                                        <ListBox.ItemsPanel>
+                                            <ItemsPanelTemplate>
+                                                <StackPanel Orientation="Horizontal"/>
+                                            </ItemsPanelTemplate>
+                                        </ListBox.ItemsPanel>
+                                        <ListBox.Resources>
+                                            <Style TargetType="ListBoxItem">
+                                                <Setter Property="Template">
+                                                    <Setter.Value>
+                                                        <ControlTemplate TargetType="ListBoxItem">
+                                                            <Border Name="mainBorder" Width="30" Height="20" CornerRadius="10" BorderBrush="Transparent" BorderThickness="0.25" Opacity="0.5">
+                                                                <Border Name="imageContainer" CornerRadius="10">
+                                                                    <Border.Background>
+                                                                        <ImageBrush Stretch="UniformToFill" ImageSource="{Binding }" />
+                                                                    </Border.Background>
+                                                                </Border>
+                                                            </Border>
+                                                            <ControlTemplate.Triggers>
+                                                                <Trigger Property="IsMouseOver" Value="True">
+                                                                    <Setter TargetName="mainBorder" Property="Opacity" Value="1" />
+                                                                </Trigger>
+                                                                <Trigger Property="IsSelected" Value="True">
+                                                                    <Setter TargetName="mainBorder" Property="Opacity" Value="1" />
+                                                                    <Setter TargetName="mainBorder" Property="BorderBrush" Value="LightBlue"/>
+                                                                </Trigger>
+                                                            </ControlTemplate.Triggers>
+                                                        </ControlTemplate>
+                                                    </Setter.Value>
+                                                </Setter>
+                                            </Style>
+                                        </ListBox.Resources>
                                     </ListBox>
                                 </Grid>
                             </Border>

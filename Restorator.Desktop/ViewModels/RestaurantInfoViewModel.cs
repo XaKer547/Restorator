@@ -1,9 +1,9 @@
-﻿using CommunityToolkit.Mvvm.ComponentModel;
+﻿using System.Collections.ObjectModel;
+using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Restorator.Desktop.Dialogs;
 using Restorator.Desktop.ViewModels.Abstract;
 using Restorator.Domain.Services;
-using System.Collections.ObjectModel;
 using Wpf.Ui;
 using Wpf.Ui.Extensions;
 
@@ -30,7 +30,7 @@ namespace Restorator.Desktop.ViewModels
         }
 
         [ObservableProperty]
-        private string name;
+        private string restaurantName;
 
         [ObservableProperty]
         private string description;
@@ -68,13 +68,13 @@ namespace Restorator.Desktop.ViewModels
 
             var info = result.Value;
 
-            Name = info.Name;
+            RestaurantName = info.Name;
 
             foreach (var image in info.Images)
                 Images.Add(image);
 
             SelectedImage = Images.FirstOrDefault();
-            
+
             Menu = info.Menu;
             Description = info.Description;
             BeginWorkTime = info.BeginWorkTime;
