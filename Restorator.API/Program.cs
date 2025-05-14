@@ -1,14 +1,16 @@
-using System.Reflection;
-using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Restorator.API.Infrastructure;
 using Restorator.Application.Server.Services;
-using Restorator.DataAccess.SqlServer;
+using Restorator.DataAccess.Data;
 using Restorator.Domain.Services;
 using Restorator.Mail.Configuration;
 using Restorator.Mail.Services;
+using Restorator.Seeder.Extensions;
+using System.Reflection;
+using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -73,7 +75,10 @@ builder.Services.AddAuthentication(x =>
     };
 });
 
-builder.Services.AddRestoratorDbContext();
+builder.Services.AddDbContext<RestoratorDbContext>(opt =>
+{
+    opt.UseSqlServer(builder.Configuration.GetConnectionString("LocalConnection"));
+});
 
 builder.Services.AddScoped<IJwtService, JwtService>();
 builder.Services.AddScoped<IAccountService, AccountService>();
@@ -85,6 +90,8 @@ builder.Services.AddScoped<IUserManager, UserManager>();
 builder.Services.AddScoped<IMailService, MailService>();
 
 builder.Services.AddScoped<MailTemplateBuilder>();
+
+builder.Services.AddSeeder();
 
 builder.Services.AddHttpContextAccessor();
 

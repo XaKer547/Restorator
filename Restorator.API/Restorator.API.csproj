@@ -11,13 +11,17 @@
 		<PackageReference Include="MailKit" Version="4.11.0" />
 		<PackageReference Include="MediatR" Version="12.4.1" />
 		<PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.13" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="9.0.0">
+		  <PrivateAssets>all</PrivateAssets>
+		  <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+		</PackageReference>
 		<PackageReference Include="Swashbuckle.AspNetCore" Version="6.6.2" />
 	</ItemGroup>
 
 	<ItemGroup>
 		<ProjectReference Include="..\Restorator.Application.Server\Restorator.Application.Server.csproj" />
-		<ProjectReference Include="..\Restorator.DataAccess.Common\Restorator.DataAccess.SqlServer.csproj" />
 		<ProjectReference Include="..\Restorator.Domain\Restorator.Domain.csproj" />
+		<ProjectReference Include="..\Restorator.Seeder\Restorator.Seeder.csproj" />
 	</ItemGroup>
 
 	<ItemGroup>

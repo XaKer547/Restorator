@@ -1,7 +1,6 @@
 ﻿using FluentResults;
 using Restorator.Application.Client.Extensions;
 using Restorator.Domain.Models.Account;
-using Restorator.Domain.Models.Authorization;
 using Restorator.Domain.Services;
 using System.Net.Http.Json;
 

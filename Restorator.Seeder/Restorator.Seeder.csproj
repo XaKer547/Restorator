@@ -1,47 +1,14 @@
-<Project Sdk="Microsoft.NET.Sdk.Web">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
-    <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
-    <Configurations>Debug;Release;HomeDebug;COLLEGE_DEBUG;HOME_DEBUG;CollegeDebug</Configurations>
+    <Nullable>enable</Nullable>
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="Resources\100 мест%281%29.png" />
-    <None Remove="Resources\100 мест%282%29.png" />
-    <None Remove="Resources\100 мест%283%29.png" />
-    <None Remove="Resources\100 мест%284%29.png" />
-    <None Remove="Resources\100 мест%285%29.png" />
-    <None Remove="Resources\100+ мест%281%29.png" />
-    <None Remove="Resources\100+ мест%282%29.png" />
-    <None Remove="Resources\100+ мест%283%29.png" />
-    <None Remove="Resources\100+ мест%284%29.png" />
-    <None Remove="Resources\100+ мест%285%29.png" />
-    <None Remove="Resources\20 мест%281%29.png" />
-    <None Remove="Resources\20 мест%282%29.png" />
-    <None Remove="Resources\20 мест%283%29.png" />
-    <None Remove="Resources\20 мест%284%29.png" />
-    <None Remove="Resources\20 мест%285%29.png" />
-    <None Remove="Resources\30 мест%281%29.png" />
-    <None Remove="Resources\30 мест%282%29.png" />
-    <None Remove="Resources\30 мест%283%29.png" />
-    <None Remove="Resources\30 мест%284%29.png" />
-    <None Remove="Resources\30 мест%285%29.png" />
-    <None Remove="Resources\40 мест%281%29.png" />
-    <None Remove="Resources\40 мест%282%29.png" />
-    <None Remove="Resources\40 мест%283%29.png" />
-    <None Remove="Resources\40 мест%284%29.png" />
-    <None Remove="Resources\40 мест%285%29.png" />
-    <None Remove="Resources\50 мест%281%29.png" />
-    <None Remove="Resources\50 мест%282%29.png" />
-    <None Remove="Resources\50 мест%283%29.png" />
-    <None Remove="Resources\50 мест%284%29.png" />
-    <None Remove="Resources\50 мест%285%29.png" />
-    <None Remove="Resources\RestaurantsImage\Dali.png" />
     <None Remove="Resources\RestaurantsImage\GIACOMO%281%29.png" />
     <None Remove="Resources\RestaurantsImage\GIACOMO%282%29.png" />
-    <None Remove="Resources\RestaurantsImage\GIACOMO.png" />
     <None Remove="Resources\RestaurantsImage\Kinza.png" />
     <None Remove="Resources\RestaurantsImage\Suly.png" />
     <None Remove="Resources\RestaurantsImage\Yoko Sushi Bar.png" />
@@ -49,7 +16,7 @@
     <None Remove="Resources\RestaurantsImage\Синабонная Бо Синна.png" />
     <None Remove="Resources\RestaurantsImage\ТатарАш.png" />
     <None Remove="Resources\RestaurantsImage\Телави.png" />
-    <None Remove="Resources\RestaurantsMenu\Dali.png" />
+    <None Remove="Resources\RestaurantsMenu\GIACOMO.png" />
     <None Remove="Resources\RestaurantsMenu\Kinza.png" />
     <None Remove="Resources\RestaurantsMenu\Suly.png" />
     <None Remove="Resources\RestaurantsMenu\Yoko Sushi Bar.png" />
@@ -58,6 +25,36 @@
     <None Remove="Resources\RestaurantsMenu\Синабонная Бо Синна.png" />
     <None Remove="Resources\RestaurantsMenu\ТатарАш.png" />
     <None Remove="Resources\RestaurantsMenu\Телави.png" />
+    <None Remove="Resources\RestaurantsPlan\100 мест%281%29.png" />
+    <None Remove="Resources\RestaurantsPlan\100 мест%282%29.png" />
+    <None Remove="Resources\RestaurantsPlan\100 мест%283%29.png" />
+    <None Remove="Resources\RestaurantsPlan\100 мест%284%29.png" />
+    <None Remove="Resources\RestaurantsPlan\100 мест%285%29.png" />
+    <None Remove="Resources\RestaurantsPlan\100+ мест%281%29.png" />
+    <None Remove="Resources\RestaurantsPlan\100+ мест%282%29.png" />
+    <None Remove="Resources\RestaurantsPlan\100+ мест%283%29.png" />
+    <None Remove="Resources\RestaurantsPlan\100+ мест%284%29.png" />
+    <None Remove="Resources\RestaurantsPlan\100+ мест%285%29.png" />
+    <None Remove="Resources\RestaurantsPlan\20 мест%281%29.png" />
+    <None Remove="Resources\RestaurantsPlan\20 мест%282%29.png" />
+    <None Remove="Resources\RestaurantsPlan\20 мест%283%29.png" />
+    <None Remove="Resources\RestaurantsPlan\20 мест%284%29.png" />
+    <None Remove="Resources\RestaurantsPlan\20 мест%285%29.png" />
+    <None Remove="Resources\RestaurantsPlan\30 мест%281%29.png" />
+    <None Remove="Resources\RestaurantsPlan\30 мест%282%29.png" />
+    <None Remove="Resources\RestaurantsPlan\30 мест%283%29.png" />
+    <None Remove="Resources\RestaurantsPlan\30 мест%284%29.png" />
+    <None Remove="Resources\RestaurantsPlan\30 мест%285%29.png" />
+    <None Remove="Resources\RestaurantsPlan\40 мест%281%29.png" />
+    <None Remove="Resources\RestaurantsPlan\40 мест%282%29.png" />
+    <None Remove="Resources\RestaurantsPlan\40 мест%283%29.png" />
+    <None Remove="Resources\RestaurantsPlan\40 мест%284%29.png" />
+    <None Remove="Resources\RestaurantsPlan\40 мест%285%29.png" />
+    <None Remove="Resources\RestaurantsPlan\50 мест%281%29.png" />
+    <None Remove="Resources\RestaurantsPlan\50 мест%282%29.png" />
+    <None Remove="Resources\RestaurantsPlan\50 мест%283%29.png" />
+    <None Remove="Resources\RestaurantsPlan\50 мест%284%29.png" />
+    <None Remove="Resources\RestaurantsPlan\50 мест%285%29.png" />
   </ItemGroup>
 
   <ItemGroup>
@@ -79,48 +76,43 @@
     <EmbeddedResource Include="Resources\RestaurantsMenu\Синабонная Бо Синна.png" />
     <EmbeddedResource Include="Resources\RestaurantsMenu\ТатарАш.png" />
     <EmbeddedResource Include="Resources\RestaurantsMenu\Телави.png" />
-    <EmbeddedResource Include="Resources\RestaurantsPlan\100 мест%281%29.png" />
-    <EmbeddedResource Include="Resources\RestaurantsPlan\100 мест%282%29.png" />
-    <EmbeddedResource Include="Resources\RestaurantsPlan\100 мест%283%29.png" />
-    <EmbeddedResource Include="Resources\RestaurantsPlan\100 мест%284%29.png" />
-    <EmbeddedResource Include="Resources\RestaurantsPlan\100 мест%285%29.png" />
-    <EmbeddedResource Include="Resources\RestaurantsPlan\100+ мест%281%29.png" />
-    <EmbeddedResource Include="Resources\RestaurantsPlan\100+ мест%282%29.png" />
-    <EmbeddedResource Include="Resources\RestaurantsPlan\100+ мест%283%29.png" />
-    <EmbeddedResource Include="Resources\RestaurantsPlan\100+ мест%284%29.png" />
-    <EmbeddedResource Include="Resources\RestaurantsPlan\100+ мест%285%29.png" />
-    <EmbeddedResource Include="Resources\RestaurantsPlan\20 мест%281%29.png" />
-    <EmbeddedResource Include="Resources\RestaurantsPlan\20 мест%282%29.png" />
-    <EmbeddedResource Include="Resources\RestaurantsPlan\20 мест%283%29.png" />
-    <EmbeddedResource Include="Resources\RestaurantsPlan\20 мест%284%29.png" />
-    <EmbeddedResource Include="Resources\RestaurantsPlan\20 мест%285%29.png" />
-    <EmbeddedResource Include="Resources\RestaurantsPlan\30 мест%281%29.png" />
-    <EmbeddedResource Include="Resources\RestaurantsPlan\30 мест%282%29.png" />
-    <EmbeddedResource Include="Resources\RestaurantsPlan\30 мест%283%29.png" />
-    <EmbeddedResource Include="Resources\RestaurantsPlan\30 мест%284%29.png" />
-    <EmbeddedResource Include="Resources\RestaurantsPlan\30 мест%285%29.png" />
-    <EmbeddedResource Include="Resources\RestaurantsPlan\40 мест%281%29.png" />
-    <EmbeddedResource Include="Resources\RestaurantsPlan\40 мест%282%29.png" />
-    <EmbeddedResource Include="Resources\RestaurantsPlan\40 мест%283%29.png" />
-    <EmbeddedResource Include="Resources\RestaurantsPlan\40 мест%284%29.png" />
-    <EmbeddedResource Include="Resources\RestaurantsPlan\40 мест%285%29.png" />
-    <EmbeddedResource Include="Resources\RestaurantsPlan\50 мест%281%29.png" />
-    <EmbeddedResource Include="Resources\RestaurantsPlan\50 мест%282%29.png" />
-    <EmbeddedResource Include="Resources\RestaurantsPlan\50 мест%283%29.png" />
-    <EmbeddedResource Include="Resources\RestaurantsPlan\50 мест%284%29.png" />
-    <EmbeddedResource Include="Resources\RestaurantsPlan\50 мест%285%29.png" />
+    <EmbeddedResource Include="Resources\RestaurantsPlan\100 мест(1).png" />
+    <EmbeddedResource Include="Resources\RestaurantsPlan\100 мест(2).png" />
+    <EmbeddedResource Include="Resources\RestaurantsPlan\100 мест(3).png" />
+    <EmbeddedResource Include="Resources\RestaurantsPlan\100 мест(4).png" />
+    <EmbeddedResource Include="Resources\RestaurantsPlan\100 мест(5).png" />
+    <EmbeddedResource Include="Resources\RestaurantsPlan\100+ мест(1).png" />
+    <EmbeddedResource Include="Resources\RestaurantsPlan\100+ мест(2).png" />
+    <EmbeddedResource Include="Resources\RestaurantsPlan\100+ мест(3).png" />
+    <EmbeddedResource Include="Resources\RestaurantsPlan\100+ мест(4).png" />
+    <EmbeddedResource Include="Resources\RestaurantsPlan\100+ мест(5).png" />
+    <EmbeddedResource Include="Resources\RestaurantsPlan\20 мест(1).png" />
+    <EmbeddedResource Include="Resources\RestaurantsPlan\20 мест(2).png" />
+    <EmbeddedResource Include="Resources\RestaurantsPlan\20 мест(3).png" />
+    <EmbeddedResource Include="Resources\RestaurantsPlan\20 мест(4).png" />
+    <EmbeddedResource Include="Resources\RestaurantsPlan\20 мест(5).png" />
+    <EmbeddedResource Include="Resources\RestaurantsPlan\30 мест(1).png" />
+    <EmbeddedResource Include="Resources\RestaurantsPlan\30 мест(2).png" />
+    <EmbeddedResource Include="Resources\RestaurantsPlan\30 мест(3).png" />
+    <EmbeddedResource Include="Resources\RestaurantsPlan\30 мест(4).png" />
+    <EmbeddedResource Include="Resources\RestaurantsPlan\30 мест(5).png" />
+    <EmbeddedResource Include="Resources\RestaurantsPlan\40 мест(1).png" />
+    <EmbeddedResource Include="Resources\RestaurantsPlan\40 мест(2).png" />
+    <EmbeddedResource Include="Resources\RestaurantsPlan\40 мест(3).png" />
+    <EmbeddedResource Include="Resources\RestaurantsPlan\40 мест(4).png" />
+    <EmbeddedResource Include="Resources\RestaurantsPlan\40 мест(5).png" />
+    <EmbeddedResource Include="Resources\RestaurantsPlan\50 мест(1).png" />
+    <EmbeddedResource Include="Resources\RestaurantsPlan\50 мест(2).png" />
+    <EmbeddedResource Include="Resources\RestaurantsPlan\50 мест(3).png" />
+    <EmbeddedResource Include="Resources\RestaurantsPlan\50 мест(4).png" />
+    <EmbeddedResource Include="Resources\RestaurantsPlan\50 мест(5).png" />
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="9.0.0">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-    </PackageReference>
-    <PackageReference Include="Swashbuckle.AspNetCore" Version="6.6.2" />
+    <PackageReference Include="Microsoft.Extensions.Hosting.Abstractions" Version="9.0.5" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Restorator.DataAccess.Common\Restorator.DataAccess.SqlServer.csproj" />
     <ProjectReference Include="..\Restorator.DataAccess\Restorator.DataAccess.csproj" />
   </ItemGroup>
 

@@ -1,4 +1,4 @@
-﻿using Restorator.Domain.Models.Authorization;
+﻿using Restorator.Domain.Models.Account;
 
 namespace Restorator.Domain.Services
 {

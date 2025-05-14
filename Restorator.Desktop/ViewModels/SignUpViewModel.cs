@@ -1,10 +1,10 @@
-﻿using System.ComponentModel.DataAnnotations;
-using CommunityToolkit.Mvvm.ComponentModel;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Restorator.Desktop.ViewModels.Abstract;
-using Restorator.Domain.Models.Authorization;
+using Restorator.Domain.Models.Account;
 using Restorator.Domain.Models.Enums;
 using Restorator.Domain.Services;
+using System.ComponentModel.DataAnnotations;
 using Wpf.Ui;
 using Wpf.Ui.Extensions;
 

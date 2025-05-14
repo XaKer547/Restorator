@@ -1,5 +1,5 @@
 ﻿using Restorator.Desktop.Properties;
-using Restorator.Domain.Models.Authorization;
+using Restorator.Domain.Models.Account;
 using Restorator.Domain.Services;
 
 namespace Restorator.Desktop.Session

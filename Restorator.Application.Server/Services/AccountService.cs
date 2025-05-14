@@ -4,7 +4,6 @@ using Restorator.DataAccess.Data;
 using Restorator.DataAccess.Data.Entities;
 using Restorator.DataAccess.Helpers;
 using Restorator.Domain.Models.Account;
-using Restorator.Domain.Models.Authorization;
 using Restorator.Domain.Services;
 using Restorator.Mail.Models.Templates;
 using Restorator.Mail.Services;

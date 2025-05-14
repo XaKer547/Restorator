@@ -1,4 +1,4 @@
-﻿namespace Restorator.Domain.Models.Authorization
+﻿namespace Restorator.Domain.Models.Account
 {
     public class SignInDTO
     {
