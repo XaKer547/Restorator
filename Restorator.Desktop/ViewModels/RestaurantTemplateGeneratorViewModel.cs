@@ -1,19 +1,24 @@
-﻿using CommunityToolkit.Mvvm.ComponentModel;
+﻿using System.Collections.ObjectModel;
+using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using Restorator.Desktop.Extensions;
 using Restorator.Desktop.Models;
 using Restorator.Desktop.ViewModels.Abstract;
-using System.Collections.ObjectModel;
-using System.Globalization;
-using System.IO;
-using System.Text;
-using System.Windows;
+using Restorator.Domain.Models.Templates;
+using Restorator.Domain.Services;
 
 namespace Restorator.Desktop.ViewModels
 {
     public partial class RestaurantTemplateGeneratorViewModel : ViewModelBase
     {
+        private readonly ITemplateService _templateService;
+        public RestaurantTemplateGeneratorViewModel(ITemplateService templateService)
+        {
+            _templateService = templateService;
+        }
+
         private const string SchemeLocation =
-            "F:\\Restorator\\Restorator.Seeder\\Resources\\RestaurantsPlan";
+            "C:\\Users\\user\\source\\repos\\XaKer547\\Restorator\\Restorator.Seeder\\Resources\\RestaurantsPlan";
 
         //тут свой путь к сидеру пиши
 
@@ -21,7 +26,13 @@ namespace Restorator.Desktop.ViewModels
         private ObservableCollection<TableModel> tables = [];
 
         [ObservableProperty]
-        private ObservableCollection<TemplateModel> templates = [];
+        private ObservableCollection<RestaurantTemplatePreview> templates = [];
+
+        [ObservableProperty]
+        private ObservableCollection<TableModel> tableTemplates = [];
+
+        [ObservableProperty]
+        private TableModel selectedTableTempate;
 
         [ObservableProperty]
         private TableModel? selectedTable;
@@ -36,20 +47,57 @@ namespace Restorator.Desktop.ViewModels
         private bool canChangeTable = false;
 
         [RelayCommand]
-        public void Initialize()
+        public async Task Initialize()
         {
-            Templates.Clear();
+            var teplates = await _templateService.GetTableTemplates();
 
-            Tables.Clear();
+            foreach (var tableTemplate in teplates)
+                TableTemplates.Add(tableTemplate.ToModel());
+
+            SelectedTableTempate = TableTemplates[0];
+
+            var schemes = await _templateService.GetRestaurantsTemplatePreview();
+
+            foreach (var scheme in schemes)
+            {
+                Templates.Add(scheme);
+            }
 
             AddNewTable();
+        }
 
-            var images = Directory.GetFiles(SchemeLocation);
+        [RelayCommand]
+        public async Task<IReadOnlyCollection<TableModel>> LoadTableTemplates()
+        {
+            await Task.Delay(1); //IDK :)
 
-            foreach (var image in images)
-            {
-                Templates.Add(GetTemplateFromPath(image));
-            }
+            return
+            [
+                new TableModel()
+                {
+                    State = Domain.Models.Enums.TableStates.OccupiedByUser,
+                    Height = 100,
+                    Width = 108,
+                    Rotation = 0,
+                    TemplateId = 1,
+                },
+                new TableModel()
+                {
+                    State = Domain.Models.Enums.TableStates.OccupiedByUser,
+                    Height = 183,
+                    Width = 183,
+                    Rotation = 0,
+                    TemplateId = 1,
+                },
+                new TableModel()
+                {
+                    State = Domain.Models.Enums.TableStates.OccupiedByUser,
+                    Height = 183,
+                    Width = 110,
+                    Rotation = 0,
+                    TemplateId = 1,
+                },
+            ];
         }
 
         [RelayCommand]
@@ -63,15 +111,7 @@ namespace Restorator.Desktop.ViewModels
         [RelayCommand]
         public void AddNewTable()
         {
-            var table = new TableModel()
-            {
-                X = 0,
-                Y = 0,
-                State = Domain.Models.Enums.TableStates.OccupiedByUser,
-                Rotation = 0,
-                Height = 183,
-                Width = 183,
-            };
+            var table = SelectedTableTempate.Clone();
 
             SelectedTable = table;
 
@@ -81,19 +121,18 @@ namespace Restorator.Desktop.ViewModels
         }
 
         [RelayCommand]
-        public void ClearScheme()
-        {
-            Tables.Clear();
-        }
+        public void ClearScheme() => Tables.Clear();
 
         [RelayCommand]
-        public void SetSelectedTableMiniSquare()
+        public void ChangeSelectedTableTemplate(TableModel template)
         {
-            if (!CanChangeTable)
+            SelectedTableTempate = template;
+
+            if (SelectedTable is null)
                 return;
 
-            SelectedTable!.Width = 100;
-            SelectedTable.Height = 108;
+            SelectedTable.Height = SelectedTableTempate.Height;
+            SelectedTable.Width = SelectedTableTempate.Width;
         }
 
         [RelayCommand]
@@ -106,26 +145,7 @@ namespace Restorator.Desktop.ViewModels
             CanChangeTable = false;
         }
 
-        [RelayCommand]
-        public void SetSelectedTableSquare()
-        {
-            if (!CanChangeTable)
-                return;
-
-            SelectedTable!.Width = 183;
-            SelectedTable.Height = 183;
-        }
-
-        [RelayCommand]
-        public void SetSelectedTableRectanle()
-        {
-            if (!CanChangeTable)
-                return;
-
-            SelectedTable!.Width = 183;
-            SelectedTable.Height = 110;
-        }
-
+        /*
         private TemplateModel GetTemplateFromPath(string imagePath)
         {
             return new TemplateModel()
@@ -155,21 +175,8 @@ namespace Restorator.Desktop.ViewModels
             {
                 script.AppendLine("\t\t\tnew Table()\n\t\t\t{");
 
-                int templateId;
 
-                if (table.Width == 183 && table.Height == 183) // надо бы сделать это по другому(
-                    templateId = 1;
-                else if (table.Width == 183 && table.Height == 110)
-                    templateId = 4;
-                else
-                    templateId = 7;
-
-                if (table.Rotation == 45)
-                    templateId++;
-                else if (table.Rotation == 90)
-                    templateId += 2;
-
-                script.AppendLine($"\t\t\t\tTableTemplateId = {templateId},");
+                script.AppendLine($"\t\t\t\tTableTemplateId = {table.TemplateId},");
 
                 //у меня margin стоит для того чтобы FlipView отработал
                 script.AppendLine(
@@ -190,5 +197,6 @@ namespace Restorator.Desktop.ViewModels
 
             SeederScript = script.ToString();
         }
+        */
     }
 }

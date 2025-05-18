@@ -23,7 +23,7 @@
                 <modern:FlipView ItemsSource="{Binding Templates}" SelectedItem="{Binding SelectedTemplate}" IsTabStop="True">
                     <modern:FlipView.ItemTemplate>
                         <DataTemplate>
-                            <Image Source="{Binding Content}"/>
+                            <Image Source="{Binding Scheme}"/>
                         </DataTemplate>
                     </modern:FlipView.ItemTemplate>
 
@@ -86,28 +86,38 @@
             <ui:Button Appearance="Danger" Foreground="White" Content="Удалить все столы" 
                        Command="{Binding ClearSchemeCommand}"/>
 
-            <TextBlock Text="{Binding SelectedTemplate.Filename, StringFormat=Выбран шаблон: {0}}"/>
-
             <ui:DynamicScrollViewer MaxHeight="300">
                 <ui:TextBox IsReadOnly="True" Text="{Binding SeederScript}"/>
             </ui:DynamicScrollViewer>
-
-
-            <DockPanel>
-                <ui:Button Content="Создать скрипт" Margin="20, 0" Command="{Binding GenerateSeederScriptCommand}"/>
-
-                <ui:Button Content="Скопировать в буффер" Command="{Binding CopyScriptToBufferCommand}"/>
-            </DockPanel>
         </StackPanel>
 
         <StackPanel Margin="20,0">
             <ui:TextBlock FontTypography="Title" Text="Шаблон стола"/>
 
-            <DockPanel>
-                <ui:Button Appearance="Info" Content="Квадрат" Command="{Binding SetSelectedTableSquareCommand}"/>
-                <ui:Button Appearance="Info" Content="Квадрат(мини)" Margin="10,0" Command="{Binding SetSelectedTableMiniSquareCommand}"/>
-                <ui:Button Appearance="Info" Content="Прямоугольник" Command="{Binding SetSelectedTableRectanleCommand}"/>
-            </DockPanel>
+            <ItemsControl ItemsSource="{Binding TableTemplates}">
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate DataType="{x:Type models:TableModel}">
+                        <ui:Button Appearance="Info"
+                                   Command="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type pages:RestaurantTemplateGeneratorPage}},
+                            Path=DataContext.ChangeSelectedTableTemplateCommand}"
+                                   CommandParameter="{Binding }">
+                            <TextBlock>
+                                <TextBlock.Text>
+                                    <MultiBinding StringFormat="{}{0}x{1}">
+                                        <Binding Path="Width"/>
+                                        <Binding Path="Height"/>
+                                    </MultiBinding>
+                                </TextBlock.Text>
+                            </TextBlock>
+                        </ui:Button>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <WrapPanel/>
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+            </ItemsControl>
         </StackPanel>
     </DockPanel>
 

@@ -1,10 +1,9 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Restorator.Domain.Models.Account;
-using Restorator.Domain.Models.Authorization;
 using Restorator.Domain.Services;
 using System.ComponentModel.DataAnnotations;
-using AuthorizationResult = Restorator.Domain.Models.Authorization.AuthorizationResult;
+using AuthorizationResult = Restorator.Domain.Models.Account.AuthorizationResult;
 
 namespace Restorator.API.Controllers
 {

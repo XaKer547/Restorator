@@ -14,7 +14,7 @@ namespace Restorator.Seeder.Data.DbSeeder
             {
                 new RestaurantTemplate
                 {
-                    Image = EmbeddedResourceHelper.GetRestaurantPlan("20 мест(1)"),
+                    Image  = EmbeddedResourceHelper.GetRestaurantPlan("20 мест(1)"),
                     Tables = new List<Table>()
                     {
                         new Table()
@@ -69,7 +69,7 @@ namespace Restorator.Seeder.Data.DbSeeder
                 }, // 20 мест (1)
                 new RestaurantTemplate
                 {
-                    Image = EmbeddedResourceHelper.GetRestaurantPlan("30 мест(1)"),
+                    Image  = EmbeddedResourceHelper.GetRestaurantPlan("30 мест(1)"),
                     Tables = new List<Table>()
                     {
                         new Table()
@@ -124,7 +124,7 @@ namespace Restorator.Seeder.Data.DbSeeder
                 }, // 30 мест (1)
                 new RestaurantTemplate
                 {
-                    Image = EmbeddedResourceHelper.GetRestaurantPlan("40 мест(1)"),
+                    Image  = EmbeddedResourceHelper.GetRestaurantPlan("40 мест(1)"),
                     Tables = new List<Table>()
                     {
                         new Table()
@@ -191,7 +191,7 @@ namespace Restorator.Seeder.Data.DbSeeder
                 }, // 40 мест (1)
                 new RestaurantTemplate
                 {
-                    Image = EmbeddedResourceHelper.GetRestaurantPlan("50 мест(1)"),
+                    Image  = EmbeddedResourceHelper.GetRestaurantPlan("50 мест(1)"),
                     Tables = new List<Table>()
                     {
                         new Table()
@@ -270,7 +270,7 @@ namespace Restorator.Seeder.Data.DbSeeder
                 }, // 50 мест (1)
                 new RestaurantTemplate
                 {
-                    Image = EmbeddedResourceHelper.GetRestaurantPlan("100 мест(1)"),
+                    Image  = EmbeddedResourceHelper.GetRestaurantPlan("100 мест(1)"),
                     Tables = new List<Table>()
                     {
                         new Table() // 39
@@ -337,7 +337,7 @@ namespace Restorator.Seeder.Data.DbSeeder
                 }, // 100 мест (1)
                 new RestaurantTemplate
                 {
-                    Image = EmbeddedResourceHelper.GetRestaurantPlan("100+ мест(1)"),
+                    Image  = EmbeddedResourceHelper.GetRestaurantPlan("100+ мест(1)"),
                     Tables = new List<Table>()
                     {
                         new Table()
@@ -380,7 +380,7 @@ namespace Restorator.Seeder.Data.DbSeeder
                 }, // 100+ мест (1)
                 new RestaurantTemplate
                 {
-                Image = EmbeddedResourceHelper.GetRestaurantPlan("100 мест(2)"),
+                Image  = EmbeddedResourceHelper.GetRestaurantPlan("100 мест(2)"),
                 Tables = new List<Table>()
                     {
                         new Table()
@@ -441,7 +441,7 @@ namespace Restorator.Seeder.Data.DbSeeder
             }, // 100 мест (2)
                 new RestaurantTemplate
                 {
-                Image = EmbeddedResourceHelper.GetRestaurantPlan("100 мест(3)"),
+                Image  = EmbeddedResourceHelper.GetRestaurantPlan("100 мест(3)"),
                 Tables = new List<Table>()
                     {
                         new Table()
@@ -496,7 +496,7 @@ namespace Restorator.Seeder.Data.DbSeeder
             }, // 100 мест (3)
                 new RestaurantTemplate
                 {
-                    Image = EmbeddedResourceHelper.GetRestaurantPlan("100 мест(4)"),
+                    Image  = EmbeddedResourceHelper.GetRestaurantPlan("100 мест(4)"),
                     Tables = new List<Table>()
                         {
                             new Table()
@@ -563,7 +563,7 @@ namespace Restorator.Seeder.Data.DbSeeder
                 }, // 100 мест (4)
                 new RestaurantTemplate
                 {
-                    Image = EmbeddedResourceHelper.GetRestaurantPlan("100 мест(5)"),
+                    Image  = EmbeddedResourceHelper.GetRestaurantPlan("100 мест(5)"),
                     Tables = new List<Table>()
                         {
                             new Table()
@@ -624,7 +624,7 @@ namespace Restorator.Seeder.Data.DbSeeder
                 }, // 100 мест (5)
                 new RestaurantTemplate
                 {
-                    Image = EmbeddedResourceHelper.GetRestaurantPlan("100+ мест(2)"),
+                    Image  = EmbeddedResourceHelper.GetRestaurantPlan("100+ мест(2)"),
                     Tables = new List<Table>()
                         {
                             new Table()
@@ -667,7 +667,7 @@ namespace Restorator.Seeder.Data.DbSeeder
                 }, // 100+ мест (2)
                 new RestaurantTemplate
                 {
-                    Image = EmbeddedResourceHelper.GetRestaurantPlan("100+ мест(3)"),
+                    Image  = EmbeddedResourceHelper.GetRestaurantPlan("100+ мест(3)"),
                     Tables = new List<Table>()
                         {
                             new Table()
@@ -722,7 +722,7 @@ namespace Restorator.Seeder.Data.DbSeeder
                 }, // 100+ мест (3)
                 new RestaurantTemplate
                 {
-                    Image = EmbeddedResourceHelper.GetRestaurantPlan("100+ мест(4)"),
+                    Image  = EmbeddedResourceHelper.GetRestaurantPlan("100+ мест(4)"),
                     Tables = new List<Table>()
                         {
                             new Table()
@@ -759,7 +759,7 @@ namespace Restorator.Seeder.Data.DbSeeder
                 }, // 100+ мест (4)
                 new RestaurantTemplate
                 {
-                    Image = EmbeddedResourceHelper.GetRestaurantPlan("100+ мест(5)"),
+                    Image  = EmbeddedResourceHelper.GetRestaurantPlan("100+ мест(5)"),
                     Tables = new List<Table>()
                         {
                             new Table()
@@ -814,7 +814,7 @@ namespace Restorator.Seeder.Data.DbSeeder
                 }, // 100+ мест (5)
                 new RestaurantTemplate
                 {
-                    Image = EmbeddedResourceHelper.GetRestaurantPlan("20 мест(2)"),
+                    Image  = EmbeddedResourceHelper.GetRestaurantPlan("20 мест(2)"),
                     Tables = new List<Table>()
                         {
                             new Table()
@@ -869,7 +869,7 @@ namespace Restorator.Seeder.Data.DbSeeder
                 }, // 20 мест (2)
                 new RestaurantTemplate
                 {
-                    Image = EmbeddedResourceHelper.GetRestaurantPlan("20 мест(3)"),
+                    Image  = EmbeddedResourceHelper.GetRestaurantPlan("20 мест(3)"),
                     Tables = new List<Table>()
                         {
                             new Table()
@@ -924,7 +924,7 @@ namespace Restorator.Seeder.Data.DbSeeder
                 }, // 20 мест (3)
                 new RestaurantTemplate
                 {
-                    Image = EmbeddedResourceHelper.GetRestaurantPlan("20 мест(4)"),
+                    Image  = EmbeddedResourceHelper.GetRestaurantPlan("20 мест(4)"),
                     Tables = new List<Table>()
                         {
                             new Table()
@@ -979,7 +979,7 @@ namespace Restorator.Seeder.Data.DbSeeder
                 }, // 20 мест (4)
                 new RestaurantTemplate
                 {
-                    Image = EmbeddedResourceHelper.GetRestaurantPlan("20 мест(5)"),
+                    Image  = EmbeddedResourceHelper.GetRestaurantPlan("20 мест(5)"),
                     Tables = new List<Table>()
                         {
                             new Table()
@@ -1028,7 +1028,7 @@ namespace Restorator.Seeder.Data.DbSeeder
                 }, // 20 мест (5)
                 new RestaurantTemplate
                 {
-                    Image = EmbeddedResourceHelper.GetRestaurantPlan("30 мест(2)"),
+                    Image  = EmbeddedResourceHelper.GetRestaurantPlan("30 мест(2)"),
                     Tables = new List<Table>()
                         {
                             new Table()
@@ -1095,7 +1095,7 @@ namespace Restorator.Seeder.Data.DbSeeder
                 }, // 30 мест (2)
                 new RestaurantTemplate
                 {
-                    Image = EmbeddedResourceHelper.GetRestaurantPlan("30 мест(3)"),
+                    Image  = EmbeddedResourceHelper.GetRestaurantPlan("30 мест(3)"),
                     Tables = new List<Table>()
                         {
                             new Table()
@@ -1162,7 +1162,7 @@ namespace Restorator.Seeder.Data.DbSeeder
                 }, // 30 мест (3)
                 new RestaurantTemplate
                 {
-                    Image = EmbeddedResourceHelper.GetRestaurantPlan("30 мест(4)"),
+                    Image  = EmbeddedResourceHelper.GetRestaurantPlan("30 мест(4)"),
                     Tables = new List<Table>()
                         {
                             new Table()
@@ -1229,7 +1229,7 @@ namespace Restorator.Seeder.Data.DbSeeder
                 }, // 30 мест (4)
                 new RestaurantTemplate
                 {
-                    Image = EmbeddedResourceHelper.GetRestaurantPlan("30 мест(5)"),
+                    Image  = EmbeddedResourceHelper.GetRestaurantPlan("30 мест(5)"),
                     Tables = new List<Table>()
                         {
                             new Table()

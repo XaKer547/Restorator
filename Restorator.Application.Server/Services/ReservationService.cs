@@ -1,5 +1,4 @@
-﻿using System.Collections.Immutable;
-using FluentResults;
+﻿using FluentResults;
 using LinqKit;
 using Microsoft.EntityFrameworkCore;
 using Restorator.DataAccess.Data;
@@ -10,6 +9,7 @@ using Restorator.Domain.Models.Restaurant;
 using Restorator.Domain.Services;
 using Restorator.Mail.Models.Templates;
 using Restorator.Mail.Services;
+using System.Collections.Immutable;
 using Roles = Restorator.DataAccess.Data.Entities.Enums.Roles;
 
 namespace Restorator.Application.Server.Services
@@ -89,8 +89,8 @@ namespace Restorator.Application.Server.Services
         }
         public async Task<Result<IReadOnlyCollection<ReservationInfoDTO>>> GetReservations(GetReservationsDTO model)
         {
-            var predicate = PredicateBuilder.New<Reservation>(r => r.ReservationEnd.Date == model.SelectedDate.Date
-                                                                   || r.ReservationStart.Date == model.SelectedDate.Date);
+            var predicate = PredicateBuilder.New<Reservation>(r => r.ReservationEnd.Date == model.SelectedDate.ToDateTime(TimeOnly.MinValue)
+                                                                   || r.ReservationStart.Date == model.SelectedDate.ToDateTime(TimeOnly.MinValue));
 
             if (model.UserId.HasValue)
                 predicate = predicate.And(r => r.User.Id == model.UserId.Value);

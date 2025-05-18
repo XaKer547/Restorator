@@ -1,6 +1,7 @@
 ﻿using FluentResults;
 using Restorator.Domain.Models;
 using Restorator.Domain.Models.Restaurant;
+using Restorator.Domain.Models.Templates;
 
 namespace Restorator.Domain.Services
 {
@@ -16,5 +17,6 @@ namespace Restorator.Domain.Services
         Task<Result> DeleteRestaurant(int restaurantId);
         Task<Result> UpdateRestaurant(UpdateRestraurantDTO model);
         Task<IReadOnlyCollection<RestaurantTemplateDTO>> GetRestaurantTemplates();
+        Task<IReadOnlyCollection<RestaurantPreviewDTO>> GetLatestVisited();
     }
 }

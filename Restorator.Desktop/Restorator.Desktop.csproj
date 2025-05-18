@@ -8,6 +8,7 @@
     <UseWPF>true</UseWPF>
     <PlatformTarget>AnyCPU</PlatformTarget>
     <Configurations>Debug;Release;HomeDebug;COLLEGE_DEBUG;HOME_DEBUG;CollegeDebug</Configurations>
+    <ApplicationIcon>restorator.ico</ApplicationIcon>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'" />
@@ -65,6 +66,10 @@
 
   <ItemGroup>
     <ApplicationDefinition Include="Views\App.xaml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="restorator.ico" />
   </ItemGroup>
 
   <ItemGroup>

@@ -1,6 +1,8 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Restorator.Application.Client.Services;
 using Restorator.Desktop.Controls;
+using Restorator.Desktop.ExceptionHandlers;
+using Restorator.Desktop.ExceptionHandlers.Abstract;
 using Restorator.Desktop.Infrastructure;
 using Restorator.Desktop.Services;
 using Restorator.Desktop.Session;
@@ -22,10 +24,17 @@ namespace Restorator.Desktop.Extensions
         public static IServiceCollection Configure(this IServiceCollection services)
         {
             return services.ConfigureServices()
+                           .ConfigureHandlers()
                            .ConfigureApiClients()
                            .ConfigureViews();
         }
 
+        public static IServiceCollection ConfigureHandlers(this IServiceCollection services)
+        {
+            services.AddKeyedScoped<ExceptionHandlerBase, UnauthorizedExceptionHandler>(typeof(HttpRequestException));
+
+            return services;
+        }
         public static IServiceCollection ConfigureServices(this IServiceCollection services)
         {
             services.AddSingleton<ISnackbarService, SnackbarService>();
@@ -35,14 +44,15 @@ namespace Restorator.Desktop.Extensions
             services.AddSingleton<Wpf.Ui.INavigationService, Wpf.Ui.NavigationService>();
             services.AddSingleton<IPageService, PageService>();
             services.AddSingleton<ISessionManager, SessionManager>();
+            services.AddSingleton<IUserManager, UserManager>();
 
             return services;
         }
         public static IServiceCollection ConfigureApiClients(this IServiceCollection services)
         {
-            Action<IServiceProvider, HttpClient, string?> configureClient = (provider, client, endpoint) =>
+            Action<IServiceProvider, HttpClient> configureClient = (provider, client) =>
             {
-                client.BaseAddress = new Uri($"https://localhost:7090/api/{endpoint}");
+                client.BaseAddress = new Uri($"https://localhost:7090/api/");
 
                 var manager = provider.GetRequiredService<ISessionManager>();
 
@@ -50,9 +60,27 @@ namespace Restorator.Desktop.Extensions
                     client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
             };
 
-            services.AddHttpClient<IAccountService, AccountService>((provider, client) => configureClient.Invoke(provider, client, "account/"));
-            services.AddHttpClient<IRestaurantService, RestaurantService>((provider, client) => configureClient.Invoke(provider, client, "restaurant/"));
-            services.AddHttpClient<IReservationService, ReservationService>((provider, client) => configureClient.Invoke(provider, client, "reservation/"));
+            Func<HttpClientHandler> configureHandler = () =>
+            {
+                var handler = new HttpClientHandler();
+#if DEBUG
+                //because of invalid SSL from dev
+                handler.ServerCertificateCustomValidationCallback = (message, cert, chain, errors) => { return true; };
+#endif
+                return handler;
+            };
+
+            services.ConfigureHttpClientDefaults(config =>
+            {
+                config.ConfigurePrimaryHttpMessageHandler(configureHandler);
+
+                config.ConfigureHttpClient(configureClient);
+            });
+
+            services.AddHttpClient<IAccountService, AccountService>();
+            services.AddHttpClient<IRestaurantService, RestaurantService>();
+            services.AddHttpClient<IReservationService, ReservationService>();
+            services.AddHttpClient<ITemplateService, TemplateService>();
 
             return services;
         }
@@ -87,9 +115,9 @@ namespace Restorator.Desktop.Extensions
             services.AddTransientFromNamespace("Restorator.Desktop.ViewModels", assembly);
             services.AddTransientFromNamespace("Restorator.Desktop.Views", assembly);
 
-            var currentApp = System.Windows.Application.Current;
+            var application = System.Windows.Application.Current;
 
-            currentApp.Startup += (assemb, args) => manager.InitilizeTemplates(currentApp.Resources);
+            application.Startup += (assemb, args) => manager.InitilizeTemplates(application.Resources);
 
             services.AddSingleton(manager);
 

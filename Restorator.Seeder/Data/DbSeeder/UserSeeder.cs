@@ -38,6 +38,7 @@ namespace Restorator.Seeder.Data.DbSeeder
                     Username = "Манагер",
                     Email = "noreply@BoSin.com",
                     Login = "Manager",
+                    Email = "noreply@BoSin.ru",
                     Verified = true,
                     Password = AccountPasswordHelper.HashUserPassword("Manager")
                 }

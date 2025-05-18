@@ -1,6 +1,6 @@
-﻿namespace Restorator.Domain.Models.Restaurant
+﻿namespace Restorator.DataAccess.Data.Entities
 {
-    public class RestaurantTemplateDTO
+    public class RestaurantImage
     {
         public int Id { get; set; }
         public byte[] Image { get; set; }

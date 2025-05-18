@@ -29,7 +29,6 @@ namespace Restorator.Desktop.ViewModels
             _navigationService = navigationService;
             _sessionManager = sessionManager;
 
-
             if (!_sessionManager.TryGetSession(out var sessionInfo))
             {
                 Username = "Гость";
@@ -41,10 +40,12 @@ namespace Restorator.Desktop.ViewModels
                 Username = sessionInfo.Username;
             }
 
-
             _contentDialogService = contentDialogService;
             _menuNavigationService = menuNavigationService;
+
+            _sessionManager.UserLoggedIn += RefreshMenuState;
         }
+
 
         [ObservableProperty]
         private string username;
@@ -56,6 +57,30 @@ namespace Restorator.Desktop.ViewModels
         private ObservableCollection<object> footerItems = [];
 
         private Roles? _role;
+
+
+        [RelayCommand]
+        public void RefreshMenuState()
+        {
+            if (!_sessionManager.TryGetSession(out var sessionInfo))
+            {
+                //how
+
+                Username = "Гость";
+                _role = null;
+
+                return;
+            }
+
+            _role = Enum.Parse<Roles>(sessionInfo.Role);
+
+            Username = sessionInfo.Username;
+
+            MenuItems.Clear();
+            FooterItems.Clear();
+
+            InitializeNavigationItems();
+        }
 
         [RelayCommand]
         public void ConfigurePageService(INavigationView navigationView)
@@ -88,6 +113,7 @@ namespace Restorator.Desktop.ViewModels
             if (_role == Roles.Admin)
             {
                 MenuItems.Add(new NavigationViewItem("Заявки", SymbolRegular.TaskListRtl20, typeof(RestaurantsVerificationPage)));
+                MenuItems.Add(new NavigationViewItem("Редактор схем", SymbolRegular.TaskListRtl20, typeof(RestaurantTemplateGeneratorPage)));
             }
 
             if (_role is null)

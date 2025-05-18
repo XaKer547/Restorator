@@ -14,7 +14,7 @@
         <BooleanToVisibilityConverter x:Key="boolToVisibilityConverter"/>
     </Page.Resources>
     <Grid>
-        <StackPanel Margin="0,25">
+        <StackPanel Margin="25">
             <ui:CalendarDatePicker Date="{Binding SelectedDate, Mode=TwoWay}" IsTodayHighlighted="True">
                 <DockPanel>
                     <ui:TextBlock Text="{Binding SelectedDate, StringFormat=m}"/>

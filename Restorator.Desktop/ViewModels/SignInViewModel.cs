@@ -1,7 +1,8 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Restorator.Desktop.ViewModels.Abstract;
-using Restorator.Domain.Models.Authorization;
+using Restorator.Domain.Models.Account;
+using Restorator.Domain.Models.Enums;
 using Restorator.Domain.Services;
 using System.ComponentModel.DataAnnotations;
 using Wpf.Ui;
@@ -58,6 +59,7 @@ namespace Restorator.Desktop.ViewModels
                 return;
             }
 
+            Role = Enum.Parse<Roles>(result.Value.SessionInfo.Role);
             Authenticated = true;
 
             _snackbarService.Show("С возвращением", "Мы рады видеть тебя снова", Wpf.Ui.Controls.ControlAppearance.Success);

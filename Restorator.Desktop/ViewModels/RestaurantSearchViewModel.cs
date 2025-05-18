@@ -1,10 +1,10 @@
-﻿using CommunityToolkit.Mvvm.ComponentModel;
+﻿using System.Collections.ObjectModel;
+using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Restorator.Desktop.ViewModels.Abstract;
 using Restorator.Domain.Models;
 using Restorator.Domain.Models.Restaurant;
 using Restorator.Domain.Services;
-using System.Collections.ObjectModel;
 using Wpf.Ui.Controls;
 
 namespace Restorator.Desktop.ViewModels
@@ -14,10 +14,20 @@ namespace Restorator.Desktop.ViewModels
         private readonly IRestaurantService _restaurantService;
         private readonly Services.INavigationService _navigationService;
         public RestaurantSearchViewModel(IRestaurantService restaurantService,
-                                         Services.INavigationService navigationService)
+                                         Services.INavigationService navigationService,
+                                         ISessionManager sessionManager)
         {
             _restaurantService = restaurantService;
             _navigationService = navigationService;
+
+            IsLoggedIn = sessionManager.HaveSession();
+
+            sessionManager.UserLoggedIn += RefreshState;
+        }
+
+        private void RefreshState()
+        {
+            IsLoggedIn = true;
         }
 
         [ObservableProperty]
@@ -38,6 +48,8 @@ namespace Restorator.Desktop.ViewModels
         [ObservableProperty]
         private string searchText;
 
+        [ObservableProperty]
+        private bool isLoggedIn;
 
         private CancellationTokenSource? _searchTokenSource = null;
         async partial void OnSearchTextChanging(string value)
@@ -91,19 +103,17 @@ namespace Restorator.Desktop.ViewModels
         {
             SelectedTag = null;
 
-            Searching = true;
-
             _currentPage = 1;
 
-            //RestaurantsName = await _restaurantService.GetRestaurantNames(); TODO
+            Searching = true;
 
             RestaurantsTag = await _restaurantService.GetRestaurantsTags();
 
             await SearchRestaurants();
 
-            Searching = false;
-
             Initialized = true;
+
+            Searching = false;
         }
 
         [ObservableProperty]
@@ -113,17 +123,11 @@ namespace Restorator.Desktop.ViewModels
         public async Task ChangeSearchTag(RestaurantTagDTO restaurantTag)
         {
             if (SelectedTag == restaurantTag)
-            {
-                SelectedTag = null;
+                return;
 
-                CanResetTag = false;
-            }
-            else
-            {
-                SelectedTag = restaurantTag;
+            SelectedTag = restaurantTag;
 
-                CanResetTag = true;
-            }
+            CanResetTag = true;
 
             await ResetSearch();
         }
@@ -135,25 +139,68 @@ namespace Restorator.Desktop.ViewModels
 
             RestaurantsPreview.Clear();
 
+            Searching = true;
+
             await SearchRestaurants();
+
+            Searching = false;
         }
 
         [RelayCommand]
         public async Task ResetSelectedTag()
         {
-            if (SelectedTag == null)
+            if (SelectedTag == null && showedLatest)
                 return;
 
             SelectedTag = null;
-
+            IsEmptyLatest = false;
             CanResetTag = false;
 
             await ResetSearch();
         }
 
+        [ObservableProperty]
+        private bool isShowingLatest = false;
+
+        private bool showedLatest = false;
+
+        [ObservableProperty]
+        private bool isEmptyLatest = false;
+
+        partial void OnIsShowingLatestChanged(bool oldValue, bool newValue)
+        {
+            showedLatest = newValue;
+
+            if (!showedLatest)
+                IsEmptyLatest = false;
+        }
+
+        [RelayCommand(AllowConcurrentExecutions = false)]
+        public async Task ShowLatest()
+        {
+            if (!showedLatest)
+                return;
+
+            RestaurantsPreview.Clear();
+
+            Searching = true;
+
+            var restaurants = await _restaurantService.GetLatestVisited();
+
+            IsEmptyLatest = restaurants.Count == 0;
+
+            foreach (var restaurant in restaurants)
+                RestaurantsPreview.Add(restaurant);
+
+            Searching = false;
+        }
+
+
         [RelayCommand(AllowConcurrentExecutions = false, CanExecute = nameof(CanLoadRestaurants))]
         public async Task SearchRestaurants()
         {
+            Searching = true;
+
             var restaurants = await _restaurantService.GetRestaurantPreviews(new GetRestaurantsPreviewDTO()
             {
                 Filter = new GetRestaurantsPreviewFilter()
@@ -164,7 +211,7 @@ namespace Restorator.Desktop.ViewModels
                 PaginationFilter = new PaginationFilter()
                 {
                     CurrentPage = _currentPage,
-                    PageSize = 20
+                    PageSize = 10 //Power check?
                 }
             });
 
@@ -174,6 +221,8 @@ namespace Restorator.Desktop.ViewModels
 
             foreach (var restaurant in restaurants)
                 RestaurantsPreview.Add(restaurant);
+
+            Searching = false;
         }
     }
 }

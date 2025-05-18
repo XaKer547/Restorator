@@ -18,7 +18,7 @@ namespace Restorator.Seeder.Data.DbSeeder
                     Description =
                         "Погрузитесь в мир сладких грез и пряных ароматов в “Синабонной Бо Синна”, где каждый ролл создан с душой и любовью, вдохновлённый самим Бо Синном! Здесь каждое блюдо — это произведение кулинарного искусства, приготовленное с заботой о ваших вкусовых рецепторах. Мы специализируемся на классических и авторских синабонах, приготовленных из нежнейшего теста, щедро сдобренных ароматной корицей и сливочным кремом, в точности как это делал сам маэстро.",
                     TemplateId = 1,
-                    Image = EmbeddedResourceHelper.GetRestaurantImage("Синабонная Бо Синна"),
+                    Images  = [new RestaurantImage() { Image = EmbeddedResourceHelper.GetRestaurantImage("Синабонная Бо Синна") }],
                     MenuImage = EmbeddedResourceHelper.GetRestaurantMenu("Синабонная Бо Синна"),
                     BeginWorkTime = new TimeOnly(12, 0),
                     EndWorkTime = new TimeOnly(0, 0),
@@ -32,7 +32,8 @@ namespace Restorator.Seeder.Data.DbSeeder
                     Description =
                         "GIACOMO — современная итальянская кухня от Kravchenko Group\r\n\r\nРимская пицца на хрустящем тесте, свежая паста ручной работы, открытая кухня, завораживающие подачи, десерты от шеф-кондитера, авторские коктейли, винная карта, которая никого не оставит равнодушным, стильный интерьер и современная итальянская музыка в самом сердце города!",
                     TemplateId = 2,
-                    Image = EmbeddedResourceHelper.GetRestaurantImage("GIACOMO"),
+                    Images  = [new RestaurantImage() { Image = EmbeddedResourceHelper.GetRestaurantImage("GIACOMO(1)") },
+                               new RestaurantImage() { Image = EmbeddedResourceHelper.GetRestaurantImage("GIACOMO(2)") }],
                     MenuImage = EmbeddedResourceHelper.GetRestaurantMenu("GIACOMO"),
                     BeginWorkTime = new TimeOnly(12, 0),
                     EndWorkTime = new TimeOnly(0, 0),
@@ -46,7 +47,7 @@ namespace Restorator.Seeder.Data.DbSeeder
                     Description =
                         "Ресторан «Гопак» - это атмосферное\r\nзаведение с просторным и уютным залом,\r\nоформленным в русском народном стиле.\r\nГостям нравится местная кухня, особенно\r\nборщ, пампушки, сало и кисель, а также\r\nмясные блюда, такие как стейк из свинины,\r\nпельмени и вареники. Кроме того,\r\nпосетители отмечают, что персонал\r\nресторана очень дружелюбный и\r\nвнимательный.",
                     TemplateId = 3,
-                    //Image = EmbeddedResourceHelper.GetRestaurantImage("Гопак"),
+                    //Images  = [EmbeddedResourceHelper.GetRestaurantImage("Гопак")],
                     //MenuImage = EmbeddedResourceHelper.GetRestaurantMenu("Гопак"),
                     BeginWorkTime = new TimeOnly(12, 0),
                     EndWorkTime = new TimeOnly(0, 0),
@@ -60,7 +61,7 @@ namespace Restorator.Seeder.Data.DbSeeder
                     Description =
                         "Наш гостеприимный грузинский дом «Антресоль», от всей души приветствуем вас. У нас всегда уютно, тепло, весело, и каждый может почувствовать себя дорогим гостем! Мы не только сытно накормим или организуем шумное застолье, но и научим васхитительно готовить в нашей кулинарной школе. \r\n \r\nСкорее бронируйте столик и заказывайте сочные хачапури, ароматные хинкали, неповторимые блюда открытого огня и другие шедевры настоящей грузинской кухни!",
                     TemplateId = 4,
-                    Image = EmbeddedResourceHelper.GetRestaurantImage("Антресоль"),
+                    Images  = [new RestaurantImage() { Image = EmbeddedResourceHelper.GetRestaurantImage("Антресоль") }],
                     MenuImage = EmbeddedResourceHelper.GetRestaurantMenu("Антресоль"),
                     BeginWorkTime = new TimeOnly(12, 0),
                     EndWorkTime = new TimeOnly(0, 0),
@@ -74,7 +75,7 @@ namespace Restorator.Seeder.Data.DbSeeder
                     Description =
                         "Алазани - ресторан современной грузинской кухни, со своими старинными тбилисскими секретами, входит в ресторанный холдинг «MATRESHKI GROUP»",
                     TemplateId = 5,
-                    //Image = EmbeddedResourceHelper.GetRestaurantImage("Алазани"),
+                    //Images  = [EmbeddedResourceHelper.GetRestaurantImage("Алазани")],
                     MenuImage = EmbeddedResourceHelper.GetRestaurantMenu("Алазани"),
                     BeginWorkTime = new TimeOnly(12, 0),
                     EndWorkTime = new TimeOnly(0, 0),
@@ -88,7 +89,7 @@ namespace Restorator.Seeder.Data.DbSeeder
                     Description =
                         "Ресторан «Телави» предлагает своим гостям блюда грузинской кухни, а также широкий выбор напитков, включая авторские чаи и лимонады.",
                     TemplateId = 7,
-                    Image = EmbeddedResourceHelper.GetRestaurantImage("Телави"),
+                    Images  = [new RestaurantImage() { Image = EmbeddedResourceHelper.GetRestaurantImage("Телави") }],
                     MenuImage = EmbeddedResourceHelper.GetRestaurantMenu("Телави"),
                     BeginWorkTime = new TimeOnly(12, 0),
                     EndWorkTime = new TimeOnly(0, 0),
@@ -102,7 +103,7 @@ namespace Restorator.Seeder.Data.DbSeeder
                     Description =
                         "Ресторан «ТатарАш» предлагает своим гостям блюда татарской кухни.",
                     TemplateId = 10,
-                    Image = EmbeddedResourceHelper.GetRestaurantImage("ТатарАш"),
+                    Images  = [new RestaurantImage() { Image = EmbeddedResourceHelper.GetRestaurantImage("ТатарАш") }],
                     MenuImage = EmbeddedResourceHelper.GetRestaurantMenu("ТатарАш"),
                     BeginWorkTime = new TimeOnly(12, 0),
                     EndWorkTime = new TimeOnly(0, 0),
@@ -116,7 +117,7 @@ namespace Restorator.Seeder.Data.DbSeeder
                     Description =
                         "Суши-бар «Yoko Sushi Bar» предлагает своим гостям блюда итальянской и японской кухни, а также широкий выбор напитков, включая авторские чаи.",
                     TemplateId = 13,
-                    Image = EmbeddedResourceHelper.GetRestaurantImage("Yoko Sushi Bar"),
+                    Images  = [new RestaurantImage(){ Image = EmbeddedResourceHelper.GetRestaurantImage("Yoko Sushi Bar")}],
                     MenuImage = EmbeddedResourceHelper.GetRestaurantMenu("Yoko Sushi Bar"),
                     BeginWorkTime = new TimeOnly(12, 0),
                     EndWorkTime = new TimeOnly(0, 0),
@@ -130,7 +131,7 @@ namespace Restorator.Seeder.Data.DbSeeder
                     Description =
                         "Ресторан «Kinza» предлагает своим гостям изысканные блюда, такие как хачапури, хинкали, салаты, паста и пицца, а также фирменные напитки, такие как чай с брусникой и специями.",
                     TemplateId = 20,
-                    Image = EmbeddedResourceHelper.GetRestaurantImage("Kinza"),
+                    Images  = [new RestaurantImage(){ Image = EmbeddedResourceHelper.GetRestaurantImage("Kinza") }],
                     MenuImage = EmbeddedResourceHelper.GetRestaurantMenu("Kinza"),
                     BeginWorkTime = new TimeOnly(12, 0),
                     EndWorkTime = new TimeOnly(0, 0),
@@ -144,7 +145,7 @@ namespace Restorator.Seeder.Data.DbSeeder
                     Description =
                         "Ресторан «Suly» предлагает своим гостям блюда вьетнамской кухни, приготовленные по традиционным рецептам. В меню представлены такие блюда, как фо-бо, том ям, лапша с различными соусами, креветки в кляре и многие другие.",
                     TemplateId = 15,
-                    Image = EmbeddedResourceHelper.GetRestaurantImage("Suly"),
+                    Images  = [new RestaurantImage() { Image = EmbeddedResourceHelper.GetRestaurantImage("Suly") }],
                     MenuImage = EmbeddedResourceHelper.GetRestaurantMenu("Suly"),
                     BeginWorkTime = new TimeOnly(12, 0),
                     EndWorkTime = new TimeOnly(0, 0),
@@ -152,7 +153,7 @@ namespace Restorator.Seeder.Data.DbSeeder
                     Tags = [.. _context.RestaurantTags.Where(t => t.Id == 9)],
                     OwnerId = 3,
                  },
-                
+
 
             };
 

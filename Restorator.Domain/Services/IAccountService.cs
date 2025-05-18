@@ -1,6 +1,5 @@
 ﻿using FluentResults;
 using Restorator.Domain.Models.Account;
-using Restorator.Domain.Models.Authorization;
 
 namespace Restorator.Domain.Services
 {

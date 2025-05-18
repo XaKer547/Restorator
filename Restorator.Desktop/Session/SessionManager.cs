@@ -1,5 +1,5 @@
 ﻿using Restorator.Desktop.Properties;
-using Restorator.Domain.Models.Authorization;
+using Restorator.Domain.Models.Account;
 using Restorator.Domain.Services;
 
 namespace Restorator.Desktop.Session
@@ -7,12 +7,15 @@ namespace Restorator.Desktop.Session
     public class SessionManager : ISessionManager
     {
         private readonly Settings _settings = Settings.Default;
+
+        public event UserLoggedInHandler? UserLoggedIn;
         public bool TryGetSession(out SessionInfo sessionInfo)
         {
-            sessionInfo = null;
-
             if (!HaveSession())
+            {
+                sessionInfo = null;
                 return false;
+            }
 
             sessionInfo = new(_settings.Username, _settings.Role);
 
@@ -33,6 +36,8 @@ namespace Restorator.Desktop.Session
             _settings.Username = sessionInfo.Username;
 
             _settings.Save();
+
+            UserLoggedIn?.Invoke();
         }
         public bool HaveSession() => _settings.Token != string.Empty;
         public bool TryGetToken(out string token)
@@ -48,5 +53,6 @@ namespace Restorator.Desktop.Session
 
             return false;
         }
+
     }
 }

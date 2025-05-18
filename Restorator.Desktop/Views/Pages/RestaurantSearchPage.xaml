@@ -11,6 +11,9 @@
       d:DataContext="{d:DesignInstance Type=viewmodels:RestaurantSearchViewModel}"
       mc:Ignorable="d" 
       d:DesignHeight="450" d:DesignWidth="800" >
+    <Page.Resources>
+        <BooleanToVisibilityConverter x:Key="boolToVisibilityConverter"/>
+    </Page.Resources>
     <Grid Margin="20,40">
         <Grid.RowDefinitions>
             <RowDefinition Height="auto"/>
@@ -27,8 +30,13 @@
             </ui:AutoSuggestBox>
 
             <DockPanel Margin="0,20">
-                <RadioButton Content="Все" Command="{Binding ResetSelectedTagCommand}" IsChecked="True"
+                <RadioButton Content="Все" Command="{Binding ResetSelectedTagCommand}" IsChecked="True" Margin="0,0,0,10"
                            Style="{StaticResource {x:Type ToggleButton}}"  GroupName="RestaurantTags"/>
+
+                <RadioButton Content="Недавно" Command="{Binding ShowLatestCommand}" IsChecked="{Binding IsShowingLatest, Mode=TwoWay}"
+                             Visibility="{Binding IsLoggedIn, Converter={StaticResource boolToVisibilityConverter}}"
+                             Margin="10,0,0,10" Style="{StaticResource {x:Type ToggleButton}}"  
+                             GroupName="RestaurantTags"/>
 
                 <ItemsControl ItemsSource="{Binding RestaurantsTag}">
                     <ItemsControl.ItemsPanel>
@@ -49,60 +57,75 @@
             </DockPanel>
         </StackPanel>
 
-        <ui:DynamicScrollViewer Grid.Row="1">
-            <StackPanel>
-                <ItemsControl ItemsSource="{Binding RestaurantsPreview}">
-                    <ItemsControl.ItemsPanel>
-                        <ItemsPanelTemplate>
-                            <ui:VirtualizingWrapPanel/>
-                        </ItemsPanelTemplate>
-                    </ItemsControl.ItemsPanel>
-                    <ItemsControl.ItemTemplate>
-                        <DataTemplate>
-                            <ui:Button MinWidth="250" Margin="0,10"
-                                       Command="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type pages:RestaurantSearchPage}}, Path=DataContext.OpenRestaurantInfoCommand}"
-                                       CommandParameter="{Binding }">
-                                <ui:Button.Template>
-                                    <ControlTemplate TargetType="ui:Button">
-                                        <StackPanel>
-                                            <Border Height="150" CornerRadius="10" BorderThickness="1" BorderBrush="LightGray">
-                                                <Border.Background>
-                                                    <ImageBrush Stretch="UniformToFill" ImageSource="{Binding Image, TargetNullValue={StaticResource NoImage}}"/>
-                                                </Border.Background>
-                                            </Border>
+        <Grid Grid.Row="1">
+            <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" 
+                        Visibility="{Binding IsEmptyLatest, Converter={StaticResource boolToVisibilityConverter}}">
+                <ui:TextBlock FontTypography="Title" Text="Вы пока еще не посещали ничего на этот месяц..."/>
+                <DockPanel>
+                    <ui:TextBlock FontTypography="Subtitle" Text="Посмотреть интересные места можно"/>
 
-                                            <ui:TextBlock Text="{Binding Name}" FontTypography="Subtitle" TextWrapping="Wrap" />
-                                            <ContentPresenter/>
-                                        </StackPanel>
-
-                                        <ControlTemplate.Triggers>
-                                            <Trigger Property="IsMouseOver" Value="True">
-                                                <Setter Property="Opacity" Value="0.8"/>
-                                            </Trigger>
-                                        </ControlTemplate.Triggers>
-                                    </ControlTemplate>
-                                </ui:Button.Template>
-                            </ui:Button>
-                        </DataTemplate>
-                    </ItemsControl.ItemTemplate>
-                </ItemsControl>
-
-                <ui:ProgressRing IsIndeterminate="True" HorizontalAlignment="Center" Visibility="Collapsed" Width="60">
-                    <i:Interaction.Triggers>
-                        <i:DataTrigger Binding="{Binding Searching}" Value="True">
-                            <i:ChangePropertyAction PropertyName="Visibility" Value="Visible"/>
-                        </i:DataTrigger>
-                        <i:DataTrigger Binding="{Binding Searching}" Value="False">
-                            <i:ChangePropertyAction PropertyName="Visibility" Value="Collapsed"/>
-                        </i:DataTrigger>
-                    </i:Interaction.Triggers>
-                </ui:ProgressRing>
+                    <ui:Button Appearance="Info" Command="{Binding ResetSelectedTagCommand}"
+                               Margin="10,0">
+                        <ui:TextBlock FontTypography="Subtitle" Text="Здесь"/>
+                    </ui:Button>
+                </DockPanel>
             </StackPanel>
 
-            <i:Interaction.Behaviors>
-                <behaviors:DynamicScrollViewerLazyLoadBehavior LoadDataCommand="{Binding SearchRestaurantsCommand}"/>
-            </i:Interaction.Behaviors>
-        </ui:DynamicScrollViewer>
+            <ui:DynamicScrollViewer >
+                <StackPanel>
+                    <ItemsControl ItemsSource="{Binding RestaurantsPreview}">
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <ui:VirtualizingWrapPanel/>
+                            </ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <ui:Button MinWidth="250" Margin="0,10"
+                                       Command="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type pages:RestaurantSearchPage}}, Path=DataContext.OpenRestaurantInfoCommand}"
+                                       CommandParameter="{Binding }">
+                                    <ui:Button.Template>
+                                        <ControlTemplate TargetType="ui:Button">
+                                            <StackPanel>
+                                                <Border Height="150" CornerRadius="10" BorderThickness="1" BorderBrush="LightGray">
+                                                    <Border.Background>
+                                                        <ImageBrush Stretch="UniformToFill" ImageSource="{Binding Image, TargetNullValue={StaticResource NoImage}}"/>
+                                                    </Border.Background>
+                                                </Border>
+
+                                                <ui:TextBlock Text="{Binding Name}" FontTypography="Subtitle" TextWrapping="Wrap" />
+                                                <ContentPresenter/>
+                                            </StackPanel>
+
+                                            <ControlTemplate.Triggers>
+                                                <Trigger Property="IsMouseOver" Value="True">
+                                                    <Setter Property="Opacity" Value="0.8"/>
+                                                </Trigger>
+                                            </ControlTemplate.Triggers>
+                                        </ControlTemplate>
+                                    </ui:Button.Template>
+                                </ui:Button>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+
+                    <ui:ProgressRing IsIndeterminate="True" HorizontalAlignment="Center" Visibility="Collapsed" Width="60">
+                        <i:Interaction.Triggers>
+                            <i:DataTrigger Binding="{Binding Searching}" Value="True">
+                                <i:ChangePropertyAction PropertyName="Visibility" Value="Visible"/>
+                            </i:DataTrigger>
+                            <i:DataTrigger Binding="{Binding Searching}" Value="False">
+                                <i:ChangePropertyAction PropertyName="Visibility" Value="Collapsed"/>
+                            </i:DataTrigger>
+                        </i:Interaction.Triggers>
+                    </ui:ProgressRing>
+                </StackPanel>
+
+                <i:Interaction.Behaviors>
+                    <behaviors:DynamicScrollViewerLazyLoadBehavior LoadDataCommand="{Binding SearchRestaurantsCommand}"/>
+                </i:Interaction.Behaviors>
+            </ui:DynamicScrollViewer>
+        </Grid>
     </Grid>
 
     <i:Interaction.Triggers>

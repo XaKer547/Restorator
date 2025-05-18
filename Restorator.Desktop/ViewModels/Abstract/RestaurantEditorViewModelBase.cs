@@ -1,7 +1,6 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Microsoft.Win32;
-using Restorator.Desktop.Session;
 using Restorator.Desktop.ViewModels.Abstract;
 using Restorator.Domain.Models.Restaurant;
 using Restorator.Domain.Services;
@@ -42,7 +41,10 @@ namespace Restorator.Desktop.ViewModels
         private bool approved;
 
         [ObservableProperty]
-        private byte[]? image;
+        private byte[]? selectedImage;
+
+        [ObservableProperty]
+        private ObservableCollection<byte[]> images = [];
 
         [ObservableProperty]
         private byte[]? menu;
@@ -73,13 +75,17 @@ namespace Restorator.Desktop.ViewModels
         {
             var dialog = new OpenFileDialog()
             {
+                Multiselect = true,
                 Filter = "Изображения|*.jpg;*.jpeg;*.png;"
             };
 
             if (dialog.ShowDialog() != true)
                 return;
 
-            Image = File.ReadAllBytes(dialog.FileName);
+            foreach (var fileName in dialog.FileNames)
+            {
+                Images.Add(File.ReadAllBytes(fileName));
+            }
         }
 
         [RelayCommand]

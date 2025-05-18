@@ -15,7 +15,11 @@
 
         <ui:TextBox Text="{Binding Login}" PlaceholderText="Логин" Margin="0,15"/>
 
-        <ui:PasswordBox Password="{Binding Password, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" PlaceholderText="Пароль" Icon="Password24" Margin="0,15"/>
+        <ui:PasswordBox Password="{Binding Password, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" PlaceholderText="Пароль" Icon="Password24" Margin="0,15">
+            <ui:PasswordBox.InputBindings>
+                <KeyBinding Command="{Binding SignInCommand}" Key="Enter"/>
+            </ui:PasswordBox.InputBindings>
+        </ui:PasswordBox>
 
         <ui:TextBlock HorizontalAlignment="Right">
             <Hyperlink Command="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type pages:AuthenticationPage}}, Path=DataContext.NavigateToSignUpPageCommand}"
@@ -28,7 +32,7 @@
 
         <i:Interaction.Triggers>
             <i:DataTrigger Binding="{Binding Authenticated}" Value="True">
-                <i:InvokeCommandAction  Command="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type pages:AuthenticationPage}}, Path=DataContext.NavigateToUserMenuCommand}"/>
+                <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type pages:AuthenticationPage}}, Path=DataContext.NavigateBackCommand}"/>
             </i:DataTrigger>
         </i:Interaction.Triggers>
     </StackPanel>

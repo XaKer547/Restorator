@@ -12,7 +12,7 @@ using Restorator.DataAccess.Data;
 namespace Restorator.DataAccess.Migrations
 {
     [DbContext(typeof(RestoratorDbContext))]
-    [Migration("20241227170006_Init")]
+    [Migration("20250514094138_Init")]
     partial class Init
     {
         /// <inheritdoc />
@@ -98,9 +98,6 @@ namespace Restorator.DataAccess.Migrations
                     b.Property<TimeOnly>("EndWorkTime")
                         .HasColumnType("time");
 
-                    b.Property<byte[]>("Image")
-                        .HasColumnType("varbinary(max)");
-
                     b.Property<byte[]>("MenuImage")
                         .HasColumnType("varbinary(max)");
 
@@ -121,6 +118,28 @@ namespace Restorator.DataAccess.Migrations
                     b.HasIndex("TemplateId");
 
                     b.ToTable("Restaurants");
+                });
+
+            modelBuilder.Entity("Restorator.DataAccess.Data.Entities.RestaurantImage", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<byte[]>("Image")
+                        .IsRequired()
+                        .HasColumnType("varbinary(max)");
+
+                    b.Property<int?>("RestaurantId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("RestaurantId");
+
+                    b.ToTable("RestaurantImage");
                 });
 
             modelBuilder.Entity("Restorator.DataAccess.Data.Entities.RestaurantTag", b =>
@@ -147,6 +166,9 @@ namespace Restorator.DataAccess.Migrations
                         .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<bool>("Deleted")
+                        .HasColumnType("bit");
 
                     b.Property<byte[]>("Image")
                         .IsRequired()
@@ -236,8 +258,15 @@ namespace Restorator.DataAccess.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("Login")
                         .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("OTP")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Password")
@@ -250,6 +279,9 @@ namespace Restorator.DataAccess.Migrations
                     b.Property<string>("Username")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("Verified")
+                        .HasColumnType("bit");
 
                     b.HasKey("Id");
 
@@ -319,6 +351,13 @@ namespace Restorator.DataAccess.Migrations
                     b.Navigation("Template");
                 });
 
+            modelBuilder.Entity("Restorator.DataAccess.Data.Entities.RestaurantImage", b =>
+                {
+                    b.HasOne("Restorator.DataAccess.Data.Entities.Restaurant", null)
+                        .WithMany("Images")
+                        .HasForeignKey("RestaurantId");
+                });
+
             modelBuilder.Entity("Restorator.DataAccess.Data.Entities.Table", b =>
                 {
                     b.HasOne("Restorator.DataAccess.Data.Entities.RestaurantTemplate", null)
@@ -347,6 +386,8 @@ namespace Restorator.DataAccess.Migrations
 
             modelBuilder.Entity("Restorator.DataAccess.Data.Entities.Restaurant", b =>
                 {
+                    b.Navigation("Images");
+
                     b.Navigation("Reservations");
                 });
 
