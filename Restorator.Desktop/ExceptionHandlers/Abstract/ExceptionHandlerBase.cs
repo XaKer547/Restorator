@@ -8,7 +8,7 @@ namespace Restorator.Desktop.ExceptionHandlers.Abstract
         protected virtual bool CanBeHandled(TException exception) => true;
         public override async Task<DispatcherUnhandledExceptionEventArgs> HandleAsync(DispatcherUnhandledExceptionEventArgs e)
         {
-            if (e.Exception is TException exception)
+            if (e.Exception is TException exception && CanBeHandled(exception))
             {
                 await HandleAsync(exception);
 

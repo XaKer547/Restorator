@@ -1,102 +1,107 @@
-﻿using System.Net.Http.Json;
-using FluentResults;
+﻿using FluentResults;
 using Restorator.Application.Client.Extensions;
-using Restorator.Application.Client.Helpers;
+using Restorator.Application.Client.Services.Abstract;
 using Restorator.Domain.Models;
 using Restorator.Domain.Models.Restaurant;
 using Restorator.Domain.Models.Templates;
 using Restorator.Domain.Services;
+using System.Text;
 
 namespace Restorator.Application.Client.Services
 {
-    public class RestaurantService : IRestaurantService
+    public class RestaurantService : ApiClientBase, IRestaurantService
     {
-        private readonly HttpClient _client;
-        public RestaurantService(HttpClient client)
-        {
-            _client = client;
-        }
+        public RestaurantService(HttpClient client) : base(client, "restaurant")
+        { }
 
         public async Task<Result> ChangeRestaurantApproval(ChangeRestaurantApprovalDTO model)
         {
-            var response = await _client.PatchAsJsonAsync($"{model.RestaurantId}/approve", model.Approval);
+            var response = await PatchAsJsonAsync($"/{model.RestaurantId}/approve", model.Approval);
 
             return await response.AsResult();
         }
 
         public async Task<Result<int>> CreateRestaurant(CreateRestaurantDTO model)
         {
-            var response = await _client.PostAsJsonAsync(string.Empty, model);
+            var response = await PostAsJsonAsync(string.Empty, model);
 
             return await response.AsResult<int>();
         }
 
         public async Task<Result> DeleteRestaurant(int restaurantId)
         {
-            var response = await _client.DeleteAsync($"{restaurantId}");
+            var response = await DeleteAsync($"/{restaurantId}");
 
             return await response.AsResult();
         }
 
         public async Task<IReadOnlyCollection<RestaurantPreviewDTO>> GetOwnedRestaurantPreviews()
         {
-            var restaurants = await _client.GetFromJsonAsync<IReadOnlyCollection<RestaurantPreviewDTO>>("owned");
+            var restaurants = await GetFromJsonAsync<IReadOnlyCollection<RestaurantPreviewDTO>>("/owned");
 
             return restaurants ?? [];
         }
 
         public async Task<Result<RestaurantInfoDTO>> GetRestaurantInfo(int restaurantId)
         {
-            var info = await _client.GetFromJsonAsync<RestaurantInfoDTO>($"{restaurantId}/");
+            var info = await GetFromJsonAsync<RestaurantInfoDTO>($"/{restaurantId}");
 
             return info.ToResultWithNullCheck();
         }
 
         public async Task<IReadOnlyCollection<RestaurantSearchItemDTO>> SearchRestaurants(string? name, CancellationToken cancellationToken = default)
         {
-            var names = await _client.GetFromJsonAsync<IReadOnlyCollection<RestaurantSearchItemDTO>>($"search?name={name}", cancellationToken);
+            var names = await GetFromJsonAsync<IReadOnlyCollection<RestaurantSearchItemDTO>>($"/search?name={name}", cancellationToken);
 
             return names ?? [];
         }
 
         public async Task<PaginatedList<RestaurantPreviewDTO>> GetRestaurantPreviews(GetRestaurantsPreviewDTO model)
         {
-            var paginationQuery = model.PaginationFilter.ToQueryString();
+            var pagintaion = model.PaginationFilter;
 
-            string filterQuery = string.Empty;
+            var builder = new StringBuilder($"?PageSize={pagintaion.PageSize}&CurrentPage={pagintaion.CurrentPage}");
 
-            if (model.Filter is not null)
-                filterQuery = model.Filter.ToQueryString();
+            var filter = model.Filter;
 
-            var previews = await _client.GetFromJsonAsync<PaginatedList<RestaurantPreviewDTO>>($"?{paginationQuery}&{filterQuery}");
+            if (filter is not null)
+            {
+                if (filter.TagId.HasValue)
+                    builder.Append($"&tagId={filter.TagId}");
+
+                if (filter.RequireApproved.HasValue)
+                    builder.Append($"&requireApproved={filter.RequireApproved}");
+            }
+
+            var previews = await GetFromJsonAsync<PaginatedList<RestaurantPreviewDTO>>(builder.ToString());
 
             return previews ?? PaginatedList<RestaurantPreviewDTO>.Empty();
         }
 
         public async Task<IReadOnlyCollection<RestaurantTagDTO>> GetRestaurantsTags()
         {
-            var tags = await _client.GetFromJsonAsync<IReadOnlyCollection<RestaurantTagDTO>>("tags");
+            var tags = await GetFromJsonAsync<IReadOnlyCollection<RestaurantTagDTO>>("/tags");
 
             return tags ?? [];
         }
 
         public async Task<IReadOnlyCollection<RestaurantTemplateDTO>> GetRestaurantTemplates()
         {
-            var templates = await _client.GetFromJsonAsync<IReadOnlyCollection<RestaurantTemplateDTO>>("templates");
+            var templates = await GetFromJsonAsync<IReadOnlyCollection<RestaurantTemplateDTO>>("/templates");
 
             return templates ?? [];
         }
 
         public async Task<Result> UpdateRestaurant(UpdateRestraurantDTO model)
         {
-            var response = await _client.PutAsJsonAsync(string.Empty, model);
+            var response = await PutAsJsonAsync(string.Empty, model);
 
             return await response.AsResult();
         }
 
         public async Task<IReadOnlyCollection<RestaurantPreviewDTO>> GetLatestVisited()
         {
-            var tags = await _client.GetFromJsonAsync<IReadOnlyCollection<RestaurantPreviewDTO>>("latest");
+            var tags = await GetFromJsonAsync<IReadOnlyCollection<RestaurantPreviewDTO>>("/latest");
 
             return tags ?? [];
         }

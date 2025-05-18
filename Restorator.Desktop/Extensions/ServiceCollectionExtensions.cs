@@ -50,9 +50,9 @@ namespace Restorator.Desktop.Extensions
         }
         public static IServiceCollection ConfigureApiClients(this IServiceCollection services)
         {
-            Action<IServiceProvider, HttpClient, string?> configureClient = (provider, client, endpoint) =>
+            Action<IServiceProvider, HttpClient> configureClient = (provider, client) =>
             {
-                client.BaseAddress = new Uri($"https://localhost:7090/api/{endpoint}");
+                client.BaseAddress = new Uri($"https://localhost:7090/api/");
 
                 var manager = provider.GetRequiredService<ISessionManager>();
 
@@ -70,17 +70,17 @@ namespace Restorator.Desktop.Extensions
                 return handler;
             };
 
-            services.AddHttpClient<IAccountService, AccountService>((provider, client) => configureClient.Invoke(provider, client, "account/"))
-                    .ConfigurePrimaryHttpMessageHandler(configureHandler);
+            services.ConfigureHttpClientDefaults(config =>
+            {
+                config.ConfigurePrimaryHttpMessageHandler(configureHandler);
 
-            services.AddHttpClient<IRestaurantService, RestaurantService>((provider, client) => configureClient.Invoke(provider, client, "restaurant/"))
-                    .ConfigurePrimaryHttpMessageHandler(configureHandler);
+                config.ConfigureHttpClient(configureClient);
+            });
 
-            services.AddHttpClient<IReservationService, ReservationService>((provider, client) => configureClient.Invoke(provider, client, "reservation/"))
-                    .ConfigurePrimaryHttpMessageHandler(configureHandler);
-
-            services.AddHttpClient<ITemplateService, TemplateService>((provider, client) => configureClient.Invoke(provider, client, "template/"))
-                    .ConfigurePrimaryHttpMessageHandler(configureHandler);
+            services.AddHttpClient<IAccountService, AccountService>();
+            services.AddHttpClient<IRestaurantService, RestaurantService>();
+            services.AddHttpClient<IReservationService, ReservationService>();
+            services.AddHttpClient<ITemplateService, TemplateService>();
 
             return services;
         }

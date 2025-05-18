@@ -28,24 +28,19 @@ namespace Restorator.Desktop
         {
             var handlers = _serviceProvider.GetKeyedServices<ExceptionHandlerBase>(e.Exception.GetType());
 
-            if (!handlers.Any())
-            {
-                var snackbarService = _serviceProvider.GetRequiredService<ISnackbarService>();
-
-                snackbarService.Show("Произошла ошибка", e.Exception.Message, Wpf.Ui.Controls.ControlAppearance.Danger);
-
-                e.Handled = true;
-
-                return;
-            }
-
             foreach (var handler in handlers)
             {
                 await handler.HandleAsync(e);
 
                 if (e.Handled)
-                    break;
+                    return;
             }
+
+            var snackbarService = _serviceProvider.GetRequiredService<ISnackbarService>();
+
+            snackbarService.Show("Произошла ошибка", e.Exception.Message, Wpf.Ui.Controls.ControlAppearance.Danger);
+
+            e.Handled = true;
         }
 
         private void OnStartup(object sender, StartupEventArgs e)

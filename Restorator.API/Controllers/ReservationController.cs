@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Restorator.Domain.Models.Reservations;
 using Restorator.Domain.Models.Restaurant;
 using Restorator.Domain.Services;
+using System.ComponentModel.DataAnnotations;
 
 namespace Restorator.API.Controllers
 {
@@ -51,15 +52,20 @@ namespace Restorator.API.Controllers
         /// <summary>
         /// Получить бронирования
         /// </summary>
-        /// <param name="model"></param>
         /// <returns></returns>
-        [HttpGet, Authorize(Roles = "User")]
+        [HttpGet, Authorize(Roles = "User,Manager")]
         [ProducesResponseType<IReadOnlyCollection<ReservationInfoDTO>>(200)]
         [ProducesResponseType(400)]
         [ProducesResponseType(401)]
-        public async Task<IActionResult> GetReservations([FromQuery] GetReservationsDTO model)
+        public async Task<IActionResult> GetReservations([Required] DateOnly selectedDate, int restaurantId, int userId, bool skipCanceled)
         {
-            var result = await _reservationService.GetReservations(model);
+            var result = await _reservationService.GetReservations(new GetReservationsDTO()
+            {
+                RestaurantId = restaurantId,
+                UserId = userId,
+                SelectedDate = selectedDate,
+                SkipCanceled = skipCanceled
+            });
 
             if (result.IsFailed)
                 return BadRequest(result.Errors);

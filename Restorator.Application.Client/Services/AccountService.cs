@@ -1,41 +1,38 @@
 ﻿using FluentResults;
 using Restorator.Application.Client.Extensions;
+using Restorator.Application.Client.Services.Abstract;
 using Restorator.Domain.Models.Account;
 using Restorator.Domain.Services;
 using System.Net.Http.Json;
 
 namespace Restorator.Application.Client.Services
 {
-    public class AccountService : IAccountService
+    public class AccountService : ApiClientBase, IAccountService
     {
-        private readonly HttpClient _client;
         private readonly ISessionManager _sessionManager;
-
-        public AccountService(HttpClient client, ISessionManager sessionManager)
+        public AccountService(HttpClient client, ISessionManager sessionManager) : base(client, "account")
         {
-            _client = client;
             _sessionManager = sessionManager;
         }
 
+
         public async Task<Result<SessionInfo>> GetSessionInfoAsync()//Why?
         {
-            var sessionInfo = await _client.GetFromJsonAsync<SessionInfo>("info");
+            var sessionInfo = await GetFromJsonAsync<SessionInfo>("/info");
 
             return sessionInfo.ToResultWithNullCheck();
         }
 
         public async Task<Result> RequestPasswordReset(string email)
         {
-            var request = new HttpRequestMessage(HttpMethod.Head, "reset");
-
-            var response = await _client.SendAsync(request);
-
+            var response = await HeadAsync("/reset");
+            //TODO
             return await response.AsResult();
         }
 
         public async Task<Result<AuthorizationResult>> SignInAsync(SignInDTO model)
         {
-            var response = await _client.PostAsJsonAsync("signin", model);
+            var response = await PostAsJsonAsync("/signin", model);
 
             if (!response.IsSuccessStatusCode)
             {
@@ -58,7 +55,7 @@ namespace Restorator.Application.Client.Services
 
         public async Task<Result<AuthorizationResult>> SignInAsync(RecoverAccountDTO model)
         {
-            var response = await _client.PostAsJsonAsync("recover", model);
+            var response = await PostAsJsonAsync("/recover", model);
 
             if (!response.IsSuccessStatusCode)
             {
@@ -79,14 +76,14 @@ namespace Restorator.Application.Client.Services
 
         public async Task<Result> SignUpAsync(SignUpDTO model)
         {
-            var response = await _client.PostAsJsonAsync("signup", model);
+            var response = await PostAsJsonAsync("/signup", model);
 
             return await response.AsResult();
         }
 
         public async Task<Result> UpdatePassword(string password)
         {
-            var response = await _client.PatchAsJsonAsync(string.Empty, password);
+            var response = await PatchAsJsonAsync(string.Empty, password);
 
             return await response.AsResult();
         }

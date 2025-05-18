@@ -1,9 +1,7 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Restorator.Desktop.Models;
-using Restorator.Desktop.Session;
 using Restorator.Desktop.ViewModels.Abstract;
-using Restorator.Domain.Models;
 using Restorator.Domain.Models.Reservations;
 using Restorator.Domain.Services;
 using System.Collections.ObjectModel;
@@ -60,7 +58,7 @@ namespace Restorator.Desktop.ViewModels
 
             var result = await _reservationService.GetReservations(new GetReservationsDTO()
             {
-                SelectedDate = SelectedDate,
+                SelectedDate =  DateOnly.FromDateTime(SelectedDate),
                 RestaurantId = _restaurantId
             });
 
@@ -71,17 +69,17 @@ namespace Restorator.Desktop.ViewModels
                 return;
             }
 
-            var reservations = result.Value.Select(r => new ReservationModel
+            foreach (var reservation in result.Value)
             {
-                Id = r.Id,
-                Username = r.Username,
-                ReservationStart = r.ReservationStart,
-                ReservationEnd = r.ReservationEnd,
-                Canceled = r.Canceled,
-            });
-
-            foreach (var reservation in reservations)
-                Reservations.Add(reservation);
+                Reservations.Add(new ReservationModel
+                {
+                    Id = reservation.Id,
+                    Username = reservation.Username,
+                    ReservationStart = reservation.ReservationStart,
+                    ReservationEnd = reservation.ReservationEnd,
+                    Canceled = reservation.Canceled,
+                });
+            }
 
             NoReservations = !Reservations.Any();
         }

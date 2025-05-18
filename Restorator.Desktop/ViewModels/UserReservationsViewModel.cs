@@ -1,6 +1,5 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using Restorator.Desktop.Session;
 using Restorator.Desktop.ViewModels.Abstract;
 using Restorator.Desktop.Views.Pages;
 using Restorator.Domain.Models.Reservations;
@@ -51,7 +50,7 @@ namespace Restorator.Desktop.ViewModels
 
             var result = await _reservationService.GetReservations(new GetReservationsDTO()
             {
-                SelectedDate = SelectedDate,
+                SelectedDate = DateOnly.FromDateTime(SelectedDate),
             });
 
             if (result.IsFailed)

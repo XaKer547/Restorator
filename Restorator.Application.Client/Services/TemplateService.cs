@@ -1,64 +1,61 @@
-﻿using System.Net.Http.Json;
-using FluentResults;
+﻿using FluentResults;
 using Restorator.Application.Client.Extensions;
+using Restorator.Application.Client.Services.Abstract;
 using Restorator.Domain.Models.Templates;
 using Restorator.Domain.Services;
 
 namespace Restorator.Application.Client.Services
 {
-    public class TemplateService : ITemplateService
+    public class TemplateService : ApiClientBase, ITemplateService
     {
-        private readonly HttpClient _client;
-        public TemplateService(HttpClient client)
-        {
-            _client = client;
-        }
+        public TemplateService(HttpClient client) : base(client, "template")
+        { }
 
         public async Task<Result<int>> CreateRestaurantTemplate(CreateRestaurantTemplateDTO model)
         {
-            var response = await _client.PostAsJsonAsync("table", model);
+            var response = await PostAsJsonAsync("/table", model);
 
             return await response.AsResult<int>();
         }
 
         public async Task<Result<int>> CreateTableTemplate(CreateTableTempateDTO model)
         {
-            var response = await _client.PostAsJsonAsync("restaurant", model);
+            var response = await PostAsJsonAsync("/restaurant", model);
 
             return await response.AsResult<int>();
         }
 
         public async Task<Result> DeleteRestaurantTemplate(int restaurantTemplateId)
         {
-            var response = await _client.DeleteAsync($"restaurant/{restaurantTemplateId}");
+            var response = await DeleteAsync($"/restaurant/{restaurantTemplateId}");
 
             return await response.AsResult();
         }
 
         public async Task<IReadOnlyCollection<RestaurantTemplatePreview>> GetRestaurantsTemplatePreview()
         {
-            var templatePreviews = await _client.GetFromJsonAsync<IReadOnlyCollection<RestaurantTemplatePreview>>("restaurant");
+            var templatePreviews = await GetFromJsonAsync<IReadOnlyCollection<RestaurantTemplatePreview>>("/restaurant");
 
             return templatePreviews ?? [];
         }
 
         public async Task<IReadOnlyCollection<TableTemplateDTO>> GetTableTemplates()
         {
-            var templates = await _client.GetFromJsonAsync<IReadOnlyCollection<TableTemplateDTO>>("tables");
+            var templates = await GetFromJsonAsync<IReadOnlyCollection<TableTemplateDTO>>("/tables");
 
             return templates ?? [];
         }
 
         public async Task<Result> UpdateRestaurantTemplate(UpdateRestaurantTemplateDTO model)
         {
-            var response = await _client.PutAsJsonAsync("restaurant", model);
+            var response = await PutAsJsonAsync("/restaurant", model);
 
             return await response.AsResult();
         }
 
         public async Task<Result<RestaurantTemplateDTO>> GetRestaurantTemplate(int restaurantTemplateId)
         {
-            var template = await _client.GetFromJsonAsync<RestaurantTemplateDTO>($"restaurant/{restaurantTemplateId}");
+            var template = await GetFromJsonAsync<RestaurantTemplateDTO>($"/restaurant/{restaurantTemplateId}");
 
             return template.ToResultWithNullCheck();
         }
