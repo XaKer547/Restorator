@@ -18,7 +18,7 @@ namespace Restorator.Seeder.Data.DbSeeder
                 {
                     Role = _context.Roles.FromEnum(Roles.User),
                     Username = "Шелкопряд Тутовый",
-                    Email = "SilkMaster@string.line",
+                    Email = "noreply@silk.ru",
                     Login = "Silk",
                     Verified = true,
                     Password = AccountPasswordHelper.HashUserPassword("MasterPassword")
@@ -36,6 +36,7 @@ namespace Restorator.Seeder.Data.DbSeeder
                 {
                     Role = _context.Roles.FromEnum(Roles.Manager),
                     Username = "Манагер",
+                    Email = "noreply@BoSin.com",
                     Login = "Manager",
                     Email = "noreply@BoSin.ru",
                     Verified = true,
