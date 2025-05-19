@@ -28,6 +28,10 @@ namespace Restorator.Desktop.ViewModels
         [ObservableProperty]
         private string login;
 
+        [Required(AllowEmptyStrings = false, ErrorMessage = "Почта обязательна для заполнения")]
+        [ObservableProperty]
+        private string email;
+
         [Required(AllowEmptyStrings = false, ErrorMessage = "Логин и пароль обязательны для заполнения")]
         [ObservableProperty]
         private string password;
@@ -65,7 +69,8 @@ namespace Restorator.Desktop.ViewModels
                 Login = Login,
                 RoleId = (int)Role,
                 Username = Username,
-                Password = Password
+                Password = Password,
+                Email = Email
             };
 
             var result = await _authenticationService.SignUpAsync(signUnDto);

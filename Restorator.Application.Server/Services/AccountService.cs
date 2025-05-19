@@ -65,6 +65,7 @@ namespace Restorator.Application.Server.Services
             {
                 Login = model.Login,
                 Username = model.Username,
+                Email = model.Email,
                 Role = await _context.Roles.SingleAsync(r => r.Id == model.RoleId),
                 Password = AccountPasswordHelper.HashUserPassword(model.Password),
             };

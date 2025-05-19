@@ -5,17 +5,20 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             xmlns:enums="clr-namespace:Restorator.Domain.Models.Enums;assembly=Restorator.Domain"
              xmlns:viewmodels="clr-namespace:Restorator.Desktop.ViewModels"
              xmlns:pages="clr-namespace:Restorator.Desktop.Views.Pages"
+             xmlns:enums="clr-namespace:Restorator.Domain.Models.Enums;assembly=Restorator.Domain"
              d:DataContext="{d:DesignInstance Type=viewmodels:SignUpViewModel}"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
     <StackPanel>
         <ui:TextBlock FontTypography="Subtitle" TextAlignment="Center" Text="-- Регистрация --"/>
 
-        <ui:TextBox Text="{Binding Login}" PlaceholderText="Логин" Margin="0,15"/>
-        <ui:TextBox Text="{Binding Username}" PlaceholderText="Как к вам обращаться?" Margin="0,15"/>
+        <ui:TextBox Text="{Binding Login, Mode=TwoWay}" PlaceholderText="Логин" Margin="0,15"/>
+
+        <ui:TextBox Text="{Binding Email, Mode=TwoWay}" PlaceholderText="Почта" Margin="0,15"/>
+
+        <ui:TextBox Text="{Binding Username, Mode=TwoWay}" PlaceholderText="Как к вам обращаться?" Margin="0,15"/>
 
         <ui:PasswordBox Password="{Binding Password, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" PlaceholderText="Пароль" Icon="Password24" Margin="0,15"/>
 
