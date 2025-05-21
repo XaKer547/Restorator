@@ -69,7 +69,6 @@ namespace Restorator.Desktop.ViewModels
                 Username = "Гость";
                 _role = null;
 
-                return;
             }
 
             _role = Enum.Parse<Roles>(sessionInfo.Role);

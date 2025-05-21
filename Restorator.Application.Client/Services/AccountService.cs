@@ -25,8 +25,8 @@ namespace Restorator.Application.Client.Services
 
         public async Task<Result> RequestPasswordReset(string email)
         {
-            var response = await HeadAsync("/reset");
-            //TODO
+            var response = await PostAsJsonAsync("/reset", email);
+
             return await response.AsResult();
         }
 
@@ -68,6 +68,8 @@ namespace Restorator.Application.Client.Services
 
             if (result is null)
                 return Result.Fail("");
+
+            _client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", result.Token);
 
             _sessionManager.SetSession(result.SessionInfo, result.Token);
 

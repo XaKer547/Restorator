@@ -25,9 +25,16 @@
 	</ItemGroup>
 
 	<ItemGroup>
+		<Content Update="wwwroot\MailTemplates\PasswordRecoveryMailTemplate.html">
+		  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</Content>
 		<Content Update="wwwroot\MailTemplates\ReservationCanceledTemplate.html">
 			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 		</Content>
+	</ItemGroup>
+
+	<ItemGroup>
+	  <Folder Include="wwwroot\Restaurants\" />
 	</ItemGroup>
 
 </Project>

@@ -125,7 +125,7 @@ namespace Restorator.Application.Server.Services
             if (user is null)
                 return Result.Fail("Пользователя не существует");
 
-            user.Password = password;
+            user.Password = AccountPasswordHelper.HashUserPassword(password);
 
             _context.Users.Update(user);
 

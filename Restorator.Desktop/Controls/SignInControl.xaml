@@ -15,18 +15,26 @@
 
         <ui:TextBox Text="{Binding Login}" PlaceholderText="Логин" Margin="0,15"/>
 
-        <ui:PasswordBox Password="{Binding Password, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" PlaceholderText="Пароль" Icon="Password24" Margin="0,15">
+        <ui:PasswordBox Password="{Binding Password, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" PlaceholderText="Пароль" Icon="Password24">
             <ui:PasswordBox.InputBindings>
                 <KeyBinding Command="{Binding SignInCommand}" Key="Enter"/>
             </ui:PasswordBox.InputBindings>
         </ui:PasswordBox>
 
+        <ui:TextBlock HorizontalAlignment="Right" Margin="0,0,0,5">
+            <Hyperlink Command="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type pages:AuthenticationPage}}, Path=DataContext.NavigateToPasswordRestorePageCommand}"
+                           TextDecorations="None" Foreground="Black" >
+                Забыли пароль?
+            </Hyperlink>
+        </ui:TextBlock>
+
         <ui:TextBlock HorizontalAlignment="Right">
             <Hyperlink Command="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type pages:AuthenticationPage}}, Path=DataContext.NavigateToSignUpPageCommand}"
-                       TextDecorations="None" Foreground="Black">
+                 TextDecorations="None" Foreground="Black">
                 Я здесь впервые
             </Hyperlink>
         </ui:TextBlock>
+
 
         <ui:Button Command="{Binding SignInCommand}" Content="Войти" HorizontalAlignment="Center" Margin="0,15"/>
 

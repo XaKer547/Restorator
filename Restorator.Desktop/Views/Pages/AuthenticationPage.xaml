@@ -22,7 +22,7 @@
 
         <Viewbox Grid.Column="1" HorizontalAlignment="Center" Margin="0,25">
             <StackPanel>
-                <DockPanel>
+                <DockPanel HorizontalAlignment="Center">
                     <ui:SymbolIcon Symbol="Mic32" FontSize="38"/>
                     <ui:TextBlock FontTypography="Title" Text="Ресторатор" />
                 </DockPanel>
@@ -30,7 +30,7 @@
 
                 <ContentControl Content="{Binding CurrentViewModel}" Margin="0,20,0,0"/>
 
-                <ui:TextBlock HorizontalAlignment="Right">
+                <ui:TextBlock HorizontalAlignment="Center">
                     <Hyperlink TextDecorations="None" Foreground="Black" Command="{Binding NavigateBackCommand}">
                         Назад
                     </Hyperlink>

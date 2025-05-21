@@ -95,6 +95,7 @@ namespace Restorator.Desktop.Extensions
             var manager = new DataTemplateManager().RegisterDataTemplate<AuthenticationViewModel, AuthenticationPage>()
                                                    .RegisterDataTemplate<SignInViewModel, SignInControl>()
                                                    .RegisterDataTemplate<SignUpViewModel, SignUpControl>()
+                                                   .RegisterDataTemplate<AccountRestoreViewModel, AccountRestoreControl>()
                                                    .RegisterDataTemplate<MenuViewModel, MenuPage>()
                                                    .RegisterDataTemplate<RestaurantInfoViewModel, RestaurantInfoPage>()
                                                    .RegisterDataTemplate<RestaurantReservationViewModel, RestraurantReservationPage>()

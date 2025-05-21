@@ -16,7 +16,7 @@ namespace Restorator.Mail.Models.Templates
             return new Dictionary<string, string>
             {
                 {"@Username", Username},
-                {"@ReservationDateTime", ReservationDateTime.ToShortDateString()},
+                {"@ReservationDate", ReservationDateTime.ToShortDateString()},
                 {"@ReservationTime", ReservationDateTime.ToShortTimeString()},
                 {"@RestaurantName", RestaurantName}
             };

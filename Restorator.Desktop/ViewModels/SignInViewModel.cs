@@ -60,6 +60,7 @@ namespace Restorator.Desktop.ViewModels
             }
 
             Role = Enum.Parse<Roles>(result.Value.SessionInfo.Role);
+
             Authenticated = true;
 
             _snackbarService.Show("С возвращением", "Мы рады видеть тебя снова", Wpf.Ui.Controls.ControlAppearance.Success);

@@ -26,7 +26,7 @@ namespace Restorator.API.Controllers
         /// Запросить сброс пароля
         /// </summary>
         /// <param name="email">почта пользователя</param>
-        [HttpHead("reset")]
+        [HttpPost("reset")]
         [ProducesResponseType(200)]
         [ProducesResponseType(400)]
         public async Task<IActionResult> RequestPasswordReset([FromBody][EmailAddress] string email)
