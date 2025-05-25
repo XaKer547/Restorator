@@ -18,5 +18,6 @@ namespace Restorator.Domain.Services
         Task<Result> UpdateRestaurant(UpdateRestraurantDTO model);
         Task<IReadOnlyCollection<RestaurantTemplateDTO>> GetRestaurantTemplates();
         Task<IReadOnlyCollection<RestaurantPreviewDTO>> GetLatestVisited();
+        Task<IReadOnlyCollection<RestaurantSearchItemDTO>> GetOwnedRestaurantsSearchItems();
     }
 }

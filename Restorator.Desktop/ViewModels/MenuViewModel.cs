@@ -107,6 +107,8 @@ namespace Restorator.Desktop.ViewModels
             if (_role == Roles.Manager)
             {
                 MenuItems.Add(new NavigationViewItem("Управление", SymbolRegular.FolderPeople20, typeof(RestaurantManagementPage)));
+                MenuItems.Add(new NavigationViewItem("Статистика", SymbolRegular.Diagram20, typeof(RestraurantsReportPage)));
+
             }
 
             if (_role == Roles.Admin)

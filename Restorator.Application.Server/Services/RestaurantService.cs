@@ -242,6 +242,33 @@ namespace Restorator.Application.Server.Services
                                                          Scheme = t.Image,
                                                      }).ToListAsync();
         }
+        public async Task<IReadOnlyCollection<RestaurantPreviewDTO>> GetLatestVisited() //latest = 30 days
+        {
+            if (!_userManager.TryGetUserId(out var userId))
+                return [];
+
+            return await _context.Reservations.AsNoTracking()
+                .Where(r => r.User.Id == userId && DateTime.Today.Month < r.ReservationEnd.Month + 1)
+                .Select(r => new RestaurantPreviewDTO
+                {
+                    Id = r.Restaurant.Id,
+                    Name = r.Restaurant.Name,
+                    Image = r.Restaurant.Images.Select(i => i.Image).FirstOrDefault(),
+                }).ToListAsync();
+        }
+        public async Task<IReadOnlyCollection<RestaurantSearchItemDTO>> GetOwnedRestaurantsSearchItems()
+        {
+            if (!_userManager.TryGetUserId(out var userId))
+                return [];
+
+            return await _context.Restaurants.AsNoTracking()
+                                             .Where(r => r.Owner.Id == userId)
+                                             .Select(r => new RestaurantSearchItemDTO
+                                             {
+                                                 Id = r.Id,
+                                                 Name = r.Name,
+                                             }).ToListAsync();
+        }
 
         private async Task<Result<Restaurant>> GetRestaurantByPrivileges(int restaurantId, int userId, params Roles[] roles)
         {
@@ -264,21 +291,6 @@ namespace Restorator.Application.Server.Services
                 return Result.Fail("Недостаточно прав для выполнения операции");
 
             return restaurant;
-        }
-
-        public async Task<IReadOnlyCollection<RestaurantPreviewDTO>> GetLatestVisited() //latest = 30 days
-        {
-            if (!_userManager.TryGetUserId(out var userId))
-                return [];
-
-            return await _context.Reservations.AsNoTracking()
-                .Where(r => r.User.Id == userId && DateTime.Today.Month < r.ReservationEnd.Month + 1)
-                .Select(r => new RestaurantPreviewDTO
-                {
-                    Id = r.Restaurant.Id,
-                    Name = r.Restaurant.Name,
-                    Image = r.Restaurant.Images.Select(i => i.Image).FirstOrDefault(),
-                }).ToListAsync();
         }
     }
 }

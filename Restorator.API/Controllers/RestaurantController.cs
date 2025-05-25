@@ -134,6 +134,22 @@ namespace Restorator.API.Controllers
 
 
         /// <summary>
+        /// Получить поисковые значения свои рестораны
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("owned/search"), Authorize(Roles = "Manager")]
+        [ProducesResponseType<IReadOnlyCollection<RestaurantSearchItemDTO>>(200)]
+        [ProducesResponseType(401)]
+        [ProducesResponseType(400)]
+        public async Task<IActionResult> GetOwnedRestaurantSearchValues()
+        {
+            var restaurants = await _restaurantService.GetOwnedRestaurantsSearchItems();
+
+            return Ok(restaurants);
+        }
+
+
+        /// <summary>
         /// Получить рестораны
         /// </summary>
         /// <param name="paginationFilter">Пагинация</param>

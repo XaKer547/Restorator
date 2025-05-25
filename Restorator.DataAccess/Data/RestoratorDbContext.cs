@@ -18,12 +18,12 @@ namespace Restorator.DataAccess.Data
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            base.OnModelCreating(modelBuilder);
+
             modelBuilder.Entity<User>()
                 .HasMany(u => u.Reservations)
                 .WithOne(r => r.User)
                 .OnDelete(DeleteBehavior.NoAction);
-
-            base.OnModelCreating(modelBuilder);
         }
     }
 }

@@ -105,5 +105,12 @@ namespace Restorator.Application.Client.Services
 
             return tags ?? [];
         }
+
+        public async Task<IReadOnlyCollection<RestaurantSearchItemDTO>> GetOwnedRestaurantsSearchItems()
+        {
+            var tags = await GetFromJsonAsync<IReadOnlyCollection<RestaurantSearchItemDTO>>("/owned/search");
+
+            return tags ?? [];
+        }
     }
 }

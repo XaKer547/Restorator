@@ -81,6 +81,7 @@ namespace Restorator.Desktop.Extensions
             services.AddHttpClient<IRestaurantService, RestaurantService>();
             services.AddHttpClient<IReservationService, ReservationService>();
             services.AddHttpClient<ITemplateService, TemplateService>();
+            services.AddHttpClient<IReportService, ReportService>();
 
             return services;
         }
