@@ -95,8 +95,6 @@ namespace Restorator.Desktop.ViewModels
                 return;
             }
 
-            Authenticated = true;
-
             _snackbarService.Show("С возвращением", "Мы рады видеть тебя снова", Wpf.Ui.Controls.ControlAppearance.Success);
         }
     }

@@ -8,7 +8,8 @@ namespace Restorator.Desktop.Session
     {
         private readonly Settings _settings = Settings.Default;
 
-        public event UserLoggedInHandler? UserLoggedIn;
+        public static event UserLoggedInHandler? UserLoggedIn;
+        public static event UserLoggedOutHandler? UserLoggedOut;
         public bool TryGetSession(out SessionInfo sessionInfo)
         {
             if (!HaveSession())
@@ -26,9 +27,13 @@ namespace Restorator.Desktop.Session
             _settings.Reset();
 
             _settings.Save();
+
+            UserLoggedOut?.Invoke();
         }
         public void SetSession(SessionInfo sessionInfo, string token)
         {
+            RemoveSession();
+
             _settings.Token = token;
 
             _settings.Role = sessionInfo.Role;
@@ -53,6 +58,5 @@ namespace Restorator.Desktop.Session
 
             return false;
         }
-
     }
 }

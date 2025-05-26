@@ -43,7 +43,9 @@ namespace Restorator.Desktop.ViewModels
             _contentDialogService = contentDialogService;
             _menuNavigationService = menuNavigationService;
 
-            _sessionManager.UserLoggedIn += RefreshMenuState;
+            ISessionManager.UserLoggedIn += RefreshMenuState;
+
+            ISessionManager.UserLoggedOut += RefreshMenuState;
         }
 
 
@@ -64,16 +66,14 @@ namespace Restorator.Desktop.ViewModels
         {
             if (!_sessionManager.TryGetSession(out var sessionInfo))
             {
-                //how
-
                 Username = "Гость";
                 _role = null;
-
             }
-
-            _role = Enum.Parse<Roles>(sessionInfo.Role);
-
-            Username = sessionInfo.Username;
+            else
+            {
+                Username = sessionInfo.Username;
+                _role = Enum.Parse<Roles>(sessionInfo.Role);
+            }
 
             MenuItems.Clear();
             FooterItems.Clear();

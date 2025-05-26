@@ -38,7 +38,7 @@ namespace Restorator.Desktop
 
             var snackbarService = _serviceProvider.GetRequiredService<ISnackbarService>();
 
-            snackbarService.Show($"Произошла ошибка в {e.Exception.Source}", e.Exception.Message, Wpf.Ui.Controls.ControlAppearance.Danger);
+            snackbarService.Show($"Произошла ошибка в {e.Exception.StackTrace}", e.Exception.Message, Wpf.Ui.Controls.ControlAppearance.Danger);
 
             e.Handled = true;
         }

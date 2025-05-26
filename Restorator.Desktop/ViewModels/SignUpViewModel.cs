@@ -96,8 +96,6 @@ namespace Restorator.Desktop.ViewModels
 
             //get session info?
             //var result = session
-
-            Authenticated = true;
             Role = Enum.Parse<Roles>(session.SessionInfo.Role);
 
             _snackbarService.Show("Добро пожаловать в семью", "Let's celebrate and eat some chick", Wpf.Ui.Controls.ControlAppearance.Success);
@@ -105,8 +103,6 @@ namespace Restorator.Desktop.ViewModels
 
         private bool ValidatePassword()
         {
-            //i'm lazy to regex ASF
-
             return Password.Any(p => char.IsDigit(p));
         }
 

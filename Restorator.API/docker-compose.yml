@@ -1,0 +1,22 @@
+services:
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "7090:7090"
+    depends_on:
+      - db
+    environment:
+      ConnectionStrings__DefaultConnection: "Server=db;Database=restorator;User Id=sa;Password=Qwerty123;TrustServerCertificate=true;Trusted_connection=false"
+
+  db:
+    image: mcr.microsoft.com/mssql/server:2019-latest
+    restart: on-failure
+    environment:
+      SA_PASSWORD: "Qwerty123"
+      ACCEPT_EULA: "Y"
+    ports:
+      - "8612:1433"
+    volumes:
+      - ./db-data:/var/opt/mssql/data  

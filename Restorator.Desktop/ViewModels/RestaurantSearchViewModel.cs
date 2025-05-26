@@ -22,13 +22,16 @@ namespace Restorator.Desktop.ViewModels
 
             IsLoggedIn = sessionManager.HaveSession();
 
-            sessionManager.UserLoggedIn += RefreshState;
+            ISessionManager.UserLoggedIn += UserLoggedIn;
+            ISessionManager.UserLoggedOut += userLoggedOut;
         }
 
-        private void RefreshState()
+        private void UserLoggedIn()
         {
             IsLoggedIn = true;
         }
+        private void userLoggedOut() => IsLoggedIn = false;
+
 
         [ObservableProperty]
         private IReadOnlyCollection<RestaurantSearchItemDTO> _restaurantsNames = [];

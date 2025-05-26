@@ -106,15 +106,14 @@ namespace Restorator.Application.Client.Services
                 };
             });
 
-            previews.Clear();
-            previews.AddRange(extendedPreviews);
+            previews = new PaginatedList<RestaurantPreviewDTO>(previews.PageIndex, previews.Count, previews.ItemsPerPage, extendedPreviews);
 
             return previews ?? PaginatedList<RestaurantPreviewDTO>.Empty();
         }
 
         public async Task<IReadOnlyCollection<RestaurantTagDTO>> GetRestaurantsTags()
         {
-            var tags = await GetFromJsonAsync<IReadOnlyCollection<RestaurantTagDTO>>("/latest");
+            var tags = await GetFromJsonAsync<IReadOnlyCollection<RestaurantTagDTO>>("/tags");
 
             return tags ?? [];
         }

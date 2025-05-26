@@ -80,10 +80,7 @@
                                        Command="{Binding Source={StaticResource ViewModelProxy}, Path=Data.OpenRestaurantMakerCommand}"/>
                         </CompositeCollection>
                     </ItemsControl.ItemsSource>
-
                 </ItemsControl>
-
-
             </WrapPanel>
 
             <ui:ProgressRing IsIndeterminate="True" HorizontalAlignment="Center" Visibility="Collapsed" Width="60">
