@@ -13,8 +13,6 @@ namespace Restorator.Seeder.Data.DbSeeder
 
         public async Task SeedAsync()
         {
-            await _context.Database.MigrateAsync();
-
             await SeedRolesAsync();
 
             await SeedUsersAsync();

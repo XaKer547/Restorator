@@ -1,9 +1,9 @@
-﻿using System.Collections.ObjectModel;
-using CommunityToolkit.Mvvm.ComponentModel;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Restorator.Desktop.Dialogs;
 using Restorator.Desktop.ViewModels.Abstract;
 using Restorator.Domain.Services;
+using System.Collections.ObjectModel;
 using Wpf.Ui;
 using Wpf.Ui.Extensions;
 
@@ -36,13 +36,13 @@ namespace Restorator.Desktop.ViewModels
         private string description;
 
         [ObservableProperty]
-        private byte[]? selectedImage;
+        private string? selectedImage;
 
         [ObservableProperty]
-        private ObservableCollection<byte[]> images = [];
+        private ObservableCollection<string> images = [];
 
         [ObservableProperty]
-        private byte[]? menu;
+        private string? menu;
 
         [ObservableProperty]
         private TimeOnly beginWorkTime;

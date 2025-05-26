@@ -34,13 +34,13 @@ namespace Restorator.Desktop.ViewModels
         private bool approved;
 
         [ObservableProperty]
-        private byte[]? selectedImage;
+        private string? selectedImage;
 
         [ObservableProperty]
-        private ObservableCollection<byte[]> images = [];
+        private ObservableCollection<string> images = [];
 
         [ObservableProperty]
-        private byte[]? menu;
+        private string? menu;
 
         [ObservableProperty]
         private TimeOnly beginWorkTime;

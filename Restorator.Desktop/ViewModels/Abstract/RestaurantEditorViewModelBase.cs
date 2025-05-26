@@ -41,13 +41,13 @@ namespace Restorator.Desktop.ViewModels
         private bool approved;
 
         [ObservableProperty]
-        private byte[]? selectedImage;
+        private string? selectedImage;
 
         [ObservableProperty]
-        private ObservableCollection<byte[]> images = [];
+        private ObservableCollection<string> images = [];
 
         [ObservableProperty]
-        private byte[]? menu;
+        private string? menu;
 
         [ObservableProperty]
         private DateTime beginWorkTime;
@@ -84,7 +84,7 @@ namespace Restorator.Desktop.ViewModels
 
             foreach (var fileName in dialog.FileNames)
             {
-                Images.Add(File.ReadAllBytes(fileName));
+                //Images.Add(File.ReadAllBytes(fileName));
             }
         }
 
@@ -99,7 +99,7 @@ namespace Restorator.Desktop.ViewModels
             if (dialog.ShowDialog() != true)
                 return;
 
-            Menu = File.ReadAllBytes(dialog.FileName);
+            //Menu = File.ReadAllBytes(dialog.FileName);
         }
 
         [RelayCommand]

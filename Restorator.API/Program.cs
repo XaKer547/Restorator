@@ -3,7 +3,9 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Restorator.API.Infrastructure;
+using Restorator.API.Services;
 using Restorator.Application.Server.Services;
+using Restorator.Application.Server.Services.Abstract;
 using Restorator.DataAccess.Data;
 using Restorator.Domain.Services;
 using Restorator.Mail.Configuration;
@@ -96,6 +98,9 @@ builder.Services.AddScoped<IReportService, ReportService>();
 builder.Services.AddScoped<IUserManager, UserManager>();
 builder.Services.AddScoped<IMailService, MailService>();
 
+builder.Services.AddScoped<IRestaurantFilesManager, RestaurantFilesManager>();
+builder.Services.AddScoped<IRestaurantTemplateFilesManager, RestaurantTemplateFilesManager>();
+
 builder.Services.AddScoped<MailTemplateBuilder>();
 
 builder.Services.AddSeeder();
@@ -111,6 +116,8 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
+app.UseStaticFiles();
 
 app.UseHttpsRedirection();
 

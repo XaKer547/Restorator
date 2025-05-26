@@ -12,8 +12,8 @@ using Restorator.DataAccess.Data;
 namespace Restorator.DataAccess.Migrations
 {
     [DbContext(typeof(RestoratorDbContext))]
-    [Migration("20250525220009_AddedDbFunctions")]
-    partial class AddedDbFunctions
+    [Migration("20250526144821_Init")]
+    partial class Init
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -98,8 +98,8 @@ namespace Restorator.DataAccess.Migrations
                     b.Property<TimeOnly>("EndWorkTime")
                         .HasColumnType("time");
 
-                    b.Property<byte[]>("MenuImage")
-                        .HasColumnType("varbinary(max)");
+                    b.Property<string>("MenuImage")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -128,9 +128,9 @@ namespace Restorator.DataAccess.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<byte[]>("Image")
+                    b.Property<string>("Image")
                         .IsRequired()
-                        .HasColumnType("varbinary(max)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int?>("RestaurantId")
                         .HasColumnType("int");
@@ -170,9 +170,9 @@ namespace Restorator.DataAccess.Migrations
                     b.Property<bool>("Deleted")
                         .HasColumnType("bit");
 
-                    b.Property<byte[]>("Image")
+                    b.Property<string>("Image")
                         .IsRequired()
-                        .HasColumnType("varbinary(max)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 

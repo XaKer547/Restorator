@@ -10,7 +10,7 @@ namespace Restorator.DataAccess.Data.Entities
         public int OwnerId { get; set; }
         public User Owner { get; set; }
         public ICollection<RestaurantImage> Images { get; set; } = new HashSet<RestaurantImage>();
-        public byte[]? MenuImage { get; set; }
+        public string? MenuImage { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }
         public TimeOnly BeginWorkTime { get; set; }

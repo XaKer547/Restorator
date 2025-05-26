@@ -4,6 +4,6 @@
     {
         public int Id { get; set; }
         public IEnumerable<RestaurantTemplateTableDTO> Tables { get; set; }
-        public byte[] Scheme { get; set; }
+        public string Scheme { get; set; }
     }
 }

@@ -104,8 +104,8 @@ namespace Restorator.Desktop.ViewModels
                 BeginWorkTime = TimeOnly.FromDateTime(BeginWorkTime),
                 EndWorkTime = TimeOnly.FromDateTime(EndWorkTime),
                 Description = Description,
-                Images = Images,
-                Menu = Menu,
+                //Images = Images, TODO
+                //Menu = Menu,
                 Tags = RestaurantTags.Select(r => r.Id)
             });
         }

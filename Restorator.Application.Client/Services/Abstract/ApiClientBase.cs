@@ -22,8 +22,6 @@ namespace Restorator.Application.Client.Services.Abstract
         }
         public Task<T?> GetFromJsonAsync<T>(string? uri, CancellationToken cancellationToken = default)
         {
-            var e = $"{Endpoint}{uri}";
-
             return _client.GetFromJsonAsync<T>($"{Endpoint}{uri}", cancellationToken);
         }
         public Task<HttpResponseMessage> PatchAsJsonAsync<TValue>(string? uri, TValue value, CancellationToken cancellationToken = default)

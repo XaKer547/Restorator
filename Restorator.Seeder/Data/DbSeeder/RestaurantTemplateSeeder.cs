@@ -1,5 +1,4 @@
 ﻿using Restorator.DataAccess.Data.Entities;
-using Restorator.Seeder.Helpers;
 
 namespace Restorator.Seeder.Data.DbSeeder
 {
@@ -12,11 +11,10 @@ namespace Restorator.Seeder.Data.DbSeeder
 
             var templates = new List<RestaurantTemplate>()
             {
-                new RestaurantTemplate
-                {
-                    Image  = EmbeddedResourceHelper.GetRestaurantPlan("20 мест(1)"),
-                    Tables = new List<Table>()
-                    {
+                new() {
+                    Image  = "20 мест(1).png",
+                    Tables =
+                    [
                         new Table()
                         {
                             TableTemplateId = 4,
@@ -65,13 +63,13 @@ namespace Restorator.Seeder.Data.DbSeeder
                             X = 683.51F,
                             Y = 1386.1F,
                         },
-                    },
+                    ],
                 }, // 20 мест (1)
-                new RestaurantTemplate
+                new()
                 {
-                    Image  = EmbeddedResourceHelper.GetRestaurantPlan("30 мест(1)"),
-                    Tables = new List<Table>()
-                    {
+                    Image  = "30 мест(1).png",
+                    Tables =
+                    [
                         new Table()
                         {
                             TableTemplateId = 4,
@@ -120,13 +118,13 @@ namespace Restorator.Seeder.Data.DbSeeder
                             X = 909.82F,
                             Y = 1237.21F,
                         },
-                    },
+                    ],
                 }, // 30 мест (1)
-                new RestaurantTemplate
+                new()
                 {
-                    Image  = EmbeddedResourceHelper.GetRestaurantPlan("40 мест(1)"),
-                    Tables = new List<Table>()
-                    {
+                    Image  = "40 мест(1).png",
+                    Tables =
+                    [
                         new Table()
                         {
                             TableTemplateId = 4,
@@ -187,13 +185,13 @@ namespace Restorator.Seeder.Data.DbSeeder
                             X = 1007.49F,
                             Y = 1047.73F,
                         },
-                    },
+                    ],
                 }, // 40 мест (1)
-                new RestaurantTemplate
+                new()
                 {
-                    Image  = EmbeddedResourceHelper.GetRestaurantPlan("50 мест(1)"),
-                    Tables = new List<Table>()
-                    {
+                    Image  = "50 мест(1).png",
+                    Tables =
+                    [
                         new Table()
                         {
                             TableTemplateId = 7,
@@ -266,13 +264,13 @@ namespace Restorator.Seeder.Data.DbSeeder
                             X = 150.05F,
                             Y = 58.08F,
                         },
-                    },
+                    ],
                 }, // 50 мест (1)
-                new RestaurantTemplate
+                new()
                 {
-                    Image  = EmbeddedResourceHelper.GetRestaurantPlan("100 мест(1)"),
-                    Tables = new List<Table>()
-                    {
+                    Image  = "100 мест(1).png",
+                    Tables =
+                    [
                         new Table() // 39
                         {
                             TableTemplateId = 4,
@@ -333,13 +331,13 @@ namespace Restorator.Seeder.Data.DbSeeder
                             X = 733.03F,
                             Y = 137.05F,
                         },
-                    },
+                    ],
                 }, // 100 мест (1)
-                new RestaurantTemplate
+                new()
                 {
-                    Image  = EmbeddedResourceHelper.GetRestaurantPlan("100+ мест(1)"),
-                    Tables = new List<Table>()
-                    {
+                    Image  = "100+ мест(1).png",
+                    Tables =
+                    [
                         new Table()
                         {
                             TableTemplateId = 6,
@@ -376,13 +374,13 @@ namespace Restorator.Seeder.Data.DbSeeder
                             X = 736.16F,
                             Y = 462.41F,
                         },
-                    },
+                    ],
                 }, // 100+ мест (1)
-                new RestaurantTemplate
+                new()
                 {
-                Image  = EmbeddedResourceHelper.GetRestaurantPlan("100 мест(2)"),
-                Tables = new List<Table>()
-                    {
+                Image  = "100 мест(2).png",
+                Tables =
+                    [
                         new Table()
                         {
                             TableTemplateId = 7,
@@ -437,13 +435,13 @@ namespace Restorator.Seeder.Data.DbSeeder
                             X = 866.93F,
                             Y = 1246.74F,
                         },
-                    }
+                    ]
             }, // 100 мест (2)
-                new RestaurantTemplate
+                new()
                 {
-                Image  = EmbeddedResourceHelper.GetRestaurantPlan("100 мест(3)"),
-                Tables = new List<Table>()
-                    {
+                Image  = "100 мест(3).png",
+                Tables =
+                    [
                         new Table()
                         {
                             TableTemplateId = 7,
@@ -492,13 +490,13 @@ namespace Restorator.Seeder.Data.DbSeeder
                             X = 813.37F,
                             Y = 128.21F,
                         },
-                    }
+                    ]
             }, // 100 мест (3)
-                new RestaurantTemplate
+                new()
                 {
-                    Image  = EmbeddedResourceHelper.GetRestaurantPlan("100 мест(4)"),
-                    Tables = new List<Table>()
-                        {
+                    Image  = "100 мест(4).png",
+                    Tables =
+                        [
                             new Table()
                             {
                                 TableTemplateId = 6,
@@ -559,13 +557,13 @@ namespace Restorator.Seeder.Data.DbSeeder
                                 X = 823.41F,
                                 Y = 1224.63F,
                             },
-                        }
+                        ]
                 }, // 100 мест (4)
-                new RestaurantTemplate
+                new()
                 {
-                    Image  = EmbeddedResourceHelper.GetRestaurantPlan("100 мест(5)"),
-                    Tables = new List<Table>()
-                        {
+                    Image  = "100 мест(5).png",
+                    Tables =
+                        [
                             new Table()
                             {
                                 TableTemplateId = 4,
@@ -620,13 +618,13 @@ namespace Restorator.Seeder.Data.DbSeeder
                                 X = 820.06F,
                                 Y = 675F,
                             },
-                        }
+                        ]
                 }, // 100 мест (5)
-                new RestaurantTemplate
+                new()
                 {
-                    Image  = EmbeddedResourceHelper.GetRestaurantPlan("100+ мест(2)"),
-                    Tables = new List<Table>()
-                        {
+                    Image  = "100+ мест(2).png",
+                    Tables =
+                        [
                             new Table()
                             {
                                 TableTemplateId = 2,
@@ -663,13 +661,13 @@ namespace Restorator.Seeder.Data.DbSeeder
                                 X = 1010.55F,
                                 Y = 705.53F,
                             },
-                        }
+                        ]
                 }, // 100+ мест (2)
-                new RestaurantTemplate
+                new()
                 {
-                    Image  = EmbeddedResourceHelper.GetRestaurantPlan("100+ мест(3)"),
-                    Tables = new List<Table>()
-                        {
+                    Image  = "100+ мест(3).png",
+                    Tables =
+                        [
                             new Table()
                             {
                                 TableTemplateId = 2,
@@ -718,13 +716,13 @@ namespace Restorator.Seeder.Data.DbSeeder
                                 X = 1017.56F,
                                 Y = 1299.79F,
                             },
-                        }
+                        ]
                 }, // 100+ мест (3)
-                new RestaurantTemplate
+                new()
                 {
-                    Image  = EmbeddedResourceHelper.GetRestaurantPlan("100+ мест(4)"),
-                    Tables = new List<Table>()
-                        {
+                    Image  = "100+ мест(4).png",
+                    Tables =
+                        [
                             new Table()
                             {
                                 TableTemplateId = 9,
@@ -755,13 +753,13 @@ namespace Restorator.Seeder.Data.DbSeeder
                                 X = 821.88F,
                                 Y = 1118.1F,
                             },
-                        }
+                        ]
                 }, // 100+ мест (4)
-                new RestaurantTemplate
+                new()
                 {
-                    Image  = EmbeddedResourceHelper.GetRestaurantPlan("100+ мест(5)"),
-                    Tables = new List<Table>()
-                        {
+                    Image  = "100+ мест(5).png",
+                    Tables =
+                        [
                             new Table()
                             {
                                 TableTemplateId = 6,
@@ -810,13 +808,13 @@ namespace Restorator.Seeder.Data.DbSeeder
                                 X = 787.97F,
                                 Y = 540.35F,
                             },
-                        }
+                        ]
                 }, // 100+ мест (5)
-                new RestaurantTemplate
+                new()
                 {
-                    Image  = EmbeddedResourceHelper.GetRestaurantPlan("20 мест(2)"),
-                    Tables = new List<Table>()
-                        {
+                    Image  = "20 мест(2).png",
+                    Tables =
+                        [
                             new Table()
                             {
                                 TableTemplateId = 9,
@@ -865,13 +863,13 @@ namespace Restorator.Seeder.Data.DbSeeder
                                 X = 1000.82F,
                                 Y = 1330.74F,
                             },
-                        }
+                        ]
                 }, // 20 мест (2)
-                new RestaurantTemplate
+                new()
                 {
-                    Image  = EmbeddedResourceHelper.GetRestaurantPlan("20 мест(3)"),
-                    Tables = new List<Table>()
-                        {
+                    Image  = "20 мест(3).png",
+                    Tables =
+                        [
                             new Table()
                             {
                                 TableTemplateId = 4,
@@ -920,13 +918,13 @@ namespace Restorator.Seeder.Data.DbSeeder
                                 X = 877.01F,
                                 Y = 1379.93F,
                             },
-                        }
+                        ]
                 }, // 20 мест (3)
-                new RestaurantTemplate
+                new()
                 {
-                    Image  = EmbeddedResourceHelper.GetRestaurantPlan("20 мест(4)"),
-                    Tables = new List<Table>()
-                        {
+                    Image  = "20 мест(4).png",
+                    Tables =
+                        [
                             new Table()
                             {
                                 TableTemplateId = 7,
@@ -975,13 +973,13 @@ namespace Restorator.Seeder.Data.DbSeeder
                                 X = 1070F,
                                 Y = 1400F,
                             },
-                        }
+                        ]
                 }, // 20 мест (4)
-                new RestaurantTemplate
+                new()
                 {
-                    Image  = EmbeddedResourceHelper.GetRestaurantPlan("20 мест(5)"),
-                    Tables = new List<Table>()
-                        {
+                    Image  = "20 мест(5).png",
+                    Tables =
+                        [
                             new Table()
                             {
                                 TableTemplateId = 6,
@@ -1024,13 +1022,13 @@ namespace Restorator.Seeder.Data.DbSeeder
                                 X = 1065.39F,
                                 Y = 527.62F,
                             },
-                        }
+                        ]
                 }, // 20 мест (5)
-                new RestaurantTemplate
+                new()
                 {
-                    Image  = EmbeddedResourceHelper.GetRestaurantPlan("30 мест(2)"),
-                    Tables = new List<Table>()
-                        {
+                    Image  = "30 мест(2).png",
+                    Tables =
+                        [
                             new Table()
                             {
                                 TableTemplateId = 2,
@@ -1091,13 +1089,13 @@ namespace Restorator.Seeder.Data.DbSeeder
                                 X = 1065.58F,
                                 Y = 1301.66F,
                             },
-                        }
+                        ]
                 }, // 30 мест (2)
-                new RestaurantTemplate
+                new()
                 {
-                    Image  = EmbeddedResourceHelper.GetRestaurantPlan("30 мест(3)"),
-                    Tables = new List<Table>()
-                        {
+                    Image  = "30 мест(3).png",
+                    Tables =
+                        [
                             new Table()
                             {
                                 TableTemplateId = 2,
@@ -1158,13 +1156,13 @@ namespace Restorator.Seeder.Data.DbSeeder
                                 X = 1067.77F,
                                 Y = 1299.79F,
                             },
-                        }
+                        ]
                 }, // 30 мест (3)
-                new RestaurantTemplate
+                new()
                 {
-                    Image  = EmbeddedResourceHelper.GetRestaurantPlan("30 мест(4)"),
-                    Tables = new List<Table>()
-                        {
+                    Image  = "30 мест(4).png",
+                    Tables =
+                        [
                             new Table()
                             {
                                 TableTemplateId = 9,
@@ -1225,13 +1223,13 @@ namespace Restorator.Seeder.Data.DbSeeder
                                 X = 1070F,
                                 Y = 1398.32F,
                             },
-                        }
+                        ]
                 }, // 30 мест (4)
-                new RestaurantTemplate
+                new()
                 {
-                    Image  = EmbeddedResourceHelper.GetRestaurantPlan("30 мест(5)"),
-                    Tables = new List<Table>()
-                        {
+                    Image  = "30 мест(5).png",
+                    Tables =
+                        [
                             new Table()
                             {
                                 TableTemplateId = 2,
@@ -1298,10 +1296,8 @@ namespace Restorator.Seeder.Data.DbSeeder
                                 X = 977.98F,
                                 Y = 1380.93F,
                             },
-                        }
+                        ]
                 }, // 30 мест (5)
-
-
             };
 
             _context.RestaurantTemplates.AddRange(templates);

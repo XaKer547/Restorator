@@ -7,8 +7,8 @@ namespace Restorator.Desktop.Dialogs
     /// </summary>
     public partial class ExpandedRestaurantMenuDialog : ContentDialog
     {
-        public byte[] Image { get; set; }
-        public ExpandedRestaurantMenuDialog(byte[] image)
+        public string Image { get; set; }
+        public ExpandedRestaurantMenuDialog(string image)
         {
             Image = image;
             DataContext = this;

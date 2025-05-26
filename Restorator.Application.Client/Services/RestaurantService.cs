@@ -9,11 +9,8 @@ using System.Text;
 
 namespace Restorator.Application.Client.Services
 {
-    public class RestaurantService : ApiClientBase, IRestaurantService
+    public class RestaurantService(HttpClient client) : ApiClientBase(client, "restaurant"), IRestaurantService
     {
-        public RestaurantService(HttpClient client) : base(client, "restaurant")
-        { }
-
         public async Task<Result> ChangeRestaurantApproval(ChangeRestaurantApprovalDTO model)
         {
             var response = await PatchAsJsonAsync($"/{model.RestaurantId}/approve", model.Approval);
@@ -37,16 +34,35 @@ namespace Restorator.Application.Client.Services
 
         public async Task<IReadOnlyCollection<RestaurantPreviewDTO>> GetOwnedRestaurantPreviews()
         {
-            var restaurants = await GetFromJsonAsync<IReadOnlyCollection<RestaurantPreviewDTO>>("/owned");
+            var ownedRestaurants = await GetFromJsonAsync<IReadOnlyCollection<RestaurantPreviewDTO>>("/owned");
 
-            return restaurants ?? [];
+            IReadOnlyCollection<RestaurantPreviewDTO> extendedOwnedPreviews = [.. ownedRestaurants.Select(x =>
+            {
+                string? image = null;
+
+                if(x.Image != null)
+                   image = $"{_client.BaseAddress}/restaurants/{x.Name}/{x.Image}";
+
+                return new RestaurantPreviewDTO
+                {
+                    Id = x.Id,
+                    Name = x.Name,
+                    Image = image,
+                };
+            })];
+
+            return extendedOwnedPreviews ?? [];
         }
 
         public async Task<Result<RestaurantInfoDTO>> GetRestaurantInfo(int restaurantId)
         {
             var info = await GetFromJsonAsync<RestaurantInfoDTO>($"/{restaurantId}");
 
-            return info.ToResultWithNullCheck();
+            info.Menu = $"{_client.BaseAddress}/restaurants/{info.Name}/menu.png";
+
+            info.Images = info.Images.Select(x => $"{_client.BaseAddress}/restaurants/{info.Name}/{x}");
+
+            return info.ToResultWithNullCheck(); //useless :)
         }
 
         public async Task<IReadOnlyCollection<RestaurantSearchItemDTO>> SearchRestaurants(string? name, CancellationToken cancellationToken = default)
@@ -75,12 +91,30 @@ namespace Restorator.Application.Client.Services
 
             var previews = await GetFromJsonAsync<PaginatedList<RestaurantPreviewDTO>>(builder.ToString());
 
+            var extendedPreviews = previews.Select(x =>
+            {
+                string? image = null;
+
+                if (x.Image != null)
+                    image = $"{_client.BaseAddress}/restaurants/{x.Name}/{x.Image}";
+
+                return new RestaurantPreviewDTO
+                {
+                    Id = x.Id,
+                    Name = x.Name,
+                    Image = image,
+                };
+            });
+
+            previews.Clear();
+            previews.AddRange(extendedPreviews);
+
             return previews ?? PaginatedList<RestaurantPreviewDTO>.Empty();
         }
 
         public async Task<IReadOnlyCollection<RestaurantTagDTO>> GetRestaurantsTags()
         {
-            var tags = await GetFromJsonAsync<IReadOnlyCollection<RestaurantTagDTO>>("/tags");
+            var tags = await GetFromJsonAsync<IReadOnlyCollection<RestaurantTagDTO>>("/latest");
 
             return tags ?? [];
         }
@@ -89,7 +123,14 @@ namespace Restorator.Application.Client.Services
         {
             var templates = await GetFromJsonAsync<IReadOnlyCollection<RestaurantTemplateDTO>>("/templates");
 
-            return templates ?? [];
+            IReadOnlyCollection<RestaurantTemplateDTO> extendedTemplates = [.. templates.Select(x => new RestaurantTemplateDTO
+            {
+                Id = x.Id,
+                Tables = x.Tables,
+                Scheme = $"{_client.BaseAddress}/schemes/{x.Scheme}",
+            })];
+
+            return extendedTemplates ?? [];
         }
 
         public async Task<Result> UpdateRestaurant(UpdateRestraurantDTO model)
@@ -101,16 +142,31 @@ namespace Restorator.Application.Client.Services
 
         public async Task<IReadOnlyCollection<RestaurantPreviewDTO>> GetLatestVisited()
         {
-            var tags = await GetFromJsonAsync<IReadOnlyCollection<RestaurantPreviewDTO>>("/latest");
+            var latest = await GetFromJsonAsync<IReadOnlyCollection<RestaurantPreviewDTO>>("/latest");
 
-            return tags ?? [];
+            IReadOnlyCollection<RestaurantPreviewDTO> extendedLatest = [.. latest.Select(x =>
+            {
+                string? image = null;
+
+                if (x.Image != null)
+                    image = $"{_client.BaseAddress}/restaurants/{x.Name}/{x.Image}";
+
+                return new RestaurantPreviewDTO
+                {
+                    Id = x.Id,
+                    Name = x.Name,
+                    Image = image,
+                };
+            })];
+
+            return extendedLatest ?? [];
         }
 
         public async Task<IReadOnlyCollection<RestaurantSearchItemDTO>> GetOwnedRestaurantsSearchItems()
         {
-            var tags = await GetFromJsonAsync<IReadOnlyCollection<RestaurantSearchItemDTO>>("/owned/search");
+            var ownedSearchItems = await GetFromJsonAsync<IReadOnlyCollection<RestaurantSearchItemDTO>>("/owned/search");
 
-            return tags ?? [];
+            return ownedSearchItems ?? [];
         }
     }
 }

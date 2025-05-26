@@ -1,5 +1,6 @@
 ﻿using FluentResults;
 using Microsoft.EntityFrameworkCore;
+using Restorator.Application.Server.Services.Abstract;
 using Restorator.DataAccess.Data;
 using Restorator.DataAccess.Data.Entities;
 using Restorator.DataAccess.Data.Entities.Enums;
@@ -12,11 +13,14 @@ namespace Restorator.Application.Server.Services
     {
         private readonly RestoratorDbContext _context;
         private readonly IUserManager _userManager;
+        private readonly IRestaurantTemplateFilesManager _restaurantTemplateFilesManager;
         public TemplateService(RestoratorDbContext context,
-                               IUserManager userManager)
+                               IUserManager userManager,
+                               IRestaurantTemplateFilesManager restaurantTemplateFilesManager)
         {
             _context = context;
             _userManager = userManager;
+            _restaurantTemplateFilesManager = restaurantTemplateFilesManager;
         }
 
         public async Task<Result<int>> CreateRestaurantTemplate(CreateRestaurantTemplateDTO model)
@@ -34,9 +38,11 @@ namespace Restorator.Application.Server.Services
             if (user.Role != Roles.Admin)
                 return Result.Fail("У вас недостаточно прав, чтобы это сделать");
 
+            var schemePath = await _restaurantTemplateFilesManager.UploadTemplate(model.Scheme);
+
             var template = new RestaurantTemplate()
             {
-                Image = model.Scheme,
+                Image = schemePath,
                 Tables = [.. model.Tables.Select(x => new Table()
                 {
                     TableTemplateId = x.TemplateId,
@@ -117,7 +123,7 @@ namespace Restorator.Application.Server.Services
                 .Select(x => new RestaurantTemplatePreview()
                 {
                     Id = x.Id,
-                    Scheme = x.Image
+                    Image = x.Image
                 }).ToListAsync();
         }
 
@@ -178,7 +184,7 @@ namespace Restorator.Application.Server.Services
             if (template is null)
                 return Result.Fail("Не найден шаблон ресторана");
 
-            template.Image = model.Scheme;
+            await _restaurantTemplateFilesManager.UpdateTemplate(template.Image, model.Scheme);
 
             var tables = template.Tables.ToList();
 

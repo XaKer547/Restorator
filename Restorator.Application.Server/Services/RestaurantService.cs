@@ -2,6 +2,7 @@
 using LinqKit;
 using Microsoft.EntityFrameworkCore;
 using Restorator.Application.Server.Extensions;
+using Restorator.Application.Server.Services.Abstract;
 using Restorator.DataAccess.Data;
 using Restorator.DataAccess.Data.Entities;
 using Restorator.Domain.Models;
@@ -16,11 +17,14 @@ namespace Restorator.Application.Server.Services
     {
         private readonly RestoratorDbContext _context;
         private readonly IUserManager _userManager;
+        private readonly IRestaurantFilesManager _restaurantFilesManager;
         public RestaurantService(RestoratorDbContext context,
-                                 IUserManager userManager)
+                                 IUserManager userManager,
+                                 IRestaurantFilesManager restaurantFilesManager)
         {
             _context = context;
             _userManager = userManager;
+            _restaurantFilesManager = restaurantFilesManager;
         }
 
         public async Task<IReadOnlyCollection<RestaurantPreviewDTO>> GetOwnedRestaurantPreviews()
@@ -34,7 +38,7 @@ namespace Restorator.Application.Server.Services
                                              {
                                                  Id = r.Id,
                                                  Name = r.Name,
-                                                 Image = r.Images.Select(i => i.Image).FirstOrDefault(),
+                                                 Image = r.Images.Select(x => x.Image).FirstOrDefault(),
                                              }).ToListAsync();
         }
         public async Task<Result> ChangeRestaurantApproval(ChangeRestaurantApprovalDTO model)
@@ -88,7 +92,7 @@ namespace Restorator.Application.Server.Services
                                              {
                                                  Id = r.Id,
                                                  Name = r.Name,
-                                                 Image = r.Images.Select(i => i.Image).FirstOrDefault(),
+                                                 Image = r.Images.Select(x => x.Image).FirstOrDefault(),
                                              }).AsPageAsync(paginationFilter.CurrentPage, paginationFilter.PageSize);
         }
         public async Task<Result<int>> CreateRestaurant(CreateRestaurantDTO model)
@@ -105,6 +109,8 @@ namespace Restorator.Application.Server.Services
             var tags = _context.RestaurantTags.AsNoTracking()
                                               .Where(t => model.Tags.Contains(t.Id));
 
+            var imagesInfo = await _restaurantFilesManager.CreateRestaurantFolder(model.Name, model.Images, model.Menu);
+
             var restaurant = new Restaurant()
             {
                 Owner = user,
@@ -113,11 +119,8 @@ namespace Restorator.Application.Server.Services
                 BeginWorkTime = model.BeginWorkTime,
                 EndWorkTime = model.EndWorkTime,
                 TemplateId = model.TemplateId,
-                Images = [.. model.Images.Select(i => new RestaurantImage()
-                {
-                    Image = i
-                })],
-                MenuImage = model.Menu,
+                Images = [.. imagesInfo.ImagesPath.Select(x => new RestaurantImage() { Image = x })],
+                MenuImage = imagesInfo.MenuPath,
                 Tags = [.. tags]
             };
 
@@ -133,7 +136,7 @@ namespace Restorator.Application.Server.Services
                                                        .Select(restaurant => new RestaurantInfoDTO()
                                                        {
                                                            Id = restaurant.Id,
-                                                           Images = restaurant.Images.Select(i => i.Image),
+                                                           Images = restaurant.Images.Select(x => x.Image),
                                                            Menu = restaurant.MenuImage,
                                                            Name = restaurant.Name,
                                                            Approved = restaurant.Approved,
@@ -206,12 +209,11 @@ namespace Restorator.Application.Server.Services
             restaurant.BeginWorkTime = model.BeginWorkTime;
             restaurant.EndWorkTime = model.EndWorkTime;
 
-            restaurant.Images = [.. model.Images.Select(i => new RestaurantImage()
-                {
-                    Image = i
-                })];
+            var imagesInfo = await _restaurantFilesManager.UpdateRestaurantFolder(model.Name, model.Images, model.Menu);
 
-            restaurant.MenuImage = model.Menu;
+            restaurant.Images = [.. imagesInfo.ImagesPath.Select(x => new RestaurantImage() { Image = x })];
+
+            restaurant.MenuImage = imagesInfo.MenuPath;
 
             var tags = await _context.RestaurantTags.AsNoTracking()
                                                     .Where(t => model.Tags.Contains(t.Id))
@@ -253,7 +255,7 @@ namespace Restorator.Application.Server.Services
                 {
                     Id = r.Restaurant.Id,
                     Name = r.Restaurant.Name,
-                    Image = r.Restaurant.Images.Select(i => i.Image).FirstOrDefault(),
+                    Image = r.Restaurant.Images.Select(x => x.Image).FirstOrDefault(),
                 }).ToListAsync();
         }
         public async Task<IReadOnlyCollection<RestaurantSearchItemDTO>> GetOwnedRestaurantsSearchItems()

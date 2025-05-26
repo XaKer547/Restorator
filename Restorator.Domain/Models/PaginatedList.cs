@@ -7,7 +7,7 @@
         public int ItemsPerPage { get; }
         public bool HasNextPage => (TotalItems - ItemsPerPage * PageIndex) > 0;
         public bool HasPreviousPage => PageIndex > 1;
-        
+
         public PaginatedList() { } //for JSON
         public PaginatedList(int index, int totalItems, int itemsPerPage, IEnumerable<T> items)
         {

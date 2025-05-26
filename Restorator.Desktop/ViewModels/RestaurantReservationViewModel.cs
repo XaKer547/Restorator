@@ -25,7 +25,7 @@ namespace Restorator.Desktop.ViewModels
         private ObservableCollection<TableModel> _tables = [];
 
         [ObservableProperty]
-        private byte[] plan;
+        private string plan;
 
         [ObservableProperty]
         private DateTime reservationStartTime;
